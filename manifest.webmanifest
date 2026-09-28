@@ -1,0 +1,16 @@
+{
+  "id": "/statistica/",
+  "name": "STATISTICA! - Laboratorio di probabilità e statistica",
+  "short_name": "STATISTICA!",
+  "description": "Laboratorio didattico interattivo di statistica e probabilità.",
+  "lang": "it",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#08111f",
+  "theme_color": "#08111f",
+  "icons": [
+    {"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  ]
+}
