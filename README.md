@@ -20,13 +20,21 @@ Laboratorio didattico interattivo di statistica e probabilità.
 ### 🔴 Palline / Urna
 - urna configurabile con 6 colori
 - da 0 a 20 palline per colore
-- estrazioni manuali con reintroduzione
-- estrazioni manuali senza reintroduzione, con urna che si svuota realmente
-- probabilità aggiornate dopo ogni estrazione senza reintroduzione
-- simulazioni con reintroduzione fino a 1.000.000 di estrazioni
-- simulazioni senza reintroduzione fino allo svuotamento dell'urna
-- istogramma per colore con barre dello stesso colore delle palline
-- confronto con le probabilità teoriche quando le estrazioni sono con reintroduzione
+- estrazioni con o senza reintroduzione
+- probabilità aggiornate quando non c'è reintroduzione
+- simulazioni e istogramma per colore
+
+### 🃏 Carte
+- mazzo standard da 40 carte: A, 2–7, Fante, Donna, Re nei semi Cuori, Quadri, Fiori e Picche
+- mazzo personalizzabile carta per carta
+- selezione rapida di tutte le carte, nessuna, numerali, figure o assi
+- selezione/deselezione di un intero seme o valore dalla griglia
+- pescate con o senza reintroduzione
+- simulazioni fino a 1.000.000 di pescate con reintroduzione
+- simulazioni senza reintroduzione fino all'esaurimento del mazzo
+- analisi della stessa serie per seme, valore, tipo o colore rosso/nero
+- confronto teorico quando le pescate sono con reintroduzione
+- esportazione CSV dell'analisi corrente
 
 ## Funzioni comuni
 - frequenze assolute e relative
@@ -37,6 +45,6 @@ Laboratorio didattico interattivo di statistica e probabilità.
 - modalità giorno/notte, fullscreen e suoni
 - PWA installabile e utilizzabile offline
 
-Architettura predisposta per future modalità: carte, roulette e altri esperimenti casuali.
+Architettura predisposta per future modalità: roulette e altri esperimenti casuali.
 
 © prof. Flavio Naretti
