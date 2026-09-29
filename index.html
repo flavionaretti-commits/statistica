@@ -292,6 +292,37 @@
     .barcol.roulette-bar .bar-theory{background:var(--roulettebar)!important;border-color:var(--roulettebar)!important;opacity:.22}
     @media(max-width:940px){.roulette-board{min-width:720px}}
     @media(max-width:560px){.roulette-main{padding:10px}.roulette-board{min-width:680px}.roulette-main-head{align-items:flex-start}}
+    /* TOMBOLA */
+    .tombola-draw-top{margin:2px 0 14px;background:linear-gradient(135deg,#b7791f,#d99b2b)}
+    .tombola-analysis-title,.tombola-wait-title{margin-top:13px}
+    .tombola-new-ticket{width:100%;margin-top:9px}
+    .tombola-main-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .tombola-main-head h2{margin:0;font-size:20px}.tombola-main-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+    .tombola-last-mini{min-width:58px;height:58px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#d99b2b,#9b6517);color:#fff;font-size:21px;font-weight:950;border:4px solid rgba(255,255,255,.75);box-shadow:0 5px 14px rgba(0,0,0,.18)}
+    .tombola-board{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}
+    .tombola-number{aspect-ratio:1/1;min-height:32px;border:1px solid var(--line);border-radius:8px;background:var(--panel2);color:var(--muted);display:grid;place-items:center;font-size:11px;font-weight:850}
+    .tombola-number.drawn{background:#d99b2b;color:#fff;border-color:#d99b2b;box-shadow:inset 0 0 0 2px rgba(255,255,255,.28)}
+    .tombola-number.last{outline:3px solid #fff;outline-offset:-4px}
+    .tombola-ticket-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:14px 0 7px;font-size:12px}
+    .tombola-ticket-head strong{font-size:14px}.tombola-ticket-head span{margin-left:8px;color:var(--muted);font-weight:800}
+    .tombola-prize{padding:6px 9px;border-radius:999px;background:var(--grid);font-weight:900;font-size:10px}
+    .tombola-prize.won{background:#d99b2b;color:white}
+    .tombola-ticket{display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(3,44px);gap:3px;background:#efe1b8;border:4px solid #c69b48;border-radius:10px;padding:5px}
+    .tombola-ticket-cell{border:1px solid #c7b580;border-radius:4px;background:#fff9e9;color:#28313d;display:grid;place-items:center;font-size:13px;font-weight:950}
+    .tombola-ticket-cell.empty{background:#e6d7aa;color:transparent}
+    .tombola-ticket-cell.marked{background:#d99b2b;color:white;border-color:#a76e17;box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}
+    .tombola-result-stage{display:grid;place-items:center;text-align:center}
+    .tombola-result-ball{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#e1aa3b,#9c6719);color:white;font-size:32px;font-weight:950;border:5px solid rgba(255,255,255,.78);box-shadow:0 8px 20px rgba(0,0,0,.22)}
+    .tombola-result-caption{font-size:11px;font-weight:850;color:var(--muted);margin-top:8px}
+    .tombola-history{background:#d99b2b;color:white;border-color:#d99b2b}
+    .barcol.tombola-bar .bar-actual{background:#d99b2b!important}
+    .barcol.tombola-bar .bar-theory{background:#d99b2b!important;border-color:#d99b2b!important;opacity:.24}
+    .instructions-modal{max-width:760px}.instructions-modal h3{margin:17px 0 4px;font-size:15px}.instructions-modal p{margin:5px 0}
+    .credits-modal{max-width:520px}.credits-modal p{margin:10px 0}.credits-copy{font-weight:850}.credits-next{padding-top:9px;border-top:1px solid var(--line)}
+    /* sei modalità: griglia piena 2x3 nella sidebar, 3x2 quando c'è spazio */
+    .experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media(max-width:940px){.experiment-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+    @media(max-width:560px){.experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tombola-board{gap:2px}.tombola-number{min-height:27px;border-radius:5px;font-size:9px}.tombola-ticket{grid-template-rows:repeat(3,38px)}}
   </style>
 </head>
 <body>
@@ -306,6 +337,7 @@
       <button class="iconbtn" id="themeBtn" title="Giorno / notte">🌙</button>
       <button class="iconbtn" id="fullBtn" title="Schermo intero">⛶</button>
       <button class="iconbtn" id="infoBtn" title="Istruzioni">ⓘ</button>
+      <button class="iconbtn" id="creditsBtn" title="Crediti">©</button>
     </div>
   </header>
 
@@ -327,6 +359,9 @@
         </button>
         <button class="mode-card experiment-card" data-experiment="roulette">
           <div class="emoji">🎡</div><div><strong>Roulette</strong><span>0 / 00</span></div>
+        </button>
+        <button class="mode-card experiment-card" data-experiment="tombola">
+          <div class="emoji">🎱</div><div><strong>Tombola</strong><span>1–90</span></div>
         </button>
       </div>
 
@@ -431,6 +466,30 @@
         </div>
       </div>
 
+      <div class="field" id="tombolaConfig" hidden>
+        <button class="primary tombola-draw-top" id="tombolaDrawTopBtn">🎱 ESTRAI UN NUMERO</button>
+
+        <div class="labelrow tombola-analysis-title"><span>Analizza le estrazioni per</span><span id="tombolaAnalysisLabel">decine</span></div>
+        <select id="tombolaAnalysis" class="card-select">
+          <option value="decade">Decine: 1–10, 11–20…</option>
+          <option value="parity">Pari / Dispari</option>
+          <option value="half">1–45 / 46–90</option>
+          <option value="number">Numero singolo</option>
+        </select>
+
+        <div class="labelrow tombola-wait-title"><span>Nelle simulazioni misura</span><span id="tombolaWaitLabel">tombola</span></div>
+        <select id="tombolaWaitEvent" class="card-select">
+          <option value="ambo">Ambo</option>
+          <option value="terno">Terno</option>
+          <option value="quaterna">Quaterna</option>
+          <option value="cinquina">Cinquina</option>
+          <option value="tombola" selected>Tombola</option>
+        </select>
+
+        <button class="smallbtn tombola-new-ticket" id="newTombolaTicketBtn">🎟️ GENERA NUOVA CARTELLA</button>
+        <p class="urn-note">La partita manuale estrae senza reintroduzione. In SIMULAZIONE il numero richiesto indica quante partite complete simulare per studiare il tempo di attesa del premio scelto.</p>
+      </div>
+
       <div class="tabs">
         <button class="active" data-tab="manual">Lanci manuali</button>
         <button data-tab="simulation">Simulazione</button>
@@ -458,6 +517,22 @@
     </aside>
 
     <main class="maincol">
+      <section class="panel tombola-main" id="tombolaMain" hidden>
+        <div class="tombola-main-head">
+          <div>
+            <h2>Tabellone della Tombola</h2>
+            <p id="tombolaStatusText">90 numeri disponibili · nessuna estrazione</p>
+          </div>
+          <div class="tombola-last-mini" id="tombolaLastMini">—</div>
+        </div>
+        <div class="tombola-board" id="tombolaBoard"></div>
+        <div class="tombola-ticket-head">
+          <div><strong>La tua cartella</strong><span id="tombolaTicketProgress">0 / 15</span></div>
+          <div class="tombola-prize" id="tombolaPrize">NESSUN PREMIO</div>
+        </div>
+        <div class="tombola-ticket" id="tombolaTicket"></div>
+      </section>
+
       <section class="panel roulette-main" id="rouletteMain" hidden>
         <div class="roulette-main-head">
           <div>
@@ -516,27 +591,47 @@
 </div>
 
 <dialog id="infoDialog">
-  <div class="modal">
+  <div class="modal instructions-modal">
     <button class="iconbtn close" id="closeInfo">✕</button>
-    <h2>STATISTICA!</h2>
-    <p>Laboratorio per osservare come le distribuzioni sperimentali prendono forma aumentando il numero delle prove.</p>
-    <ul>
-      <li><b>Dadi:</b> da 1 a 6 dadi a sei facce; la variabile osservata è la somma dei risultati.</li>
-      <li><b>Monete:</b> da 1 a 6 monete; la variabile osservata è il numero di teste. Con una sola moneta le categorie sono CROCE e TESTA.</li>
-      <li><b>Palline:</b> costruisci un'urna scegliendo fino a 6 colori e da 0 a 20 palline per colore. Puoi estrarre con reintroduzione oppure senza reintrodurre la pallina.</li>
-      <li><b>Carte:</b> usa il mazzo da 40 carte (A, 2–7, Fante, Donna, Re nei quattro semi) oppure costruisci un mazzo personalizzato selezionando le carte.</li>
-      <li><b>Analisi carte:</b> la stessa serie di pescate può essere studiata per seme, valore, tipo di carta o colore rosso/nero.</li>
-      <li><b>Roulette:</b> scegli la versione europea (0–36) oppure americana (0, 00, 1–36), gira la pallina o simula molte prove e analizza numero, colore, pari/dispari, basso/alto, dozzine o colonne.</li>
-      <li><b>Gioco roulette:</b> usa fiche esclusivamente virtuali e piazzale su numeri, rosso/nero, pari/dispari, 1–18/19–36, dozzine e colonne.</li>
-      <li><b>Senza reintroduzione:</b> urna e mazzo si svuotano realmente e le probabilità cambiano dopo ogni estrazione/pescata.</li>
-      <li><b>Lanci manuali:</b> ogni prova aggiorna immediatamente istogramma e indici.</li>
-      <li><b>Simulazione:</b> genera rapidamente da 1 a 1.000.000 di prove.</li>
-      <li><b>Frequenze relative:</b> passa dai conteggi alle percentuali.</li>
-      <li><b>Confronto teorico:</b> sovrappone la distribuzione esatta attesa; per le monete è la distribuzione binomiale con p = 0,5.</li>
-      <li><b>PROIETTA:</b> apre l'istogramma in una vista molto più grande, pensata per LIM e proiezione in classe.</li>
-      <li><b>Esporta CSV:</b> salva frequenze osservate e probabilità teoriche.</li>
-    </ul>
-    <p><b>Idea didattica:</b> confronta 10, 100, 1.000 e 100.000 prove e osserva come la distribuzione sperimentale si avvicina a quella teorica.</p>
+    <h2>STATISTICA! · Istruzioni</h2>
+    <p>Un laboratorio per sperimentare probabilità e statistica partendo da giochi e oggetti familiari. Ogni modalità permette prove manuali, simulazioni, frequenze assolute/relative, confronto teorico quando appropriato, PROIETTA ed esportazione CSV.</p>
+
+    <h3>🎲 Dadi</h3>
+    <p>Scegli da 1 a 6 dadi. Ogni lancio registra la <b>somma</b>. Puoi confrontare l'istogramma sperimentale con la distribuzione teorica esatta.</p>
+
+    <h3>🪙 Monete</h3>
+    <p>Scegli da 1 a 6 monete. Con una moneta osservi TESTA/CROCE; con più monete osservi il <b>numero di teste</b>. Il confronto teorico usa la distribuzione binomiale con p = 0,5.</p>
+
+    <h3>🔴 Palline</h3>
+    <p>Costruisci l'urna scegliendo colori e quantità. Con <b>reintroduzione</b> le probabilità restano costanti; senza reintroduzione l'urna si svuota e le probabilità cambiano dopo ogni estrazione.</p>
+
+    <h3>🃏 Carte</h3>
+    <p>Usa il mazzo da 40 carte oppure personalizzalo. Pesca con o senza reintroduzione e rileggi la stessa serie per <b>seme, valore, tipo o colore</b>.</p>
+
+    <h3>🎡 Roulette</h3>
+    <p>Scegli europea (0) o americana (0 e 00). Analizza i giri per numero, colore, pari/dispari, 1–18/19–36, dozzine o colonne. La modalità GIOCO usa esclusivamente <b>fiche virtuali</b> e permette puntate didattiche sul tavolo.</p>
+
+    <h3>🎱 Tombola</h3>
+    <p>Estrai numeri da 1 a 90 senza reintroduzione: il tabellone si completa e una cartella 3×9 da 15 numeri viene segnata automaticamente. L'app riconosce <b>ambo, terno, quaterna, cinquina e tombola</b>. In SIMULAZIONE puoi generare molte partite e studiare <b>dopo quante estrazioni</b> compare il premio scelto.</p>
+
+    <h3>📊 Grafici e strumenti comuni</h3>
+    <p><b>Frequenze relative</b> passa dai conteggi alle percentuali. <b>Teoria</b> mostra la distribuzione attesa quando ha senso. <b>Valori</b> mostra i numeri sulle barre. <b>PROIETTA</b> ingrandisce l'istogramma per LIM e proiezione. <b>Esporta CSV</b> salva i dati della serie corrente.</p>
+
+    <h3>🌙 🔊 ⛶</h3>
+    <p>I pulsanti in alto attivano modalità giorno/notte, suoni e schermo intero. Il pulsante © apre i crediti dell'app.</p>
+  </div>
+</dialog>
+
+<dialog id="creditsDialog">
+  <div class="modal credits-modal">
+    <button class="iconbtn close" id="closeCredits">✕</button>
+    <h2>STATISTICA! · Crediti</h2>
+    <p><b>Ideazione e progettazione didattica:</b><br>prof. Flavio Naretti</p>
+    <p><b>Sviluppo dell'app:</b><br>realizzato in collaborazione con ChatGPT · OpenAI</p>
+    <p><b>Finalità:</b><br>strumento didattico per esplorare probabilità e statistica attraverso esperimenti, giochi e simulazioni.</p>
+    <p><b>Grafica:</b><br>interfaccia, carte, urna, roulette, tabellone e cartelle realizzati in HTML/CSS senza librerie grafiche esterne.</p>
+    <p class="credits-copy">© 2026 prof. Flavio Naretti · uso didattico</p>
+    <p class="credits-next">Prossima estensione prevista: <b>macchina di Galton</b>.</p>
   </div>
 </dialog>
 
@@ -610,6 +705,42 @@
   var allCardIds=CARDS.map(function(c){return c.id});
   var RED_NUMBERS=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 
+  function range90(){var a=[];for(var i=1;i<=90;i++)a.push(i);return a}
+  function shuffled(a){
+    var x=a.slice();
+    for(var i=x.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=x[i];x[i]=x[j];x[j]=t}
+    return x;
+  }
+  function generateTombolaTicket(){
+    var mask=null;
+    for(var attempt=0;attempt<3000;attempt++){
+      var m=[new Array(9).fill(false),new Array(9).fill(false),new Array(9).fill(false)];
+      for(var r=0;r<3;r++){
+        shuffled([0,1,2,3,4,5,6,7,8]).slice(0,5).forEach(function(c){m[r][c]=true});
+      }
+      var ok=true;
+      for(var c=0;c<9;c++){if(!m[0][c]&&!m[1][c]&&!m[2][c]){ok=false;break}}
+      if(ok){mask=m;break}
+    }
+    if(!mask){
+      mask=[
+        [true,true,true,true,true,false,false,false,false],
+        [false,true,false,false,true,true,true,true,false],
+        [true,false,true,false,false,true,false,true,true]
+      ];
+    }
+    var ticket=[new Array(9).fill(null),new Array(9).fill(null),new Array(9).fill(null)];
+    for(var c=0;c<9;c++){
+      var low=c===0?1:c*10,high=c===8?90:c*10+9,nums=[];
+      for(var n=low;n<=high;n++)nums.push(n);
+      nums=shuffled(nums);
+      var rows=[];for(var r=0;r<3;r++)if(mask[r][c])rows.push(r);
+      var chosen=nums.slice(0,rows.length).sort(function(a,b){return a-b});
+      rows.forEach(function(row,i){ticket[row][c]=chosen[i]});
+    }
+    return ticket;
+  }
+
   var state={
     experiment:"dice",
     quantities:{dice:2,coins:1},
@@ -642,6 +773,15 @@
       chip:1,
       bets:{},
       lastNet:null
+    },
+    tombola:{
+      remaining:range90(),
+      last:null,
+      analysis:"decade",
+      dataMode:"draws",
+      ticket:generateTombolaTicket(),
+      waitEvent:"tombola",
+      lastPrize:""
     }
   };
 
@@ -675,6 +815,7 @@
   function chartHasTheory(){
     if(state.experiment==="balls"&&!state.urn.replacement)return false;
     if(state.experiment==="cards"&&!state.deck.replacement)return false;
+    if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting")return false;
     return state.theory;
   }
 
@@ -765,10 +906,50 @@
     cap.textContent=state.roulette.last?"ULTIMO NUMERO · "+rouletteColor(state.roulette.last).toUpperCase():"NESSUN GIRO";
     wrap.appendChild(cap);resultWrap.appendChild(wrap);
   }
+  function ticketNumbers(ticket){
+    var out=[];ticket.forEach(function(row){row.forEach(function(n){if(n!=null)out.push(n)})});return out;
+  }
+  function tombolaHitInfo(drawn){
+    var set=new Set(drawn),rows=state.tombola.ticket.map(function(row){return row.reduce(function(s,n){return s+(n!=null&&set.has(n)?1:0)},0)}),total=0;
+    state.tombola.ticket.forEach(function(row){row.forEach(function(n){if(n!=null&&set.has(n))total++})});
+    var best=Math.max.apply(null,rows),prize=total===15?"TOMBOLA":best>=5?"CINQUINA":best>=4?"QUATERNA":best>=3?"TERNO":best>=2?"AMBO":"NESSUN PREMIO";
+    return {rows:rows,total:total,best:best,prize:prize};
+  }
+  function renderTombolaVisual(){
+    resultWrap.innerHTML="";
+    var wrap=document.createElement("div");wrap.className="tombola-result-stage";
+    var ball=document.createElement("div");ball.className="tombola-result-ball";ball.textContent=state.tombola.last||"?";wrap.appendChild(ball);
+    var cap=document.createElement("div");cap.className="tombola-result-caption";cap.textContent=state.tombola.last?"ULTIMO NUMERO ESTRATTO":"NESSUNA ESTRAZIONE";wrap.appendChild(cap);
+    resultWrap.appendChild(wrap);
+  }
+  function renderTombolaMain(){
+    var board=$("#tombolaBoard");board.innerHTML="";var drawn=state.tombola.dataMode==="draws"?new Set(state.results):new Set();
+    for(var n=1;n<=90;n++){
+      var d=document.createElement("div");d.className="tombola-number"+(drawn.has(n)?" drawn":"")+(state.tombola.last===n?" last":"");d.textContent=n;board.appendChild(d);
+    }
+    var ticket=$("#tombolaTicket");ticket.innerHTML="";
+    state.tombola.ticket.forEach(function(row){
+      row.forEach(function(n){
+        var cell=document.createElement("div");cell.className="tombola-ticket-cell"+(n==null?" empty":"")+(n!=null&&drawn.has(n)?" marked":"");cell.textContent=n==null?"·":n;ticket.appendChild(cell);
+      });
+    });
+    var info=tombolaHitInfo(state.tombola.dataMode==="draws"?state.results:[]);
+    $("#tombolaTicketProgress").textContent=info.total+" / 15";
+    $("#tombolaPrize").textContent=info.prize;$("#tombolaPrize").classList.toggle("won",info.prize!=="NESSUN PREMIO");
+    $("#tombolaStatusText").textContent=state.tombola.dataMode==="waiting"?"Simulazione dei tempi di attesa":state.tombola.remaining.length+" numeri disponibili · "+state.results.length+" estratti";
+    $("#tombolaLastMini").textContent=state.tombola.last||"—";
+  }
   function showOutcome(vals,animate){
+    if(state.experiment==="tombola"){
+      n=Math.min(n,100000);state.tombola.dataMode="waiting";state.tombola.last=null;state.tombola.remaining=range90();
+      state.results=new Array(n);for(var tg=0;tg<n;tg++)state.results[tg]=tombolaWaitForEvent(state.tombola.waitEvent);
+      sumDisplay.innerHTML="—<small>"+n.toLocaleString("it-IT")+" partite simulate · "+tombolaWaitName()+"</small>";beep("done");render();return;
+    }
+
     if(state.experiment==="balls"){renderUrnVisual();return}
     if(state.experiment==="cards"){renderCardVisual();return}
     if(state.experiment==="roulette"){renderRouletteVisual();return}
+    if(state.experiment==="tombola"){renderTombolaVisual();return}
     resultWrap.innerHTML="";
     vals.forEach(function(v,i){var el=state.experiment==="dice"?dieEl(v,((i%3)-1)*3):coinEl(v,((i%3)-1)*3);if(animate)el.classList.add("pulse");resultWrap.appendChild(el)});
   }
@@ -790,6 +971,11 @@
     return id;
   }
   function trial(){
+    if(state.experiment==="tombola"){
+      if(!state.tombola.remaining.length)return null;
+      var ti=Math.floor(Math.random()*state.tombola.remaining.length),tv=state.tombola.remaining[ti];
+      state.tombola.remaining.splice(ti,1);return {raw:[tv],value:tv};
+    }
     if(state.experiment==="roulette"){
       var pockets=roulettePockets(),rv=pockets[Math.floor(Math.random()*pockets.length)];
       return {raw:[rv],value:rv};
@@ -810,6 +996,9 @@
   }
   function resultText(value,simulated){
     var q=quantity();
+    if(state.experiment==="tombola"){
+      return value+"<small>"+(simulated?"tempo di attesa simulato":"numero estratto · "+(90-state.tombola.remaining.length)+"ª estrazione")+"</small>";
+    }
     if(state.experiment==="roulette"){
       var c=rouletteColor(value),label=c==="red"?"ROSSO":c==="black"?"NERO":"VERDE";
       return value+"<small>"+label+" · "+(simulated?"ultimo giro simulato":"ultimo giro")+"</small>";
@@ -827,13 +1016,34 @@
     return value+" "+(value===1?"TESTA":"TESTE")+" · "+(q-value)+" "+((q-value)===1?"CROCE":"CROCI")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
   }
 
+  function tombolaWaitForEvent(eventName){
+    var order=shuffled(range90()),ticketSet=new Set(ticketNumbers(state.tombola.ticket)),rowSets=state.tombola.ticket.map(function(row){return new Set(row.filter(function(n){return n!=null}))});
+    var rowHits=[0,0,0],total=0,threshold={ambo:2,terno:3,quaterna:4,cinquina:5}[eventName]||15;
+    for(var i=0;i<order.length;i++){
+      var v=order[i];
+      if(ticketSet.has(v)){
+        total++;
+        rowSets.forEach(function(s,r){if(s.has(v))rowHits[r]++});
+        if(eventName==="tombola"){if(total===15)return i+1}
+        else if(Math.max.apply(null,rowHits)>=threshold)return i+1;
+      }
+    }
+    return 90;
+  }
+
   function oneRoll(){
+    if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"){
+      if(state.results.length&&!confirm("Iniziare una partita manuale? La simulazione corrente verrà azzerata."))return;
+      state.results=[];state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";
+    }
+    if(state.experiment==="tombola"&&state.tombola.remaining.length===0){alert("Sono già usciti tutti i 90 numeri. Azzera la serie per iniziare una nuova partita.");return}
     if(state.experiment==="balls"&&urnTotal("current")===0){alert("L'urna è vuota. Premi “Ripristina urna” oppure azzera la serie.");return}
     if(state.experiment==="cards"&&deckTotal("current")===0){alert("Il mazzo è vuoto. Premi “Ripristina mazzo completo” oppure azzera la serie.");return}
     var r=trial();if(!r)return;
     state.lastOutcome=r.raw;state.results.push(r.value);
     if(state.experiment==="balls")state.urn.lastColor=r.value;
     if(state.experiment==="cards")state.deck.lastCard=r.value;
+    if(state.experiment==="tombola"){state.tombola.last=r.value;state.tombola.dataMode="draws";state.tombola.lastPrize=tombolaHitInfo(state.results).prize}
     if(state.experiment==="roulette"){
       state.roulette.last=r.value;
       if(state.roulette.mode==="game")resolveRouletteBets(r.value);
@@ -894,6 +1104,25 @@
     if(state.deck.analysis==="type")return ["asso","numero","figura"];
     return ["red","black"];
   }
+  function tombolaWaitName(){
+    var x={ambo:"ambo",terno:"terno",quaterna:"quaterna",cinquina:"cinquina",tombola:"tombola"};return x[state.tombola.waitEvent];
+  }
+  function tombolaCategory(v){
+    if(state.tombola.dataMode==="waiting")return Number(v);
+    if(state.tombola.analysis==="number")return Number(v);
+    if(state.tombola.analysis==="parity")return v%2===0?"even":"odd";
+    if(state.tombola.analysis==="half")return v<=45?"low":"high";
+    return Math.floor((v-1)/10)+1;
+  }
+  function tombolaDomain(){
+    if(state.tombola.dataMode==="waiting"){
+      var min={ambo:2,terno:3,quaterna:4,cinquina:5,tombola:15}[state.tombola.waitEvent],a=[];for(var n=min;n<=90;n++)a.push(n);return a;
+    }
+    if(state.tombola.analysis==="number")return range90();
+    if(state.tombola.analysis==="parity")return ["odd","even"];
+    if(state.tombola.analysis==="half")return ["low","high"];
+    return [1,2,3,4,5,6,7,8,9];
+  }
   function rouletteDomain(){
     if(state.roulette.analysis==="number")return roulettePockets();
     if(state.roulette.analysis==="color")return ["green","red","black"];
@@ -906,6 +1135,7 @@
     if(state.experiment==="balls")return activeBallIds();
     if(state.experiment==="cards")return cardDomain();
     if(state.experiment==="roulette")return rouletteDomain();
+    if(state.experiment==="tombola")return tombolaDomain();
     var q=quantity(),out=[];
     if(state.experiment==="dice"){for(var s=q;s<=6*q;s++)out.push(s)}
     else{for(var h=0;h<=q;h++)out.push(h)}
@@ -914,6 +1144,12 @@
 
   function theoreticalProbabilities(){
     var out={};
+    if(state.experiment==="tombola"){
+      var td=tombolaDomain();td.forEach(function(k){out[k]=0});
+      if(state.tombola.dataMode==="waiting")return out;
+      range90().forEach(function(v){var k=tombolaCategory(v);out[k]=(out[k]||0)+1});
+      td.forEach(function(k){out[k]=out[k]/90});return out;
+    }
     if(state.experiment==="roulette"){
       var rd=rouletteDomain(),rp=roulettePockets();rd.forEach(function(k){out[k]=0});
       rp.forEach(function(v){var k=rouletteCategory(v);out[k]=(out[k]||0)+1});
@@ -945,7 +1181,7 @@
   function counts(){
     var out={};domain().forEach(function(v){out[v]=0});
     state.results.forEach(function(v){
-      var key=state.experiment==="cards"?cardCategory(v):state.experiment==="roulette"?rouletteCategory(v):v;
+      var key=state.experiment==="cards"?cardCategory(v):state.experiment==="roulette"?rouletteCategory(v):state.experiment==="tombola"?tombolaCategory(v):v;
       out[key]=(out[key]||0)+1;
     });
     return out;
@@ -954,7 +1190,7 @@
   function fmt(x,d){if(!Number.isFinite(x))return "—";return x.toLocaleString("it-IT",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
 
   function calcStats(){
-    if(state.experiment==="balls"||state.experiment==="cards"||state.experiment==="roulette")return null;
+    if(state.experiment==="balls"||state.experiment==="cards"||state.experiment==="roulette"||(state.experiment==="tombola"&&state.tombola.dataMode==="draws"))return null;
     var n=state.results.length;if(!n)return null;
     var a=state.results.slice().sort(function(x,y){return x-y}),sum=a.reduce(function(x,y){return x+y},0),mean=sum/n;
     var med=n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2,c=counts(),maxC=0,modes=[];
@@ -977,9 +1213,24 @@
       var labels={green:"Verde",red:"Rosso",black:"Nero",zero:"Zero",even:"Pari",odd:"Dispari",low:"1–18",high:"19–36",d1:"1ª dozzina",d2:"2ª dozzina",d3:"3ª dozzina",c1:"1ª colonna",c2:"2ª colonna",c3:"3ª colonna"};
       return labels[k]||String(k);
     }
+    if(state.experiment==="tombola"){
+      if(state.tombola.dataMode==="waiting")return String(k);
+      if(state.tombola.analysis==="parity")return k==="even"?"Pari":"Dispari";
+      if(state.tombola.analysis==="half")return k==="low"?"1–45":"46–90";
+      if(state.tombola.analysis==="decade"){var a=(Number(k)-1)*10+1,b=Number(k)*10;return a+"–"+b}
+      return String(k);
+    }
     return String(k);
   }
   function renderStats(){
+    if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"){
+      var ts=calcStats();setStat("n","Partite",fmt(ts?ts.n:0,0));setStat("mean","Media estrazione",ts?fmt(ts.mean,2):"—");setStat("median","Mediana",ts?fmt(ts.median,1):"—");setStat("mode","Moda",ts?ts.mode:"—");
+      setStat("min","Più presto",ts?fmt(ts.min,0):"—");setStat("max","Più tardi",ts?fmt(ts.max,0):"—");setStat("range","Range",ts?fmt(ts.range,0):"—");setStat("sd","Dev. std.",ts?fmt(ts.sd,2):"—");return;
+    }
+    if(state.experiment==="tombola"){
+      var hi=tombolaHitInfo(state.results);setStat("n","Estratti",fmt(state.results.length,0));setStat("mean","Ultimo",state.tombola.last||"—");setStat("median","Cartella",hi.total+"/15");setStat("mode","Miglior riga",hi.best+"/5");
+      setStat("min","Mancano",15-hi.total);setStat("max","Rimasti",state.tombola.remaining.length);setStat("range","Premio",hi.prize);setStat("sd","Modalità","SENZA");return;
+    }
     if(state.experiment==="balls"||state.experiment==="cards"||state.experiment==="roulette"){
       var c=counts(),ids=domain(),best=null,bestN=0,used=0;
       ids.forEach(function(id){var n=c[id]||0;if(n>0)used++;if(n>bestN){bestN=n;best=id}});
@@ -1014,6 +1265,7 @@
     if(state.experiment==="balls")return ballInfo(v).name;
     if(state.experiment==="cards"){var c=cardInfo(v);return c.rank+c.symbol}
     if(state.experiment==="roulette")return String(v);
+    if(state.experiment==="tombola")return String(v);
     if(state.experiment==="dice")return String(v);
     if(quantity()===1)return v===1?"T":"C";return v+"T";
   }
@@ -1025,6 +1277,7 @@
       if(state.experiment==="balls"){x.classList.add("ball-chip");x.style.setProperty("--ball",ballInfo(v).hex)}
       if(state.experiment==="cards"){var c=cardInfo(v);x.classList.add("card-chip");if(c.color==="red")x.classList.add("red")}
       if(state.experiment==="roulette"){x.classList.add("roulette-chip-history");x.classList.add(rouletteColor(v))}
+      if(state.experiment==="tombola")x.classList.add("tombola-history");
       x.textContent=historyLabel(v);history.appendChild(x);
     });
   }
@@ -1033,6 +1286,7 @@
     if(state.experiment==="balls")return ballInfo(v).name;
     if(state.experiment==="cards")return categoryLabel(v);
     if(state.experiment==="roulette")return categoryLabel(v);
+    if(state.experiment==="tombola")return categoryLabel(v);
     if(state.experiment==="coins"&&quantity()===1)return v===0?"CROCE":"TESTA";
     return String(v);
   }
@@ -1046,12 +1300,18 @@
       var rn={color:"Roulette · colori",parity:"Roulette · pari/dispari",range:"Roulette · 1–18 / 19–36",dozen:"Roulette · dozzine",column:"Roulette · colonne",number:"Roulette · numeri"};
       return rn[state.roulette.analysis];
     }
+    if(state.experiment==="tombola"){
+      if(state.tombola.dataMode==="waiting")return "Tempo di attesa · "+tombolaWaitName();
+      var tn={decade:"Tombola · decine",parity:"Tombola · pari/dispari",half:"Tombola · 1–45 / 46–90",number:"Tombola · numeri"};
+      return tn[state.tombola.analysis];
+    }
     return state.experiment==="dice"?"Distribuzione delle somme":"Distribuzione del numero di teste";
   }
   function emptyMessage(){
     if(state.experiment==="balls")return "Estrai una pallina per costruire l'istogramma.";
     if(state.experiment==="cards")return "Pesca una carta per costruire l'istogramma.";
     if(state.experiment==="roulette")return "Gira la pallina per costruire l'istogramma.";
+    if(state.experiment==="tombola")return "Estrai un numero oppure simula molte partite.";
     return state.experiment==="dice"?"Lancia i dadi per costruire l'istogramma.":"Lancia le monete per costruire l'istogramma.";
   }
   function seriesDescription(){
@@ -1059,12 +1319,14 @@
     if(state.experiment==="balls")return fmt(n,0)+" estrazioni · "+(state.urn.replacement?"con reintroduzione":"senza reintroduzione");
     if(state.experiment==="cards")return fmt(n,0)+" pescate · "+(state.deck.replacement?"con reintroduzione":"senza reintroduzione")+" · "+deckTotal("initial")+" carte";
     if(state.experiment==="roulette")return fmt(n,0)+" giri · "+(state.roulette.kind==="american"?"americana 0+00":"europea 0");
+    if(state.experiment==="tombola")return state.tombola.dataMode==="waiting"?fmt(n,0)+" partite · attesa per "+tombolaWaitName():fmt(n,0)+" estrazioni · senza reintroduzione";
     return state.experiment==="dice"?fmt(n,0)+" lanci · "+q+(q===1?" dado":" dadi"):fmt(n,0)+" lanci · "+q+(q===1?" moneta":" monete");
   }
   function expectedText(){
     if(state.experiment==="balls")return state.urn.replacement?"Probabilità teoriche = composizione dell'urna":"Le probabilità cambiano dopo ogni estrazione";
     if(state.experiment==="cards")return state.deck.replacement?"Probabilità teoriche = composizione del mazzo · analisi per "+analysisName():"Le probabilità cambiano dopo ogni pescata";
     if(state.experiment==="roulette")return (state.roulette.kind==="american"?"38 esiti equiprobabili · vantaggio banco 5,26%":"37 esiti equiprobabili · vantaggio banco 2,70%")+" · analisi per "+rouletteAnalysisName();
+    if(state.experiment==="tombola")return state.tombola.dataMode==="waiting"?"Numero di estrazione in cui compare "+tombolaWaitName():"Campione casuale senza reintroduzione da 1 a 90";
     var q=quantity(),v=state.experiment==="dice"?3.5*q:q/2;
     return "Valore atteso teorico: "+fmt(v,1);
   }
@@ -1105,6 +1367,7 @@
       if(state.experiment==="balls"){col.classList.add("ball-bar");col.style.setProperty("--ball",ballInfo(v.x).hex)}
       if(state.experiment==="cards"){col.classList.add("card-bar");col.style.setProperty("--cardbar",cardSeriesColor(v.x))}
       if(state.experiment==="roulette"){col.classList.add("roulette-bar");col.style.setProperty("--roulettebar",rouletteSeriesColor(v.x))}
+      if(state.experiment==="tombola")col.classList.add("tombola-bar");
       var hO=v.obs/max*100,hT=v.theory/max*100;
       if(showTheory){var t=document.createElement("div");t.className="bar-theory";t.style.height=hT+"%";t.title="Teorica: "+(state.relative?fmt(v.theory,2)+"%":fmt(v.theory,1));slot.appendChild(t)}
       var b=document.createElement("div");b.className="bar-actual";b.style.height=hO+"%";b.title="Osservata: "+(state.relative?fmt(v.obs,2)+"%":fmt(v.obs,0));slot.appendChild(b);
@@ -1274,16 +1537,16 @@
   }
 
   function updateExperimentUI(){
-    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isRoulette=state.experiment==="roulette",isCategorical=isBalls||isCards||isRoulette;
+    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isRoulette=state.experiment==="roulette",isTombola=state.experiment==="tombola",isCategorical=isBalls||isCards||isRoulette||isTombola;
     $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
-    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;$("#rouletteConfig").hidden=!isRoulette;$("#rouletteMain").hidden=!isRoulette;
+    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;$("#rouletteConfig").hidden=!isRoulette;$("#tombolaConfig").hidden=!isTombola;$("#rouletteMain").hidden=!isRoulette;$("#tombolaMain").hidden=!isTombola;
     var noFixedTheory=(isBalls&&!state.urn.replacement)||(isCards&&!state.deck.replacement);
     $("#theoryToggle").disabled=noFixedTheory;$("#theoryToggle").closest(".switchrow").style.opacity=noFixedTheory?".5":"1";
     document.querySelectorAll("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
 
-    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":isCards?"Pescate manuali":isRoulette?"Giri manuali":"Lanci manuali";
+    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":isCards?"Pescate manuali":isRoulette?"Giri manuali":isTombola?"Estrazioni manuali":"Lanci manuali";
     $("#manualPane").style.display=isCategorical?"none":"";
-    $("#urnDrawTopBtn").hidden=!isBalls;$("#cardDrawTopBtn").hidden=!isCards;$("#rouletteSpinTopBtn").hidden=!isRoulette;
+    $("#urnDrawTopBtn").hidden=!isBalls;$("#cardDrawTopBtn").hidden=!isCards;$("#rouletteSpinTopBtn").hidden=!isRoulette;$("#tombolaDrawTopBtn").hidden=!isTombola;
     $("#manualHelp").textContent=isBalls
       ?(state.urn.replacement?"Ogni estrazione registra il colore; la pallina viene poi reintrodotta nell'urna.":"Ogni estrazione registra il colore e rimuove la pallina dall'urna.")
       :isCards
@@ -1293,6 +1556,7 @@
     if(isBalls)$("#simNote").textContent=state.urn.replacement?"La simulazione avvia una nuova serie di estrazioni indipendenti.":"Senza reintroduzione la simulazione si ferma quando l'urna è vuota.";
     else if(isCards)$("#simNote").textContent=state.deck.replacement?"La simulazione avvia una nuova serie di pescate indipendenti.":"Senza reintroduzione la simulazione si ferma quando il mazzo è vuoto.";
     else if(isRoulette)$("#simNote").textContent="La simulazione genera una nuova serie di giri della roulette.";
+    else if(isTombola)$("#simNote").textContent="Il numero indica quante partite simulare (massimo 100.000). Si misura il tempo di attesa per "+tombolaWaitName()+".";
     else $("#simNote").textContent="La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.";
 
     $("#rollBtn").disabled=false;
@@ -1306,8 +1570,12 @@
     }else if(isCards){
       var deckHasCards=deckTotal("current")>0;
       $("#cardDrawTopBtn").textContent=deckHasCards?"🃏 PESCA UNA CARTA":"MAZZO VUOTO";$("#cardDrawTopBtn").disabled=!deckHasCards;$(".brandmark").textContent="🃏";renderDeckConfig();
-    }else{
+    }else if(isRoulette){
       $("#rouletteSpinTopBtn").textContent="🎡 GIRA LA PALLINA";$("#rouletteSpinTopBtn").disabled=false;$(".brandmark").textContent="🎡";renderRouletteConfig();renderRouletteTable();
+    }else{
+      $("#tombolaDrawTopBtn").textContent=state.tombola.remaining.length?"🎱 ESTRAI UN NUMERO":"TABELLONE COMPLETO";$("#tombolaDrawTopBtn").disabled=!state.tombola.remaining.length;$(".brandmark").textContent="🎱";
+      $("#tombolaAnalysis").value=state.tombola.analysis;$("#tombolaAnalysisLabel").textContent=state.tombola.analysis==="decade"?"decine":state.tombola.analysis==="parity"?"pari/dispari":state.tombola.analysis==="half"?"1–45 / 46–90":"numero";
+      $("#tombolaWaitEvent").value=state.tombola.waitEvent;$("#tombolaWaitLabel").textContent=tombolaWaitName();renderTombolaMain();
     }
   }
 
@@ -1316,6 +1584,7 @@
     if(state.experiment==="balls")renderUrnVisual();
     if(state.experiment==="cards")renderCardVisual();
     if(state.experiment==="roulette"){renderRouletteVisual();renderRouletteConfig();renderRouletteTable();}
+    if(state.experiment==="tombola"){renderTombolaVisual();renderTombolaMain();}
   }
 
   function resetSeries(sound){
@@ -1326,6 +1595,8 @@
       state.deck.current=state.deck.initial.slice();state.deck.lastCard=null;renderCardVisual();sumDisplay.innerHTML="—<small>nessuna carta pescata</small>";
     }else if(state.experiment==="roulette"){
       state.roulette.last=null;state.roulette.lastNet=null;if(state.roulette.mode==="game")clearRouletteBets(true);renderRouletteVisual();sumDisplay.innerHTML="—<small>nessun giro</small>";
+    }else if(state.experiment==="tombola"){
+      state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";state.tombola.lastPrize="";renderTombolaVisual();sumDisplay.innerHTML="—<small>nessun numero estratto</small>";
     }else{
       resultWrap.innerHTML="";sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
     }
@@ -1342,6 +1613,7 @@
     if(exp==="balls")renderUrnVisual();
     if(exp==="cards")renderCardVisual();
     if(exp==="roulette"){renderRouletteVisual();renderRouletteConfig();renderRouletteTable();}
+    if(exp==="tombola"){renderTombolaVisual();renderTombolaMain();}
   }
 
   function updateUrnCount(id,delta){
@@ -1378,6 +1650,16 @@
       rows.push("colore;quantita_iniziale;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");
       domain().forEach(function(id){rows.push([ballInfo(id).name,state.urn.initial[id],c[id],(c[id]/state.results.length*100).toFixed(4),(t[id]*100).toFixed(4)].join(";"))});
       kind="palline";
+    }else if(state.experiment==="tombola"){
+      if(state.tombola.dataMode==="waiting"){
+        rows.push("premio;estrazione;frequenza_assoluta;frequenza_relativa_percento");
+        domain().forEach(function(k){rows.push([tombolaWaitName(),k,c[k]||0,(c[k]/state.results.length*100).toFixed(4)].join(";"))});
+        kind="tombola_attesa_"+state.tombola.waitEvent;
+      }else{
+        rows.push("analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
+        domain().forEach(function(k){rows.push([state.tombola.analysis,categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
+        kind="tombola_"+state.tombola.analysis;
+      }
     }else if(state.experiment==="roulette"){
       rows.push("roulette;analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
       domain().forEach(function(k){rows.push([state.roulette.kind,rouletteAnalysisName(),categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
@@ -1427,6 +1709,14 @@
   $("#clearRouletteBetsBtn").addEventListener("click",function(){clearRouletteBets(true)});
   $("#newRouletteGameBtn").addEventListener("click",function(){state.roulette.bankroll=100;state.roulette.bets={};state.roulette.lastNet=null;renderRouletteConfig();renderRouletteTable()});
 
+  $("#tombolaDrawTopBtn").addEventListener("click",oneRoll);
+  $("#tombolaAnalysis").addEventListener("change",function(e){state.tombola.analysis=e.target.value;if(state.tombola.dataMode==="draws")render()});
+  $("#tombolaWaitEvent").addEventListener("change",function(e){state.tombola.waitEvent=e.target.value;if(state.tombola.dataMode==="waiting"){state.results=[];render()}else updateExperimentUI()});
+  $("#newTombolaTicketBtn").addEventListener("click",function(){
+    if(state.results.length&&!confirm("Generare una nuova cartella? La serie corrente verrà azzerata."))return;
+    state.tombola.ticket=generateTombolaTicket();state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";state.results=[];sumDisplay.innerHTML="—<small>nessun numero estratto</small>";render();
+  });
+
   document.querySelectorAll(".tabs button").forEach(function(b){b.addEventListener("click",function(){
     $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
     $$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active");
@@ -1453,8 +1743,11 @@
   $("#infoBtn").addEventListener("click",function(){$("#infoDialog").showModal()});
   $("#closeInfo").addEventListener("click",function(){$("#infoDialog").close()});
   $("#infoDialog").addEventListener("click",function(e){if(e.target===$("#infoDialog"))$("#infoDialog").close()});
+  $("#creditsBtn").addEventListener("click",function(){$("#creditsDialog").showModal()});
+  $("#closeCredits").addEventListener("click",function(){$("#creditsDialog").close()});
+  $("#creditsDialog").addEventListener("click",function(e){if(e.target===$("#creditsDialog"))$("#creditsDialog").close()});
   document.addEventListener("keydown",function(e){
-    if(e.code==="Space"&&!["INPUT","BUTTON","SELECT"].includes(document.activeElement.tagName)&&!$("#projectionDialog").open&&!$("#infoDialog").open){e.preventDefault();oneRoll()}
+    if(e.code==="Space"&&!["INPUT","BUTTON","SELECT"].includes(document.activeElement.tagName)&&!$("#projectionDialog").open&&!$("#infoDialog").open&&!$("#creditsDialog").open){e.preventDefault();oneRoll()}
   });
 
   loadPrefs();
