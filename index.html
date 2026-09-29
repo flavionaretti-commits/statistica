@@ -200,6 +200,59 @@
     @media(max-width:560px){
       .mode-card{grid-template-columns:1fr;padding:9px 4px}
     }
+    /* CARTE */
+    .card-draw-top{margin:2px 0 14px}
+    .deck-title{margin-top:2px}
+    .deck-shortcuts{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-bottom:6px}
+    .deck-shortcuts button,.deck-head-btn,.deck-suit-btn,.deck-card-btn{
+      border:1px solid var(--line);background:var(--panel2);color:var(--text);cursor:pointer;font-weight:850
+    }
+    .deck-shortcuts button{border-radius:9px;padding:7px 2px;font-size:9px}
+    .deck-hint{font-size:10px;line-height:1.35;color:var(--muted);margin:6px 1px 7px}
+    .deck-grid-wrap{max-width:100%;overflow-x:auto;padding-bottom:5px}
+    .deck-grid{min-width:300px;display:grid;grid-template-columns:25px repeat(10,25px);gap:3px;align-items:center}
+    .deck-corner{width:25px;height:22px}
+    .deck-head-btn{height:22px;border-radius:6px;padding:0;font-size:9px}
+    .deck-suit-btn{height:31px;border-radius:7px;padding:0;font-size:16px}
+    .deck-card-btn{height:31px;border-radius:6px;padding:0;font-size:9px;line-height:1}
+    .deck-card-btn.selected{background:#fff;border-color:#7d8aa0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.5)}
+    .deck-card-btn:not(.selected){opacity:.28;filter:grayscale(.75)}
+    .deck-card-btn.red,.deck-head-btn.red,.deck-suit-btn.red{color:#d92d3a}
+    html[data-theme="dark"] .deck-card-btn.selected{background:#f7f9fc;color:#132033}
+    html[data-theme="dark"] .deck-card-btn.selected.red{color:#d92d3a}
+    .card-analysis-title,.card-mode-label{margin-top:13px}
+    .card-select{width:100%;min-height:42px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);padding:9px 10px;font-weight:800}
+    .deck-reset{width:100%;margin-top:8px}
+    .playing-stage{width:min(100%,330px);display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center}
+    .deck-stack{height:122px;border-radius:12px;background:repeating-linear-gradient(45deg,#244b86 0,#244b86 8px,#315f9f 8px,#315f9f 16px);border:5px solid #fff;box-shadow:0 0 0 1px #8ca1bd,5px 6px 0 -2px #dfe6ef,9px 10px 0 -4px #aeb9c8;display:grid;place-items:center;color:white;font-weight:950;font-size:13px;letter-spacing:.08em;min-width:92px}
+    .playing-card{width:82px;height:118px;border-radius:9px;background:#fff;border:1px solid #c8d0db;box-shadow:0 8px 18px rgba(20,35,55,.20);position:relative;color:#152033;font-weight:900}
+    .playing-card.red{color:#d92d3a}
+    .playing-card .corner{position:absolute;top:6px;left:7px;text-align:center;font-size:17px;line-height:.9}
+    .playing-card .corner small{display:block;font-size:16px;margin-top:3px}
+    .playing-card .center{position:absolute;inset:0;display:grid;place-items:center;font-size:44px}
+    .card-draw-info{text-align:center;min-width:88px}
+    .card-draw-label{font-size:11px;font-weight:900;margin-top:6px}
+    .card-remaining{font-size:10px;color:var(--muted);font-weight:800;margin-top:4px}
+    .card-chip{font-weight:900}
+    .card-chip.red{color:#d92d3a}
+    .barcol.card-bar .bar-actual{background:var(--cardbar)!important}
+    .barcol.card-bar .bar-theory{background:var(--cardbar)!important;border-color:var(--cardbar)!important;opacity:.25}
+    /* Quattro esperimenti: 2x2 nella colonna laterale */
+    .experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .experiment-card[data-experiment="balls"]{grid-column:auto}
+    @media(max-width:940px){
+      .experiment-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+      .mode-card{grid-template-columns:30px minmax(0,1fr)}
+    }
+    @media(max-width:700px){
+      .experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+      .mode-card{grid-template-columns:34px minmax(0,1fr)}
+    }
+    @media(max-width:560px){
+      .deck-grid{min-width:300px}
+      .playing-stage{grid-template-columns:1fr}.card-draw-info{display:flex;justify-content:center;align-items:center;gap:10px}
+      .playing-card{width:70px;height:101px}.playing-card .center{font-size:38px}
+    }
   </style>
 </head>
 <body>
@@ -230,9 +283,12 @@
         <button class="mode-card experiment-card" data-experiment="balls">
           <div class="emoji">🔴</div><div><strong>Palline</strong><span>Urna</span></div>
         </button>
+        <button class="mode-card experiment-card" data-experiment="cards">
+          <div class="emoji">🃏</div><div><strong>Carte</strong><span>Mazzo da 40</span></div>
+        </button>
       </div>
       <div class="future">
-        <div><b>🃏</b>Carte</div><div><b>🎡</b>Roulette</div>
+        <div><b>🎡</b>Roulette</div>
       </div>
 
       <div class="field" id="standardQuantityField">
@@ -261,6 +317,37 @@
         </div>
         <button class="smallbtn urn-reset" id="resetUrnBtn">↺ Ripristina urna</button>
         <p class="urn-note" id="urnModeNote">La pallina estratta torna nell'urna: le probabilità restano costanti.</p>
+      </div>
+
+      <div class="field" id="cardsConfig" hidden>
+        <button class="primary card-draw-top" id="cardDrawTopBtn">🃏 PESCA UNA CARTA</button>
+
+        <div class="labelrow deck-title"><span>Mazzo personalizzato</span><span id="deckTotalLabel">40 carte</span></div>
+        <div class="deck-shortcuts">
+          <button data-deck-preset="all">TUTTE</button>
+          <button data-deck-preset="none">NESSUNA</button>
+          <button data-deck-preset="numbers">NUMERI</button>
+          <button data-deck-preset="figures">FIGURE</button>
+          <button data-deck-preset="aces">ASSI</button>
+        </div>
+        <p class="deck-hint">Tocca una carta per includerla/escluderla. Tocca un seme o un valore per selezionare l'intero gruppo.</p>
+        <div class="deck-grid-wrap"><div class="deck-grid" id="deckGrid"></div></div>
+
+        <div class="labelrow card-analysis-title"><span>Analizza le pescate per</span><span id="cardAnalysisLabel">seme</span></div>
+        <select id="cardAnalysis" class="card-select">
+          <option value="suit">Seme</option>
+          <option value="rank">Valore</option>
+          <option value="type">Tipo: Asso / Numerale / Figura</option>
+          <option value="color">Colore: Rosso / Nero</option>
+        </select>
+
+        <div class="labelrow card-mode-label"><span>Tipo di pescata</span><span id="cardReplacementLabel">con reintroduzione</span></div>
+        <div class="replacement-seg" id="cardReplacementSeg">
+          <button class="active" data-card-replacement="1">CON reintroduzione</button>
+          <button data-card-replacement="0">SENZA reintroduzione</button>
+        </div>
+        <button class="smallbtn deck-reset" id="resetDeckBtn">↺ Ripristina mazzo completo</button>
+        <p class="urn-note" id="cardModeNote">La carta pescata torna nel mazzo: le probabilità restano costanti.</p>
       </div>
 
       <div class="tabs">
@@ -345,7 +432,9 @@
       <li><b>Dadi:</b> da 1 a 6 dadi a sei facce; la variabile osservata è la somma dei risultati.</li>
       <li><b>Monete:</b> da 1 a 6 monete; la variabile osservata è il numero di teste. Con una sola moneta le categorie sono CROCE e TESTA.</li>
       <li><b>Palline:</b> costruisci un'urna scegliendo fino a 6 colori e da 0 a 20 palline per colore. Puoi estrarre con reintroduzione oppure senza reintrodurre la pallina.</li>
-      <li><b>Senza reintroduzione:</b> l'urna si svuota realmente e le probabilità del prossimo colore cambiano dopo ogni estrazione.</li>
+      <li><b>Carte:</b> usa il mazzo da 40 carte (A, 2–7, Fante, Donna, Re nei quattro semi) oppure costruisci un mazzo personalizzato selezionando le carte.</li>
+      <li><b>Analisi carte:</b> la stessa serie di pescate può essere studiata per seme, valore, tipo di carta o colore rosso/nero.</li>
+      <li><b>Senza reintroduzione:</b> urna e mazzo si svuotano realmente e le probabilità cambiano dopo ogni estrazione/pescata.</li>
       <li><b>Lanci manuali:</b> ogni prova aggiorna immediatamente istogramma e indici.</li>
       <li><b>Simulazione:</b> genera rapidamente da 1 a 1.000.000 di prove.</li>
       <li><b>Frequenze relative:</b> passa dai conteggi alle percentuali.</li>
@@ -390,6 +479,42 @@
     {id:"orange",name:"Arancione",plural:"Arancioni",hex:"#f97316"}
   ];
 
+  var SUITS=[
+    {id:"hearts",symbol:"♥",name:"Cuori",color:"red"},
+    {id:"diamonds",symbol:"♦",name:"Quadri",color:"red"},
+    {id:"clubs",symbol:"♣",name:"Fiori",color:"black"},
+    {id:"spades",symbol:"♠",name:"Picche",color:"black"}
+  ];
+  var RANKS=[
+    {id:"A",label:"A",name:"Asso",type:"asso"},
+    {id:"2",label:"2",name:"2",type:"numero"},
+    {id:"3",label:"3",name:"3",type:"numero"},
+    {id:"4",label:"4",name:"4",type:"numero"},
+    {id:"5",label:"5",name:"5",type:"numero"},
+    {id:"6",label:"6",name:"6",type:"numero"},
+    {id:"7",label:"7",name:"7",type:"numero"},
+    {id:"J",label:"J",name:"Fante",type:"figura"},
+    {id:"Q",label:"Q",name:"Donna",type:"figura"},
+    {id:"K",label:"K",name:"Re",type:"figura"}
+  ];
+  var CARDS=[];
+  SUITS.forEach(function(suit){
+    RANKS.forEach(function(rank){
+      CARDS.push({
+        id:rank.id+"_"+suit.id,
+        rank:rank.id,
+        rankName:rank.name,
+        type:rank.type,
+        suit:suit.id,
+        suitName:suit.name,
+        symbol:suit.symbol,
+        color:suit.color
+      });
+    });
+  });
+
+  var allCardIds=CARDS.map(function(c){return c.id});
+
   var state={
     experiment:"dice",
     quantities:{dice:2,coins:1},
@@ -405,6 +530,13 @@
       current:{red:5,blue:3,green:2,yellow:0,purple:0,orange:0},
       replacement:true,
       lastColor:null
+    },
+    deck:{
+      initial:allCardIds.slice(),
+      current:allCardIds.slice(),
+      replacement:true,
+      analysis:"suit",
+      lastCard:null
     }
   };
 
@@ -415,13 +547,19 @@
 
   function quantity(){return state.quantities[state.experiment]}
   function ballInfo(id){return BALLS.find(function(b){return b.id===id})}
+  function cardInfo(id){return CARDS.find(function(c){return c.id===id})}
   function copyCounts(src){var out={};BALLS.forEach(function(b){out[b.id]=src[b.id]||0});return out}
   function urnTotal(which){
     var src=which==="initial"?state.urn.initial:state.urn.current;
     return BALLS.reduce(function(s,b){return s+(src[b.id]||0)},0);
   }
   function activeBallIds(){return BALLS.filter(function(b){return (state.urn.initial[b.id]||0)>0}).map(function(b){return b.id})}
-  function chartHasTheory(){return state.theory && !(state.experiment==="balls"&&!state.urn.replacement)}
+  function deckTotal(which){return (which==="current"?state.deck.current:state.deck.initial).length}
+  function chartHasTheory(){
+    if(state.experiment==="balls"&&!state.urn.replacement)return false;
+    if(state.experiment==="cards"&&!state.deck.replacement)return false;
+    return state.theory;
+  }
 
   function loadPrefs(){
     state.sound=localStorage.getItem("statistica-sound")!=="0";
@@ -439,7 +577,9 @@
       audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
       var o=audioCtx.createOscillator(),g=audioCtx.createGain();
       o.type="sine";o.frequency.value=kind==="roll"?420:kind==="reset"?260:620;
-      g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.08,audioCtx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.13);
+      g.gain.setValueAtTime(.0001,audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(.08,audioCtx.currentTime+.01);
+      g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.13);
       o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.14);
     }catch(e){}
   }
@@ -454,6 +594,7 @@
     var c=document.createElement("div");c.className="coin "+(v?"testa":"croce");c.style.transform="rotate("+(rot||0)+"deg)";
     c.textContent=v?"T":"C";c.title=v?"TESTA":"CROCE";return c;
   }
+
   function renderUrnVisual(){
     resultWrap.innerHTML="";
     var wrap=document.createElement("div");wrap.className="urn-display";
@@ -475,8 +616,32 @@
     var rem=document.createElement("div");rem.className="urn-remaining";rem.textContent=urnTotal("current")+" nell'urna";draw.appendChild(rem);
     wrap.appendChild(draw);resultWrap.appendChild(wrap);
   }
+
+  function playingCardElement(card){
+    var el=document.createElement("div");el.className="playing-card"+(card.color==="red"?" red":"");
+    var corner=document.createElement("div");corner.className="corner";corner.innerHTML=card.rank+'<small>'+card.symbol+"</small>";
+    var center=document.createElement("div");center.className="center";center.textContent=card.symbol;
+    el.appendChild(corner);el.appendChild(center);return el;
+  }
+  function renderCardVisual(){
+    resultWrap.innerHTML="";
+    var wrap=document.createElement("div");wrap.className="playing-stage";
+    var stack=document.createElement("div");stack.className="deck-stack";stack.textContent="MAZZO";wrap.appendChild(stack);
+    var draw=document.createElement("div");draw.className="card-draw-info";
+    if(state.deck.lastCard){
+      var c=cardInfo(state.deck.lastCard);draw.appendChild(playingCardElement(c));
+      var lab=document.createElement("div");lab.className="card-draw-label";lab.textContent=c.rankName.toUpperCase()+" DI "+c.suitName.toUpperCase();draw.appendChild(lab);
+    }else{
+      var blank=document.createElement("div");blank.className="playing-card";blank.innerHTML='<div class="center" style="font-size:28px;color:#8a97a9">?</div>';draw.appendChild(blank);
+      var lab0=document.createElement("div");lab0.className="card-draw-label";lab0.textContent="PESCATA";draw.appendChild(lab0);
+    }
+    var rem=document.createElement("div");rem.className="card-remaining";rem.textContent=deckTotal("current")+" carte nel mazzo";draw.appendChild(rem);
+    wrap.appendChild(draw);resultWrap.appendChild(wrap);
+  }
+
   function showOutcome(vals,animate){
     if(state.experiment==="balls"){renderUrnVisual();return}
+    if(state.experiment==="cards"){renderCardVisual();return}
     resultWrap.innerHTML="";
     vals.forEach(function(v,i){var el=state.experiment==="dice"?dieEl(v,((i%3)-1)*3):coinEl(v,((i%3)-1)*3);if(animate)el.classList.add("pulse");resultWrap.appendChild(el)});
   }
@@ -491,9 +656,18 @@
     if(chosen&&!state.urn.replacement)state.urn.current[chosen]--;
     return chosen;
   }
+  function drawCard(){
+    if(!state.deck.current.length)return null;
+    var idx=Math.floor(Math.random()*state.deck.current.length),id=state.deck.current[idx];
+    if(!state.deck.replacement)state.deck.current.splice(idx,1);
+    return id;
+  }
   function trial(){
     if(state.experiment==="balls"){
       var id=weightedBallDraw();return id===null?null:{raw:[id],value:id};
+    }
+    if(state.experiment==="cards"){
+      var cid=drawCard();return cid===null?null:{raw:[cid],value:cid};
     }
     var q=quantity(),raw=[],value=0;
     if(state.experiment==="dice"){
@@ -509,17 +683,25 @@
       var info=ballInfo(value);
       return info.name.toUpperCase()+"<small>"+(state.urn.replacement?"pallina reintrodotta nell'urna":"pallina non reintrodotta")+"</small>";
     }
+    if(state.experiment==="cards"){
+      var c=cardInfo(value);
+      return c.rank+c.symbol+"<small>"+c.rankName+" di "+c.suitName+(state.deck.replacement?" · carta reintrodotta":" · carta non reintrodotta")+"</small>";
+    }
     if(state.experiment==="dice")return value+"<small>"+(simulated?"ultimo lancio simulato":"somma dell'ultimo lancio")+"</small>";
     if(q===1)return (value===1?"TESTA":"CROCE")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
     return value+" "+(value===1?"TESTA":"TESTE")+" · "+(q-value)+" "+((q-value)===1?"CROCE":"CROCI")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
   }
+
   function oneRoll(){
     if(state.experiment==="balls"&&urnTotal("current")===0){alert("L'urna è vuota. Premi “Ripristina urna” oppure azzera la serie.");return}
+    if(state.experiment==="cards"&&deckTotal("current")===0){alert("Il mazzo è vuoto. Premi “Ripristina mazzo completo” oppure azzera la serie.");return}
     var r=trial();if(!r)return;
     state.lastOutcome=r.raw;state.results.push(r.value);
     if(state.experiment==="balls")state.urn.lastColor=r.value;
+    if(state.experiment==="cards")state.deck.lastCard=r.value;
     showOutcome(r.raw,true);sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
   }
+
   function simulate(n){
     n=Math.max(1,Math.min(1000000,Math.floor(Number(n)||0)));
     state.results=[];state.lastOutcome=[];
@@ -529,10 +711,21 @@
       var available=urnTotal("current");
       if(available<=0){alert("Inserisci almeno una pallina nell'urna.");render();return}
       if(!state.urn.replacement)n=Math.min(n,available);
-      var last=null;
-      for(var i=0;i<n;i++){var rb=trial();if(!rb)break;state.results.push(rb.value);last=rb}
-      if(last){state.lastOutcome=last.raw;state.urn.lastColor=last.value;sumDisplay.innerHTML=resultText(last.value,true)}
+      var lastBall=null;
+      for(var i=0;i<n;i++){var rb=trial();if(!rb)break;state.results.push(rb.value);lastBall=rb}
+      if(lastBall){state.lastOutcome=lastBall.raw;state.urn.lastColor=lastBall.value;sumDisplay.innerHTML=resultText(lastBall.value,true)}
       renderUrnVisual();beep("done");render();return;
+    }
+
+    if(state.experiment==="cards"){
+      state.deck.current=state.deck.initial.slice();state.deck.lastCard=null;
+      var availableCards=deckTotal("current");
+      if(availableCards<=0){alert("Seleziona almeno una carta nel mazzo.");render();return}
+      if(!state.deck.replacement)n=Math.min(n,availableCards);
+      var lastCard=null;
+      for(var j=0;j<n;j++){var rc=trial();if(!rc)break;state.results.push(rc.value);lastCard=rc}
+      if(lastCard){state.lastOutcome=lastCard.raw;state.deck.lastCard=lastCard.value;sumDisplay.innerHTML=resultText(lastCard.value,true)}
+      renderCardVisual();beep("done");render();return;
     }
 
     state.results=new Array(n);var final=null;
@@ -541,13 +734,29 @@
   }
 
   function choose(n,k){if(k<0||k>n)return 0;k=Math.min(k,n-k);var r=1;for(var i=1;i<=k;i++)r=r*(n-k+i)/i;return r}
+
+  function cardCategory(cardId){
+    var c=cardInfo(cardId);
+    if(state.deck.analysis==="suit")return c.suit;
+    if(state.deck.analysis==="rank")return c.rank;
+    if(state.deck.analysis==="type")return c.type;
+    return c.color==="red"?"red":"black";
+  }
+  function cardDomain(){
+    if(state.deck.analysis==="suit")return SUITS.map(function(s){return s.id});
+    if(state.deck.analysis==="rank")return RANKS.map(function(r){return r.id});
+    if(state.deck.analysis==="type")return ["asso","numero","figura"];
+    return ["red","black"];
+  }
   function domain(){
     if(state.experiment==="balls")return activeBallIds();
+    if(state.experiment==="cards")return cardDomain();
     var q=quantity(),out=[];
     if(state.experiment==="dice"){for(var s=q;s<=6*q;s++)out.push(s)}
     else{for(var h=0;h<=q;h++)out.push(h)}
     return out;
   }
+
   function theoreticalProbabilities(){
     var out={};
     if(state.experiment==="balls"){
@@ -555,21 +764,37 @@
       activeBallIds().forEach(function(id){out[id]=total?(state.urn.initial[id]||0)/total:0});
       return out;
     }
+    if(state.experiment==="cards"){
+      var d=cardDomain(),totalCards=deckTotal("initial");
+      d.forEach(function(k){out[k]=0});
+      state.deck.initial.forEach(function(id){var k=cardCategory(id);out[k]=(out[k]||0)+1});
+      d.forEach(function(k){out[k]=totalCards?out[k]/totalCards:0});
+      return out;
+    }
     var q=quantity();
     if(state.experiment==="coins"){for(var h=0;h<=q;h++)out[h]=choose(q,h)/Math.pow(2,q);return out}
     var dist=[1];
-    for(var d=0;d<q;d++){
+    for(var di=0;di<q;di++){
       var next=new Array(dist.length+6).fill(0);
-      for(var i=0;i<dist.length;i++)for(var face=1;face<=6;face++)next[i+face]+=dist[i];
+      for(var x=0;x<dist.length;x++)for(var face=1;face<=6;face++)next[x+face]+=dist[x];
       dist=next;
     }
     var total=Math.pow(6,q);for(var s=q;s<=6*q;s++)out[s]=(dist[s]||0)/total;return out;
   }
-  function counts(){var out={};domain().forEach(function(v){out[v]=0});state.results.forEach(function(v){out[v]=(out[v]||0)+1});return out}
+
+  function counts(){
+    var out={};domain().forEach(function(v){out[v]=0});
+    state.results.forEach(function(v){
+      var key=state.experiment==="cards"?cardCategory(v):v;
+      out[key]=(out[key]||0)+1;
+    });
+    return out;
+  }
+
   function fmt(x,d){if(!Number.isFinite(x))return "—";return x.toLocaleString("it-IT",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
 
   function calcStats(){
-    if(state.experiment==="balls")return null;
+    if(state.experiment==="balls"||state.experiment==="cards")return null;
     var n=state.results.length;if(!n)return null;
     var a=state.results.slice().sort(function(x,y){return x-y}),sum=a.reduce(function(x,y){return x+y},0),mean=sum/n;
     var med=n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2,c=counts(),maxC=0,modes=[];
@@ -580,18 +805,35 @@
   function setStat(key,label,value){
     var node=$("[data-stat="+key+"]");node.textContent=value;node.previousElementSibling.textContent=label;
   }
+  function categoryLabel(k){
+    if(state.experiment==="balls")return ballInfo(k).name;
+    if(state.experiment==="cards"){
+      if(state.deck.analysis==="suit"){var s=SUITS.find(function(x){return x.id===k});return s.symbol+" "+s.name}
+      if(state.deck.analysis==="rank"){return RANKS.find(function(x){return x.id===k}).name}
+      if(state.deck.analysis==="type")return k==="asso"?"Asso":k==="numero"?"Numerale":"Figura";
+      return k==="red"?"Rosso":"Nero";
+    }
+    return String(k);
+  }
   function renderStats(){
-    if(state.experiment==="balls"){
+    if(state.experiment==="balls"||state.experiment==="cards"){
       var c=counts(),ids=domain(),best=null,bestN=0,used=0;
       ids.forEach(function(id){var n=c[id]||0;if(n>0)used++;if(n>bestN){bestN=n;best=id}});
-      setStat("n","Estrazioni",fmt(state.results.length,0));
-      setStat("mean","Più estratto",best?ballInfo(best).name:"—");
+      setStat("n",state.experiment==="cards"?"Pescate":"Estrazioni",fmt(state.results.length,0));
+      setStat("mean","Più frequente",best?categoryLabel(best):"—");
       setStat("median","Frequenza max",best?fmt(bestN,0):"—");
-      setStat("mode","Colori estratti",fmt(used,0));
-      setStat("min","Palline iniziali",fmt(urnTotal("initial"),0));
-      setStat("max","Palline rimaste",fmt(urnTotal("current"),0));
-      setStat("range","Colori attivi",fmt(ids.length,0));
-      setStat("sd","Modalità",state.urn.replacement?"CON":"SENZA");
+      setStat("mode","Categorie viste",fmt(used,0));
+      if(state.experiment==="balls"){
+        setStat("min","Palline iniziali",fmt(urnTotal("initial"),0));
+        setStat("max","Palline rimaste",fmt(urnTotal("current"),0));
+        setStat("range","Colori attivi",fmt(ids.length,0));
+        setStat("sd","Modalità",state.urn.replacement?"CON":"SENZA");
+      }else{
+        setStat("min","Carte iniziali",fmt(deckTotal("initial"),0));
+        setStat("max","Carte rimaste",fmt(deckTotal("current"),0));
+        setStat("range","Categorie",fmt(ids.length,0));
+        setStat("sd","Modalità",state.deck.replacement?"CON":"SENZA");
+      }
       return;
     }
     var s=calcStats(),vals=s||{n:0,mean:NaN,median:NaN,mode:"—",min:NaN,max:NaN,range:NaN,sd:NaN};
@@ -601,6 +843,7 @@
 
   function historyLabel(v){
     if(state.experiment==="balls")return ballInfo(v).name;
+    if(state.experiment==="cards"){var c=cardInfo(v);return c.rank+c.symbol}
     if(state.experiment==="dice")return String(v);
     if(quantity()===1)return v===1?"T":"C";return v+"T";
   }
@@ -610,32 +853,55 @@
     state.results.slice(-16).reverse().forEach(function(v){
       var x=document.createElement("span");x.className="chip";
       if(state.experiment==="balls"){x.classList.add("ball-chip");x.style.setProperty("--ball",ballInfo(v).hex)}
+      if(state.experiment==="cards"){var c=cardInfo(v);x.classList.add("card-chip");if(c.color==="red")x.classList.add("red")}
       x.textContent=historyLabel(v);history.appendChild(x);
     });
   }
+
   function xLabel(v){
     if(state.experiment==="balls")return ballInfo(v).name;
-    if(state.experiment==="coins"&&quantity()===1)return v===0?"CROCE":"TESTA";return String(v);
+    if(state.experiment==="cards")return categoryLabel(v);
+    if(state.experiment==="coins"&&quantity()===1)return v===0?"CROCE":"TESTA";
+    return String(v);
   }
   function chartTitle(){
     if(state.experiment==="balls")return "Distribuzione dei colori estratti";
+    if(state.experiment==="cards"){
+      var names={suit:"Distribuzione per seme",rank:"Distribuzione per valore",type:"Distribuzione per tipo di carta",color:"Distribuzione per colore"};
+      return names[state.deck.analysis];
+    }
     return state.experiment==="dice"?"Distribuzione delle somme":"Distribuzione del numero di teste";
   }
   function emptyMessage(){
     if(state.experiment==="balls")return "Estrai una pallina per costruire l'istogramma.";
+    if(state.experiment==="cards")return "Pesca una carta per costruire l'istogramma.";
     return state.experiment==="dice"?"Lancia i dadi per costruire l'istogramma.":"Lancia le monete per costruire l'istogramma.";
   }
   function seriesDescription(){
     var n=state.results.length,q=quantity();
     if(state.experiment==="balls")return fmt(n,0)+" estrazioni · "+(state.urn.replacement?"con reintroduzione":"senza reintroduzione");
+    if(state.experiment==="cards")return fmt(n,0)+" pescate · "+(state.deck.replacement?"con reintroduzione":"senza reintroduzione")+" · "+deckTotal("initial")+" carte";
     return state.experiment==="dice"?fmt(n,0)+" lanci · "+q+(q===1?" dado":" dadi"):fmt(n,0)+" lanci · "+q+(q===1?" moneta":" monete");
   }
   function expectedText(){
-    if(state.experiment==="balls"){
-      return state.urn.replacement?"Probabilità teoriche = composizione dell'urna":"Le probabilità cambiano dopo ogni estrazione";
-    }
+    if(state.experiment==="balls")return state.urn.replacement?"Probabilità teoriche = composizione dell'urna":"Le probabilità cambiano dopo ogni estrazione";
+    if(state.experiment==="cards")return state.deck.replacement?"Probabilità teoriche = composizione del mazzo · analisi per "+analysisName():"Le probabilità cambiano dopo ogni pescata";
     var q=quantity(),v=state.experiment==="dice"?3.5*q:q/2;
     return "Valore atteso teorico: "+fmt(v,1);
+  }
+  function analysisName(){
+    return state.deck.analysis==="suit"?"seme":state.deck.analysis==="rank"?"valore":state.deck.analysis==="type"?"tipo":"colore";
+  }
+  function cardSeriesColor(k){
+    if(state.deck.analysis==="suit"){
+      if(k==="hearts")return "#e5484d";
+      if(k==="diamonds")return "#f97316";
+      if(k==="clubs")return "#22a06b";
+      return "#64748b";
+    }
+    if(state.deck.analysis==="color")return k==="red"?"#e5484d":"#64748b";
+    if(state.deck.analysis==="type")return k==="asso"?"#f59e0b":k==="numero"?"#2962ff":"#8b5cf6";
+    return "#2962ff";
   }
 
   function renderChartInto(target){
@@ -647,6 +913,7 @@
     values.forEach(function(v){
       var col=document.createElement("div"),slot=document.createElement("div");col.className="barcol";slot.className="barslot";
       if(state.experiment==="balls"){col.classList.add("ball-bar");col.style.setProperty("--ball",ballInfo(v.x).hex)}
+      if(state.experiment==="cards"){col.classList.add("card-bar");col.style.setProperty("--cardbar",cardSeriesColor(v.x))}
       var hO=v.obs/max*100,hT=v.theory/max*100;
       if(showTheory){var t=document.createElement("div");t.className="bar-theory";t.style.height=hT+"%";t.title="Teorica: "+(state.relative?fmt(v.theory,2)+"%":fmt(v.theory,1));slot.appendChild(t)}
       var b=document.createElement("div");b.className="bar-actual";b.style.height=hO+"%";b.title="Osservata: "+(state.relative?fmt(v.obs,2)+"%":fmt(v.obs,0));slot.appendChild(b);
@@ -654,10 +921,11 @@
       var x=document.createElement("div");x.className="xlabel";x.textContent=xLabel(v.x);col.appendChild(slot);col.appendChild(x);target.appendChild(col);
     });
   }
+
   function syncProjectionButtons(){
     $("#projRelativeBtn").classList.toggle("active",state.relative);
     $("#projTheoryBtn").classList.toggle("active",chartHasTheory());
-    $("#projTheoryBtn").disabled=state.experiment==="balls"&&!state.urn.replacement;
+    $("#projTheoryBtn").disabled=(state.experiment==="balls"&&!state.urn.replacement)||(state.experiment==="cards"&&!state.deck.replacement);
     $("#projLabelsBtn").classList.toggle("active",state.labels);
   }
   function renderChart(){
@@ -685,59 +953,103 @@
       :"La pallina estratta non torna nell'urna: quantità e probabilità cambiano dopo ogni estrazione.";
   }
 
+  function deckHas(id){return state.deck.initial.indexOf(id)!==-1}
+  function toggleDeckGroup(ids){
+    var allSelected=ids.every(deckHas),next=state.deck.initial.slice();
+    if(allSelected)next=next.filter(function(id){return ids.indexOf(id)===-1});
+    else ids.forEach(function(id){if(next.indexOf(id)===-1)next.push(id)});
+    applyDeckSelection(next);
+  }
+  function applyDeckSelection(next){
+    if(state.results.length&&!confirm("Modificare il mazzo? La serie corrente verrà azzerata."))return;
+    state.deck.initial=allCardIds.filter(function(id){return next.indexOf(id)!==-1});
+    state.deck.current=state.deck.initial.slice();state.deck.lastCard=null;state.results=[];state.lastOutcome=[];
+    sumDisplay.innerHTML="—<small>nessuna carta pescata</small>";render();
+  }
+  function renderDeckGrid(){
+    var grid=$("#deckGrid");grid.innerHTML="";
+    var corner=document.createElement("div");corner.className="deck-corner";grid.appendChild(corner);
+    RANKS.forEach(function(rank){
+      var h=document.createElement("button");h.className="deck-head-btn";h.type="button";h.textContent=rank.label;h.title="Seleziona/deseleziona tutti i "+rank.name;
+      h.addEventListener("click",function(){toggleDeckGroup(CARDS.filter(function(c){return c.rank===rank.id}).map(function(c){return c.id}))});
+      grid.appendChild(h);
+    });
+    SUITS.forEach(function(suit){
+      var sb=document.createElement("button");sb.type="button";sb.className="deck-suit-btn"+(suit.color==="red"?" red":"");sb.textContent=suit.symbol;sb.title="Seleziona/deseleziona "+suit.name;
+      sb.addEventListener("click",function(){toggleDeckGroup(CARDS.filter(function(c){return c.suit===suit.id}).map(function(c){return c.id}))});
+      grid.appendChild(sb);
+      RANKS.forEach(function(rank){
+        var id=rank.id+"_"+suit.id,c=cardInfo(id),b=document.createElement("button");b.type="button";
+        b.className="deck-card-btn"+(c.color==="red"?" red":"")+(deckHas(id)?" selected":"");
+        b.textContent=rank.label+suit.symbol;b.title=(deckHas(id)?"Escludi ":"Includi ")+c.rankName+" di "+c.suitName;
+        b.addEventListener("click",function(){toggleDeckGroup([id])});grid.appendChild(b);
+      });
+    });
+  }
+  function renderDeckConfig(){
+    $("#deckTotalLabel").textContent=deckTotal("initial")+" "+(deckTotal("initial")===1?"carta":"carte");
+    $("#cardAnalysis").value=state.deck.analysis;$("#cardAnalysisLabel").textContent=analysisName();
+    $$("#cardReplacementSeg button").forEach(function(b){b.classList.toggle("active",(b.dataset.cardReplacement==="1")===state.deck.replacement)});
+    $("#cardReplacementLabel").textContent=state.deck.replacement?"con reintroduzione":"senza reintroduzione";
+    $("#cardModeNote").textContent=state.deck.replacement
+      ?"La carta pescata torna nel mazzo: le probabilità restano costanti."
+      :"La carta pescata non torna nel mazzo: il mazzo si riduce e le probabilità cambiano.";
+    renderDeckGrid();
+  }
+
   function updateExperimentUI(){
-    var q=quantity(),isBalls=state.experiment==="balls";
+    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isCategorical=isBalls||isCards;
     $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
-    $("#standardQuantityField").hidden=isBalls;$("#ballsConfig").hidden=!isBalls;
-    $("#theoryToggle").disabled=isBalls&&!state.urn.replacement;
-    $("#theoryToggle").closest(".switchrow").style.opacity=(isBalls&&!state.urn.replacement)?".5":"1";
+    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;
+    var noFixedTheory=(isBalls&&!state.urn.replacement)||(isCards&&!state.deck.replacement);
+    $("#theoryToggle").disabled=noFixedTheory;$("#theoryToggle").closest(".switchrow").style.opacity=noFixedTheory?".5":"1";
     document.querySelectorAll("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
-    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":"Lanci manuali";
-    $("#manualPane").style.display=isBalls?"none":"";
-    $("#urnDrawTopBtn").hidden=!isBalls;
+
+    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":isCards?"Pescate manuali":"Lanci manuali";
+    $("#manualPane").style.display=isCategorical?"none":"";
+    $("#urnDrawTopBtn").hidden=!isBalls;$("#cardDrawTopBtn").hidden=!isCards;
     $("#manualHelp").textContent=isBalls
-      ?(state.urn.replacement
-        ?"Ogni estrazione registra il colore; la pallina viene poi reintrodotta nell'urna."
-        :"Ogni estrazione registra il colore e rimuove la pallina dall'urna.")
-      :"Ogni lancio si aggiunge alla serie e aggiorna immediatamente distribuzione e indici.";
-    $("#simNote").textContent=isBalls
-      ?(state.urn.replacement?"La simulazione avvia una nuova serie di estrazioni indipendenti.":"Senza reintroduzione la simulazione si ferma quando l'urna è vuota.")
-      :"La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.";
+      ?(state.urn.replacement?"Ogni estrazione registra il colore; la pallina viene poi reintrodotta nell'urna.":"Ogni estrazione registra il colore e rimuove la pallina dall'urna.")
+      :isCards
+        ?(state.deck.replacement?"Ogni pescata registra la carta; la carta viene poi reintrodotta nel mazzo.":"Ogni pescata registra e rimuove la carta dal mazzo.")
+        :"Ogni lancio si aggiunge alla serie e aggiorna immediatamente distribuzione e indici.";
+
+    if(isBalls)$("#simNote").textContent=state.urn.replacement?"La simulazione avvia una nuova serie di estrazioni indipendenti.":"Senza reintroduzione la simulazione si ferma quando l'urna è vuota.";
+    else if(isCards)$("#simNote").textContent=state.deck.replacement?"La simulazione avvia una nuova serie di pescate indipendenti.":"Senza reintroduzione la simulazione si ferma quando il mazzo è vuoto.";
+    else $("#simNote").textContent="La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.";
 
     $("#rollBtn").disabled=false;
     if(state.experiment==="dice"){
-      $("#quantityTitle").textContent="Numero di dadi";
-      $("#quantityLabel").textContent=q+(q===1?" dado":" dadi");
-      $("#rollBtn").textContent=q===1?"🎲 LANCIA IL DADO":"🎲 LANCIA I DADI";
-      $(".brandmark").textContent="🎲";
+      $("#quantityTitle").textContent="Numero di dadi";$("#quantityLabel").textContent=q+(q===1?" dado":" dadi");$("#rollBtn").textContent=q===1?"🎲 LANCIA IL DADO":"🎲 LANCIA I DADI";$(".brandmark").textContent="🎲";
     }else if(state.experiment==="coins"){
-      $("#quantityTitle").textContent="Numero di monete";
-      $("#quantityLabel").textContent=q+(q===1?" moneta":" monete");
-      $("#rollBtn").textContent=q===1?"🪙 LANCIA LA MONETA":"🪙 LANCIA LE MONETE";
-      $(".brandmark").textContent="🪙";
-    }else{
+      $("#quantityTitle").textContent="Numero di monete";$("#quantityLabel").textContent=q+(q===1?" moneta":" monete");$("#rollBtn").textContent=q===1?"🪙 LANCIA LA MONETA":"🪙 LANCIA LE MONETE";$(".brandmark").textContent="🪙";
+    }else if(isBalls){
       var urnHasBalls=urnTotal("current")>0;
-      $("#rollBtn").textContent=urnHasBalls?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";
-      $("#rollBtn").disabled=!urnHasBalls;
-      $("#urnDrawTopBtn").textContent=urnHasBalls?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";
-      $("#urnDrawTopBtn").disabled=!urnHasBalls;
-      $(".brandmark").textContent="🔴";
-      renderUrnConfig();
+      $("#urnDrawTopBtn").textContent=urnHasBalls?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";$("#urnDrawTopBtn").disabled=!urnHasBalls;$(".brandmark").textContent="🔴";renderUrnConfig();
+    }else{
+      var deckHasCards=deckTotal("current")>0;
+      $("#cardDrawTopBtn").textContent=deckHasCards?"🃏 PESCA UNA CARTA":"MAZZO VUOTO";$("#cardDrawTopBtn").disabled=!deckHasCards;$(".brandmark").textContent="🃏";renderDeckConfig();
     }
   }
+
   function render(){
     updateExperimentUI();renderHistory();renderChart();renderStats();$("#seriesInfo").textContent=seriesDescription();$("#expectedInfo").textContent=expectedText();
     if(state.experiment==="balls")renderUrnVisual();
+    if(state.experiment==="cards")renderCardVisual();
   }
+
   function resetSeries(sound){
     state.results=[];state.lastOutcome=[];
     if(state.experiment==="balls"){
       state.urn.current=copyCounts(state.urn.initial);state.urn.lastColor=null;renderUrnVisual();sumDisplay.innerHTML="—<small>nessuna pallina estratta</small>";
+    }else if(state.experiment==="cards"){
+      state.deck.current=state.deck.initial.slice();state.deck.lastCard=null;renderCardVisual();sumDisplay.innerHTML="—<small>nessuna carta pescata</small>";
     }else{
       resultWrap.innerHTML="";sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
     }
     if(sound)beep("reset");render();
   }
+
   function setQuantity(n){state.quantities[state.experiment]=n;resetSeries(false)}
   function setExperiment(exp){
     if(exp===state.experiment)return;
@@ -746,18 +1058,34 @@
     if(exp==="dice")showOutcome([1,6],false);
     if(exp==="coins")showOutcome([1],false);
     if(exp==="balls")renderUrnVisual();
+    if(exp==="cards")renderCardVisual();
   }
+
   function updateUrnCount(id,delta){
     var old=state.urn.initial[id]||0,next=Math.max(0,Math.min(20,old+delta));
     if(next===old)return;
     if(state.results.length&&!confirm("Modificare l'urna? La serie corrente verrà azzerata."))return;
-    state.urn.initial[id]=next;state.urn.current=copyCounts(state.urn.initial);state.results=[];state.urn.lastColor=null;
-    render();
+    state.urn.initial[id]=next;state.urn.current=copyCounts(state.urn.initial);state.results=[];state.urn.lastColor=null;render();
   }
-  function setReplacement(value){
+  function setUrnReplacement(value){
     if(value===state.urn.replacement)return;
     if(state.results.length&&!confirm("Cambiare tipo di estrazione? La serie corrente verrà azzerata."))return;
     state.urn.replacement=value;state.urn.current=copyCounts(state.urn.initial);state.results=[];state.urn.lastColor=null;render();
+  }
+  function setCardReplacement(value){
+    if(value===state.deck.replacement)return;
+    if(state.results.length&&!confirm("Cambiare tipo di pescata? La serie corrente verrà azzerata."))return;
+    state.deck.replacement=value;state.deck.current=state.deck.initial.slice();state.results=[];state.deck.lastCard=null;render();
+  }
+
+  function applyDeckPreset(preset){
+    var ids=[];
+    if(preset==="all")ids=allCardIds.slice();
+    else if(preset==="none")ids=[];
+    else if(preset==="numbers")ids=CARDS.filter(function(c){return c.type==="numero"}).map(function(c){return c.id});
+    else if(preset==="figures")ids=CARDS.filter(function(c){return c.type==="figura"}).map(function(c){return c.id});
+    else if(preset==="aces")ids=CARDS.filter(function(c){return c.type==="asso"}).map(function(c){return c.id});
+    applyDeckSelection(ids);
   }
 
   function exportCSV(){
@@ -767,35 +1095,51 @@
       rows.push("colore;quantita_iniziale;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");
       domain().forEach(function(id){rows.push([ballInfo(id).name,state.urn.initial[id],c[id],(c[id]/state.results.length*100).toFixed(4),(t[id]*100).toFixed(4)].join(";"))});
       kind="palline";
+    }else if(state.experiment==="cards"){
+      rows.push("analisi;categoria;carte_iniziali_categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");
+      var initialCategoryCounts={};domain().forEach(function(k){initialCategoryCounts[k]=0});
+      state.deck.initial.forEach(function(id){var k=cardCategory(id);initialCategoryCounts[k]=(initialCategoryCounts[k]||0)+1});
+      domain().forEach(function(k){rows.push([analysisName(),categoryLabel(k),initialCategoryCounts[k]||0,c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
+      kind="carte_"+state.deck.analysis;
     }else{
       var variable=state.experiment==="dice"?"somma":"numero_teste";
       rows.push(variable+";frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
       domain().forEach(function(v){rows.push([v,c[v],(c[v]/state.results.length*100).toFixed(4),(t[v]*100).toFixed(4)].join(";"))});
       kind=state.experiment==="dice"?"dadi":"monete";
     }
-    var blob=new Blob(["\ufeff"+rows.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);
-    a.download="STATISTICA_"+kind+"_"+state.results.length+"prove.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+    var blob=new Blob(["\ufeff"+rows.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");
+    a.href=URL.createObjectURL(blob);a.download="STATISTICA_"+kind+"_"+state.results.length+"prove.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
   }
 
   $$(".experiment-card").forEach(function(b){b.addEventListener("click",function(){setExperiment(b.dataset.experiment)})});
   $("#quantitySeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setQuantity(Number(b.dataset.n))});
+
   $("#urnConfig").addEventListener("click",function(e){var b=e.target.closest(".urn-step");if(b)updateUrnCount(b.dataset.color,Number(b.dataset.delta))});
-  $("#replacementSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setReplacement(b.dataset.replacement==="1")});
+  $("#replacementSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setUrnReplacement(b.dataset.replacement==="1")});
   $("#resetUrnBtn").addEventListener("click",function(){resetSeries(true)});
+  $("#urnDrawTopBtn").addEventListener("click",oneRoll);
+
+  $(".deck-shortcuts").addEventListener("click",function(e){var b=e.target.closest("[data-deck-preset]");if(b)applyDeckPreset(b.dataset.deckPreset)});
+  $("#cardReplacementSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setCardReplacement(b.dataset.cardReplacement==="1")});
+  $("#resetDeckBtn").addEventListener("click",function(){applyDeckSelection(allCardIds.slice())});
+  $("#cardDrawTopBtn").addEventListener("click",oneRoll);
+  $("#cardAnalysis").addEventListener("change",function(e){state.deck.analysis=e.target.value;render()});
 
   $$(".tabs button").forEach(function(b){b.addEventListener("click",function(){
     $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
     $$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active");
   })});
   $("#rollBtn").addEventListener("click",oneRoll);
-  $("#urnDrawTopBtn").addEventListener("click",oneRoll);
   $$(".quick button").forEach(function(b){b.addEventListener("click",function(){$("#simN").value=b.dataset.sim})});
   $("#simBtn").addEventListener("click",function(){simulate($("#simN").value)});
   $("#relativeToggle").addEventListener("change",function(e){state.relative=e.target.checked;renderChart()});
   $("#theoryToggle").addEventListener("change",function(e){state.theory=e.target.checked;renderChart()});
   $("#labelsToggle").addEventListener("change",function(e){state.labels=e.target.checked;renderChart()});
   $("#projRelativeBtn").addEventListener("click",function(){state.relative=!state.relative;$("#relativeToggle").checked=state.relative;renderChart()});
-  $("#projTheoryBtn").addEventListener("click",function(){if(state.experiment==="balls"&&!state.urn.replacement)return;state.theory=!state.theory;$("#theoryToggle").checked=state.theory;renderChart()});
+  $("#projTheoryBtn").addEventListener("click",function(){
+    if((state.experiment==="balls"&&!state.urn.replacement)||(state.experiment==="cards"&&!state.deck.replacement))return;
+    state.theory=!state.theory;$("#theoryToggle").checked=state.theory;renderChart();
+  });
   $("#projLabelsBtn").addEventListener("click",function(){state.labels=!state.labels;$("#labelsToggle").checked=state.labels;renderChart()});
   $("#projectBtn").addEventListener("click",function(){$("#projectionDialog").showModal();renderChartInto(projectionChart);renderChart()});
   $("#closeProjection").addEventListener("click",function(){$("#projectionDialog").close()});
@@ -804,11 +1148,16 @@
   $("#soundBtn").addEventListener("click",function(){state.sound=!state.sound;localStorage.setItem("statistica-sound",state.sound?"1":"0");this.textContent=state.sound?"🔊":"🔇";if(state.sound)beep("done")});
   $("#themeBtn").addEventListener("click",function(){state.theme=state.theme==="dark"?"light":"dark";localStorage.setItem("statistica-theme",state.theme);applyTheme()});
   $("#fullBtn").addEventListener("click",function(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen&&document.exitFullscreen()});
-  $("#infoBtn").addEventListener("click",function(){$("#infoDialog").showModal()});$("#closeInfo").addEventListener("click",function(){$("#infoDialog").close()});
+  $("#infoBtn").addEventListener("click",function(){$("#infoDialog").showModal()});
+  $("#closeInfo").addEventListener("click",function(){$("#infoDialog").close()});
   $("#infoDialog").addEventListener("click",function(e){if(e.target===$("#infoDialog"))$("#infoDialog").close()});
-  document.addEventListener("keydown",function(e){if(e.code==="Space"&&!["INPUT","BUTTON"].includes(document.activeElement.tagName)&&!$("#projectionDialog").open&&!$("#infoDialog").open){e.preventDefault();oneRoll()}});
+  document.addEventListener("keydown",function(e){
+    if(e.code==="Space"&&!["INPUT","BUTTON","SELECT"].includes(document.activeElement.tagName)&&!$("#projectionDialog").open&&!$("#infoDialog").open){e.preventDefault();oneRoll()}
+  });
 
-  loadPrefs();$("#relativeToggle").checked=state.relative;$("#theoryToggle").checked=state.theory;$("#labelsToggle").checked=state.labels;showOutcome([1,6],false);render();
+  loadPrefs();
+  $("#relativeToggle").checked=state.relative;$("#theoryToggle").checked=state.theory;$("#labelsToggle").checked=state.labels;
+  showOutcome([1,6],false);render();
   if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("service-worker.js").catch(function(){})});
 })();
 </script>
