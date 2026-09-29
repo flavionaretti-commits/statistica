@@ -940,12 +940,6 @@
     $("#tombolaLastMini").textContent=state.tombola.last||"—";
   }
   function showOutcome(vals,animate){
-    if(state.experiment==="tombola"){
-      n=Math.min(n,100000);state.tombola.dataMode="waiting";state.tombola.last=null;state.tombola.remaining=range90();
-      state.results=new Array(n);for(var tg=0;tg<n;tg++)state.results[tg]=tombolaWaitForEvent(state.tombola.waitEvent);
-      sumDisplay.innerHTML="—<small>"+n.toLocaleString("it-IT")+" partite simulate · "+tombolaWaitName()+"</small>";beep("done");render();return;
-    }
-
     if(state.experiment==="balls"){renderUrnVisual();return}
     if(state.experiment==="cards"){renderCardVisual();return}
     if(state.experiment==="roulette"){renderRouletteVisual();return}
@@ -1054,6 +1048,12 @@
   function simulate(n){
     n=Math.max(1,Math.min(1000000,Math.floor(Number(n)||0)));
     state.results=[];state.lastOutcome=[];
+
+    if(state.experiment==="tombola"){
+      n=Math.min(n,100000);state.tombola.dataMode="waiting";state.tombola.last=null;state.tombola.remaining=range90();
+      state.results=new Array(n);for(var tg=0;tg<n;tg++)state.results[tg]=tombolaWaitForEvent(state.tombola.waitEvent);
+      sumDisplay.innerHTML="—<small>"+n.toLocaleString("it-IT")+" partite simulate · "+tombolaWaitName()+"</small>";beep("done");render();return;
+    }
 
     if(state.experiment==="balls"){
       state.urn.current=copyCounts(state.urn.initial);state.urn.lastColor=null;
