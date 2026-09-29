@@ -1379,7 +1379,7 @@
   function syncProjectionButtons(){
     $("#projRelativeBtn").classList.toggle("active",state.relative);
     $("#projTheoryBtn").classList.toggle("active",chartHasTheory());
-    $("#projTheoryBtn").disabled=(state.experiment==="balls"&&!state.urn.replacement)||(state.experiment==="cards"&&!state.deck.replacement);
+    $("#projTheoryBtn").disabled=(state.experiment==="balls"&&!state.urn.replacement)||(state.experiment==="cards"&&!state.deck.replacement)||(state.experiment==="tombola"&&state.tombola.dataMode==="waiting");
     $("#projLabelsBtn").classList.toggle("active",state.labels);
   }
   function renderChart(){
@@ -1540,7 +1540,7 @@
     var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isRoulette=state.experiment==="roulette",isTombola=state.experiment==="tombola",isCategorical=isBalls||isCards||isRoulette||isTombola;
     $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
     $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;$("#rouletteConfig").hidden=!isRoulette;$("#tombolaConfig").hidden=!isTombola;$("#rouletteMain").hidden=!isRoulette;$("#tombolaMain").hidden=!isTombola;
-    var noFixedTheory=(isBalls&&!state.urn.replacement)||(isCards&&!state.deck.replacement);
+    var noFixedTheory=(isBalls&&!state.urn.replacement)||(isCards&&!state.deck.replacement)||(isTombola&&state.tombola.dataMode==="waiting");
     $("#theoryToggle").disabled=noFixedTheory;$("#theoryToggle").closest(".switchrow").style.opacity=noFixedTheory?".5":"1";
     document.querySelectorAll("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
 
@@ -1729,7 +1729,7 @@
   $("#labelsToggle").addEventListener("change",function(e){state.labels=e.target.checked;renderChart()});
   $("#projRelativeBtn").addEventListener("click",function(){state.relative=!state.relative;$("#relativeToggle").checked=state.relative;renderChart()});
   $("#projTheoryBtn").addEventListener("click",function(){
-    if((state.experiment==="balls"&&!state.urn.replacement)||(state.experiment==="cards"&&!state.deck.replacement))return;
+    if((state.experiment==="balls"&&!state.urn.replacement)||(state.experiment==="cards"&&!state.deck.replacement)||(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"))return;
     state.theory=!state.theory;$("#theoryToggle").checked=state.theory;renderChart();
   });
   $("#projLabelsBtn").addEventListener("click",function(){state.labels=!state.labels;$("#labelsToggle").checked=state.labels;renderChart()});
