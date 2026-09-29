@@ -703,11 +703,20 @@
 
     $("#rollBtn").disabled=false;
     if(state.experiment==="dice"){
-      $("#quantityTitle").textContent="Numero di dadi";$("#quantityLabel").textContent=q+(q===1?" dado":" dadi");$("#rollBtn").textContent="🎲 LANCIA I DADI";$(".brandmark").textContent="🎲";
+      $("#quantityTitle").textContent="Numero di dadi";
+      $("#quantityLabel").textContent=q+(q===1?" dado":" dadi");
+      $("#rollBtn").textContent=q===1?"🎲 LANCIA IL DADO":"🎲 LANCIA I DADI";
+      $(".brandmark").textContent="🎲";
     }else if(state.experiment==="coins"){
-      $("#quantityTitle").textContent="Numero di monete";$("#quantityLabel").textContent=q+(q===1?" moneta":" monete");$("#rollBtn").textContent="🪙 LANCIA LE MONETE";$(".brandmark").textContent="🪙";
+      $("#quantityTitle").textContent="Numero di monete";
+      $("#quantityLabel").textContent=q+(q===1?" moneta":" monete");
+      $("#rollBtn").textContent=q===1?"🪙 LANCIA LA MONETA":"🪙 LANCIA LE MONETE";
+      $(".brandmark").textContent="🪙";
     }else{
-      $("#rollBtn").textContent=urnTotal("current")>0?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";$("#rollBtn").disabled=urnTotal("current")===0;$(".brandmark").textContent="🔴";renderUrnConfig();
+      $("#rollBtn").textContent=urnTotal("current")>0?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";
+      $("#rollBtn").disabled=urnTotal("current")===0;
+      $(".brandmark").textContent="🔴";
+      renderUrnConfig();
     }
   }
   function render(){
