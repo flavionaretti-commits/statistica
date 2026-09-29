@@ -674,7 +674,9 @@
     var q=quantity(),isBalls=state.experiment==="balls";
     $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
     $("#standardQuantityField").hidden=isBalls;$("#ballsConfig").hidden=!isBalls;
-    $$("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
+    $("#theoryToggle").disabled=isBalls&&!state.urn.replacement;
+    $("#theoryToggle").closest(".switchrow").style.opacity=(isBalls&&!state.urn.replacement)?".5":"1";
+    $("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
     $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":"Lanci manuali";
     $("#simNote").textContent=isBalls
       ?(state.urn.replacement?"La simulazione avvia una nuova serie di estrazioni indipendenti.":"Senza reintroduzione la simulazione si ferma quando l'urna è vuota.")
