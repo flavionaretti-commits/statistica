@@ -1064,7 +1064,7 @@
   function expectedText(){
     if(state.experiment==="balls")return state.urn.replacement?"Probabilità teoriche = composizione dell'urna":"Le probabilità cambiano dopo ogni estrazione";
     if(state.experiment==="cards")return state.deck.replacement?"Probabilità teoriche = composizione del mazzo · analisi per "+analysisName():"Le probabilità cambiano dopo ogni pescata";
-    if(state.experiment==="roulette")return (state.roulette.kind==="american"?"38":"37")+" esiti equiprobabili · analisi per "+rouletteAnalysisName();
+    if(state.experiment==="roulette")return (state.roulette.kind==="american"?"38 esiti equiprobabili · vantaggio banco 5,26%":"37 esiti equiprobabili · vantaggio banco 2,70%")+" · analisi per "+rouletteAnalysisName();
     var q=quantity(),v=state.experiment==="dice"?3.5*q:q/2;
     return "Valore atteso teorico: "+fmt(v,1);
   }
