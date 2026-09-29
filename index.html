@@ -148,6 +148,44 @@
       .die,.coin{width:55px;height:55px}.pip{width:9px;height:9px}.dice-wrap{gap:7px}.legend{width:100%}
       .projection-shell{padding:10px}.projection-dialog .chart{min-width:620px;min-height:360px}
     }
+    .experiment-grid{grid-template-columns:repeat(3,1fr)}
+    .future{grid-template-columns:repeat(2,1fr)}
+    .urn-config{display:grid;gap:6px;margin:8px 0 12px}
+    .urn-row{display:grid;grid-template-columns:18px 1fr 30px 24px 30px 44px;gap:5px;align-items:center;min-height:34px;font-size:12px}
+    .urn-row span{font-weight:750;min-width:0}
+    .urn-row b{text-align:center;font-size:13px}
+    .urn-row em{text-align:right;color:var(--muted);font-style:normal;font-weight:800;font-size:11px}
+    .color-dot{width:14px;height:14px;border-radius:50%;background:var(--c);box-shadow:inset 0 -2px 3px rgba(0,0,0,.18),0 1px 3px rgba(0,0,0,.14)}
+    .urn-step{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-weight:950;font-size:18px;line-height:1;cursor:pointer}
+    .urn-step:disabled{opacity:.35;cursor:default}
+    .urn-mode-label{margin-top:13px}
+    .replacement-seg{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .replacement-seg button{min-height:42px;border:1px solid var(--line);border-radius:12px;background:var(--panel2);color:var(--text);font-size:11px;font-weight:850;cursor:pointer;padding:7px}
+    .replacement-seg button.active{background:var(--accent);border-color:var(--accent);color:white}
+    .urn-reset{width:100%;margin-top:8px}
+    .urn-note{font-size:11px;line-height:1.4;color:var(--muted);margin:8px 2px 0}
+    .urn-display{width:min(100%,330px);display:grid;grid-template-columns:1fr auto;gap:15px;align-items:center}
+    .urn-vessel{position:relative;height:132px;border:4px solid var(--line);border-top-width:2px;border-radius:16px 16px 58px 58px;background:linear-gradient(180deg,rgba(255,255,255,.12),rgba(41,98,255,.05));padding:12px 12px 16px;overflow:hidden}
+    .urn-vessel:before{content:"URNA";position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.12em;color:var(--muted);font-weight:900}
+    .urn-balls{height:100%;display:flex;flex-wrap:wrap-reverse;align-content:flex-start;justify-content:center;gap:4px;padding-top:12px;overflow:hidden}
+    .mini-ball,.drawn-ball{border-radius:50%;background:var(--ball);box-shadow:inset -4px -5px 7px rgba(0,0,0,.20),inset 3px 3px 5px rgba(255,255,255,.40),0 2px 5px rgba(0,0,0,.14)}
+    .mini-ball{width:17px;height:17px}
+    .draw-zone{min-width:76px;text-align:center}
+    .drawn-ball{width:66px;height:66px;margin:auto;border:3px solid rgba(255,255,255,.4)}
+    .drawn-label{margin-top:7px;font-size:11px;font-weight:900}
+    .urn-remaining{margin-top:6px;font-size:10px;color:var(--muted);font-weight:750}
+    .ball-chip{display:inline-flex;align-items:center;gap:5px}
+    .ball-chip:before{content:"";width:10px;height:10px;border-radius:50%;background:var(--ball)}
+    .barcol.ball-bar .bar-actual{background:var(--ball)!important}
+    .barcol.ball-bar .bar-theory{background:var(--ball)!important;border-color:var(--ball)!important;opacity:.25}
+    .no-theory-note{font-size:11px;color:var(--muted)}
+    @media(max-width:560px){
+      .experiment-grid{grid-template-columns:repeat(3,1fr)}
+      .mode-card{grid-template-columns:1fr;text-align:center;gap:3px;padding:9px 4px}
+      .mode-card .emoji{font-size:24px}.mode-card span{display:none}
+      .urn-row{grid-template-columns:16px 1fr 30px 22px 30px 40px}
+      .urn-display{grid-template-columns:1fr}.draw-zone{display:flex;align-items:center;justify-content:center;gap:8px}.drawn-ball{width:48px;height:48px;margin:0}
+    }
   </style>
 </head>
 <body>
@@ -170,22 +208,44 @@
       <h2 class="section-title">Esperimento</h2>
       <div class="experiment-grid">
         <button class="mode-card experiment-card active" data-experiment="dice">
-          <div class="emoji">🎲</div><div><strong>Dadi</strong><span>Somma dei risultati</span></div>
+          <div class="emoji">🎲</div><div><strong>Dadi</strong><span>Somma</span></div>
         </button>
         <button class="mode-card experiment-card" data-experiment="coins">
-          <div class="emoji">🪙</div><div><strong>Monete</strong><span>Numero di teste</span></div>
+          <div class="emoji">🪙</div><div><strong>Monete</strong><span>Teste</span></div>
+        </button>
+        <button class="mode-card experiment-card" data-experiment="balls">
+          <div class="emoji">🔴</div><div><strong>Palline</strong><span>Urna</span></div>
         </button>
       </div>
       <div class="future">
-        <div><b>🃏</b>Carte</div><div><b>🔴</b>Palline</div><div><b>🎡</b>Roulette</div>
+        <div><b>🃏</b>Carte</div><div><b>🎡</b>Roulette</div>
       </div>
 
-      <div class="field">
+      <div class="field" id="standardQuantityField">
         <div class="labelrow"><span id="quantityTitle">Numero di dadi</span><span id="quantityLabel">2 dadi</span></div>
         <div class="seg" id="quantitySeg">
           <button data-n="1">1</button><button class="active" data-n="2">2</button><button data-n="3">3</button>
           <button data-n="4">4</button><button data-n="5">5</button><button data-n="6">6</button>
         </div>
+      </div>
+
+      <div class="field" id="ballsConfig" hidden>
+        <div class="labelrow"><span>Composizione dell'urna</span><span id="urnTotalLabel">10 palline</span></div>
+        <div class="urn-config" id="urnConfig">
+          <div class="urn-row" data-color-row="red"><i class="color-dot" style="--c:#ef4444"></i><span>Rosse</span><button class="urn-step" data-color="red" data-delta="-1">−</button><b data-urn-count="red">5</b><button class="urn-step" data-color="red" data-delta="1">+</button><em data-urn-prob="red">50%</em></div>
+          <div class="urn-row" data-color-row="blue"><i class="color-dot" style="--c:#3b82f6"></i><span>Blu</span><button class="urn-step" data-color="blue" data-delta="-1">−</button><b data-urn-count="blue">3</b><button class="urn-step" data-color="blue" data-delta="1">+</button><em data-urn-prob="blue">30%</em></div>
+          <div class="urn-row" data-color-row="green"><i class="color-dot" style="--c:#22c55e"></i><span>Verdi</span><button class="urn-step" data-color="green" data-delta="-1">−</button><b data-urn-count="green">2</b><button class="urn-step" data-color="green" data-delta="1">+</button><em data-urn-prob="green">20%</em></div>
+          <div class="urn-row" data-color-row="yellow"><i class="color-dot" style="--c:#facc15"></i><span>Gialle</span><button class="urn-step" data-color="yellow" data-delta="-1">−</button><b data-urn-count="yellow">0</b><button class="urn-step" data-color="yellow" data-delta="1">+</button><em data-urn-prob="yellow">0%</em></div>
+          <div class="urn-row" data-color-row="purple"><i class="color-dot" style="--c:#a855f7"></i><span>Viola</span><button class="urn-step" data-color="purple" data-delta="-1">−</button><b data-urn-count="purple">0</b><button class="urn-step" data-color="purple" data-delta="1">+</button><em data-urn-prob="purple">0%</em></div>
+          <div class="urn-row" data-color-row="orange"><i class="color-dot" style="--c:#f97316"></i><span>Arancioni</span><button class="urn-step" data-color="orange" data-delta="-1">−</button><b data-urn-count="orange">0</b><button class="urn-step" data-color="orange" data-delta="1">+</button><em data-urn-prob="orange">0%</em></div>
+        </div>
+        <div class="labelrow urn-mode-label"><span>Tipo di estrazione</span><span id="replacementLabel">con reintroduzione</span></div>
+        <div class="replacement-seg" id="replacementSeg">
+          <button class="active" data-replacement="1">CON reintroduzione</button>
+          <button data-replacement="0">SENZA reintroduzione</button>
+        </div>
+        <button class="smallbtn urn-reset" id="resetUrnBtn">↺ Ripristina urna</button>
+        <p class="urn-note" id="urnModeNote">La pallina estratta torna nell'urna: le probabilità restano costanti.</p>
       </div>
 
       <div class="tabs">
@@ -205,7 +265,7 @@
           <button data-sim="10000">10.000</button><button data-sim="50000">50.000</button><button data-sim="100000">100.000</button>
         </div>
         <div class="simrow"><input id="simN" type="number" min="1" max="1000000" value="1000" inputmode="numeric"><button class="secondary" id="simBtn">SIMULA</button></div>
-        <p style="font-size:11px;color:var(--muted);margin:8px 2px 0">La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.</p>
+        <p id="simNote" style="font-size:11px;color:var(--muted);margin:8px 2px 0">La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.</p>
       </div>
 
       <div style="height:14px"></div>
@@ -269,6 +329,8 @@
     <ul>
       <li><b>Dadi:</b> da 1 a 6 dadi a sei facce; la variabile osservata è la somma dei risultati.</li>
       <li><b>Monete:</b> da 1 a 6 monete; la variabile osservata è il numero di teste. Con una sola moneta le categorie sono CROCE e TESTA.</li>
+      <li><b>Palline:</b> costruisci un'urna scegliendo fino a 6 colori e da 0 a 20 palline per colore. Puoi estrarre con reintroduzione oppure senza reintrodurre la pallina.</li>
+      <li><b>Senza reintroduzione:</b> l'urna si svuota realmente e le probabilità del prossimo colore cambiano dopo ogni estrazione.</li>
       <li><b>Lanci manuali:</b> ogni prova aggiorna immediatamente istogramma e indici.</li>
       <li><b>Simulazione:</b> genera rapidamente da 1 a 1.000.000 di prove.</li>
       <li><b>Frequenze relative:</b> passa dai conteggi alle percentuali.</li>
@@ -303,12 +365,49 @@
 <script>
 (function(){
   "use strict";
-  var state={experiment:"dice",quantities:{dice:2,coins:1},results:[],lastOutcome:[],relative:false,theory:true,labels:true,sound:true,theme:"light"};
-  var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.from(document.querySelectorAll(s))};
+
+  var BALLS=[
+    {id:"red",name:"Rosso",plural:"Rosse",hex:"#ef4444"},
+    {id:"blue",name:"Blu",plural:"Blu",hex:"#3b82f6"},
+    {id:"green",name:"Verde",plural:"Verdi",hex:"#22c55e"},
+    {id:"yellow",name:"Giallo",plural:"Gialle",hex:"#facc15"},
+    {id:"purple",name:"Viola",plural:"Viola",hex:"#a855f7"},
+    {id:"orange",name:"Arancione",plural:"Arancioni",hex:"#f97316"}
+  ];
+
+  var state={
+    experiment:"dice",
+    quantities:{dice:2,coins:1},
+    results:[],
+    lastOutcome:[],
+    relative:false,
+    theory:true,
+    labels:true,
+    sound:true,
+    theme:"light",
+    urn:{
+      initial:{red:5,blue:3,green:2,yellow:0,purple:0,orange:0},
+      current:{red:5,blue:3,green:2,yellow:0,purple:0,orange:0},
+      replacement:true,
+      lastColor:null
+    }
+  };
+
+  var $=function(s){return document.querySelector(s)};
+  var $$=function(s){return Array.from(document.querySelectorAll(s))};
   var resultWrap=$("#resultWrap"),chart=$("#chart"),projectionChart=$("#projectionChart"),history=$("#history"),sumDisplay=$("#sumDisplay");
   var audioCtx=null;
 
   function quantity(){return state.quantities[state.experiment]}
+  function ballInfo(id){return BALLS.find(function(b){return b.id===id})}
+  function copyCounts(src){var out={};BALLS.forEach(function(b){out[b.id]=src[b.id]||0});return out}
+  function urnTotal(which){
+    var src=which==="initial"?state.urn.initial:state.urn.current;
+    return BALLS.reduce(function(s,b){return s+(src[b.id]||0)},0);
+  }
+  function activeBallIds(){return BALLS.filter(function(b){return (state.urn.initial[b.id]||0)>0}).map(function(b){return b.id})}
+  function chartHasTheory(){return state.theory && !(state.experiment==="balls"&&!state.urn.replacement)}
+
   function loadPrefs(){
     state.sound=localStorage.getItem("statistica-sound")!=="0";
     state.theme=localStorage.getItem("statistica-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
@@ -340,11 +439,47 @@
     var c=document.createElement("div");c.className="coin "+(v?"testa":"croce");c.style.transform="rotate("+(rot||0)+"deg)";
     c.textContent=v?"T":"C";c.title=v?"TESTA":"CROCE";return c;
   }
+  function renderUrnVisual(){
+    resultWrap.innerHTML="";
+    var wrap=document.createElement("div");wrap.className="urn-display";
+    var vessel=document.createElement("div");vessel.className="urn-vessel";
+    var balls=document.createElement("div");balls.className="urn-balls";
+    BALLS.forEach(function(info){
+      var n=state.urn.current[info.id]||0;
+      for(var i=0;i<n;i++){var dot=document.createElement("i");dot.className="mini-ball";dot.style.setProperty("--ball",info.hex);balls.appendChild(dot)}
+    });
+    vessel.appendChild(balls);wrap.appendChild(vessel);
+    var draw=document.createElement("div");draw.className="draw-zone";
+    if(state.urn.lastColor){
+      var info=ballInfo(state.urn.lastColor),big=document.createElement("div");big.className="drawn-ball pulse";big.style.setProperty("--ball",info.hex);draw.appendChild(big);
+      var lab=document.createElement("div");lab.className="drawn-label";lab.textContent=info.name.toUpperCase();draw.appendChild(lab);
+    }else{
+      var placeholder=document.createElement("div");placeholder.className="drawn-ball";placeholder.style.setProperty("--ball","var(--grid)");draw.appendChild(placeholder);
+      var txt=document.createElement("div");txt.className="drawn-label";txt.textContent="ESTRAZIONE";draw.appendChild(txt);
+    }
+    var rem=document.createElement("div");rem.className="urn-remaining";rem.textContent=urnTotal("current")+" nell'urna";draw.appendChild(rem);
+    wrap.appendChild(draw);resultWrap.appendChild(wrap);
+  }
   function showOutcome(vals,animate){
+    if(state.experiment==="balls"){renderUrnVisual();return}
     resultWrap.innerHTML="";
     vals.forEach(function(v,i){var el=state.experiment==="dice"?dieEl(v,((i%3)-1)*3):coinEl(v,((i%3)-1)*3);if(animate)el.classList.add("pulse");resultWrap.appendChild(el)});
   }
+
+  function weightedBallDraw(){
+    var total=urnTotal("current");if(total<=0)return null;
+    var r=Math.random()*total,acc=0,chosen=null;
+    for(var i=0;i<BALLS.length;i++){
+      var id=BALLS[i].id;acc+=state.urn.current[id]||0;
+      if(r<acc){chosen=id;break}
+    }
+    if(chosen&&!state.urn.replacement)state.urn.current[chosen]--;
+    return chosen;
+  }
   function trial(){
+    if(state.experiment==="balls"){
+      var id=weightedBallDraw();return id===null?null:{raw:[id],value:id};
+    }
     var q=quantity(),raw=[],value=0;
     if(state.experiment==="dice"){
       for(var i=0;i<q;i++){var v=1+Math.floor(Math.random()*6);raw.push(v);value+=v}
@@ -355,51 +490,71 @@
   }
   function resultText(value,simulated){
     var q=quantity();
+    if(state.experiment==="balls"){
+      var info=ballInfo(value);
+      return info.name.toUpperCase()+"<small>"+(state.urn.replacement?"pallina reintrodotta nell'urna":"pallina non reintrodotta")+"</small>";
+    }
     if(state.experiment==="dice")return value+"<small>"+(simulated?"ultimo lancio simulato":"somma dell'ultimo lancio")+"</small>";
     if(q===1)return (value===1?"TESTA":"CROCE")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
     return value+" "+(value===1?"TESTA":"TESTE")+" · "+(q-value)+" "+((q-value)===1?"CROCE":"CROCI")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
   }
   function oneRoll(){
-    var r=trial();state.lastOutcome=r.raw;state.results.push(r.value);showOutcome(r.raw,true);sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
+    if(state.experiment==="balls"&&urnTotal("current")===0){alert("L'urna è vuota. Premi “Ripristina urna” oppure azzera la serie.");return}
+    var r=trial();if(!r)return;
+    state.lastOutcome=r.raw;state.results.push(r.value);
+    if(state.experiment==="balls")state.urn.lastColor=r.value;
+    showOutcome(r.raw,true);sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
   }
   function simulate(n){
-    n=Math.max(1,Math.min(1000000,Math.floor(Number(n)||0)));state.results=new Array(n);var last=null;
-    for(var i=0;i<n;i++){var r=trial();state.results[i]=r.value;if(i===n-1)last=r}
-    state.lastOutcome=last.raw;showOutcome(last.raw,true);sumDisplay.innerHTML=resultText(last.value,true);beep("done");render();
+    n=Math.max(1,Math.min(1000000,Math.floor(Number(n)||0)));
+    state.results=[];state.lastOutcome=[];
+
+    if(state.experiment==="balls"){
+      state.urn.current=copyCounts(state.urn.initial);state.urn.lastColor=null;
+      var available=urnTotal("current");
+      if(available<=0){alert("Inserisci almeno una pallina nell'urna.");render();return}
+      if(!state.urn.replacement)n=Math.min(n,available);
+      var last=null;
+      for(var i=0;i<n;i++){var rb=trial();if(!rb)break;state.results.push(rb.value);last=rb}
+      if(last){state.lastOutcome=last.raw;state.urn.lastColor=last.value;sumDisplay.innerHTML=resultText(last.value,true)}
+      renderUrnVisual();beep("done");render();return;
+    }
+
+    state.results=new Array(n);var final=null;
+    for(var k=0;k<n;k++){var r=trial();state.results[k]=r.value;if(k===n-1)final=r}
+    state.lastOutcome=final.raw;showOutcome(final.raw,true);sumDisplay.innerHTML=resultText(final.value,true);beep("done");render();
   }
-  function choose(n,k){
-    if(k<0||k>n)return 0;k=Math.min(k,n-k);var r=1;
-    for(var i=1;i<=k;i++)r=r*(n-k+i)/i;return r;
-  }
+
+  function choose(n,k){if(k<0||k>n)return 0;k=Math.min(k,n-k);var r=1;for(var i=1;i<=k;i++)r=r*(n-k+i)/i;return r}
   function domain(){
+    if(state.experiment==="balls")return activeBallIds();
     var q=quantity(),out=[];
     if(state.experiment==="dice"){for(var s=q;s<=6*q;s++)out.push(s)}
     else{for(var h=0;h<=q;h++)out.push(h)}
     return out;
   }
   function theoreticalProbabilities(){
-    var q=quantity(),out={};
-    if(state.experiment==="coins"){
-      for(var h=0;h<=q;h++)out[h]=choose(q,h)/Math.pow(2,q);
+    var out={};
+    if(state.experiment==="balls"){
+      var total=urnTotal("initial");
+      activeBallIds().forEach(function(id){out[id]=total?(state.urn.initial[id]||0)/total:0});
       return out;
     }
+    var q=quantity();
+    if(state.experiment==="coins"){for(var h=0;h<=q;h++)out[h]=choose(q,h)/Math.pow(2,q);return out}
     var dist=[1];
     for(var d=0;d<q;d++){
       var next=new Array(dist.length+6).fill(0);
       for(var i=0;i<dist.length;i++)for(var face=1;face<=6;face++)next[i+face]+=dist[i];
       dist=next;
     }
-    var total=Math.pow(6,q);
-    for(var s=q;s<=6*q;s++)out[s]=(dist[s]||0)/total;
-    return out;
+    var total=Math.pow(6,q);for(var s=q;s<=6*q;s++)out[s]=(dist[s]||0)/total;return out;
   }
-  function counts(){
-    var out={};domain().forEach(function(v){out[v]=0});state.results.forEach(function(v){out[v]=(out[v]||0)+1});return out;
-  }
-  function fmt(x,d){
-    if(!Number.isFinite(x))return "—";return x.toLocaleString("it-IT",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d});
-  }
+  function counts(){var out={};domain().forEach(function(v){out[v]=0});state.results.forEach(function(v){out[v]=(out[v]||0)+1});return out}
+  function fmt(x,d){if(!Number.isFinite(x))return "—";return x.toLocaleString("it-IT",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
+
   function calcStats(){
+    if(state.experiment==="balls")return null;
     var n=state.results.length;if(!n)return null;
     var a=state.results.slice().sort(function(x,y){return x-y}),sum=a.reduce(function(x,y){return x+y},0),mean=sum/n;
     var med=n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2,c=counts(),maxC=0,modes=[];
@@ -407,68 +562,143 @@
     var variance=a.reduce(function(acc,x){var q=x-mean;return acc+q*q},0)/n;
     return {n:n,mean:mean,median:med,mode:modes.join(", "),min:a[0],max:a[n-1],range:a[n-1]-a[0],sd:Math.sqrt(variance)};
   }
-  function renderStats(){
-    var s=calcStats(),vals=s||{n:0,mean:NaN,median:NaN,mode:"—",min:NaN,max:NaN,range:NaN,sd:NaN};
-    $("[data-stat=n]").textContent=fmt(vals.n,0);$("[data-stat=mean]").textContent=s?fmt(vals.mean,2):"—";$("[data-stat=median]").textContent=s?fmt(vals.median,1):"—";$("[data-stat=mode]").textContent=s?vals.mode:"—";
-    ["min","max","range"].forEach(function(k){$("[data-stat="+k+"]").textContent=s?fmt(vals[k],0):"—"});$("[data-stat=sd]").textContent=s?fmt(vals.sd,2):"—";
+  function setStat(key,label,value){
+    var node=$("[data-stat="+key+"]");node.textContent=value;node.previousElementSibling.textContent=label;
   }
+  function renderStats(){
+    if(state.experiment==="balls"){
+      var c=counts(),ids=domain(),best=null,bestN=0,used=0;
+      ids.forEach(function(id){var n=c[id]||0;if(n>0)used++;if(n>bestN){bestN=n;best=id}});
+      setStat("n","Estrazioni",fmt(state.results.length,0));
+      setStat("mean","Più estratto",best?ballInfo(best).name:"—");
+      setStat("median","Frequenza max",best?fmt(bestN,0):"—");
+      setStat("mode","Colori estratti",fmt(used,0));
+      setStat("min","Palline iniziali",fmt(urnTotal("initial"),0));
+      setStat("max","Palline rimaste",fmt(urnTotal("current"),0));
+      setStat("range","Colori attivi",fmt(ids.length,0));
+      setStat("sd","Modalità",state.urn.replacement?"CON":"SENZA");
+      return;
+    }
+    var s=calcStats(),vals=s||{n:0,mean:NaN,median:NaN,mode:"—",min:NaN,max:NaN,range:NaN,sd:NaN};
+    setStat("n","Lanci",fmt(vals.n,0));setStat("mean","Media",s?fmt(vals.mean,2):"—");setStat("median","Mediana",s?fmt(vals.median,1):"—");setStat("mode","Moda",s?vals.mode:"—");
+    setStat("min","Minimo",s?fmt(vals.min,0):"—");setStat("max","Massimo",s?fmt(vals.max,0):"—");setStat("range","Range",s?fmt(vals.range,0):"—");setStat("sd","Dev. std.",s?fmt(vals.sd,2):"—");
+  }
+
   function historyLabel(v){
-    if(state.experiment==="dice")return String(v);if(quantity()===1)return v===1?"T":"C";return v+"T";
+    if(state.experiment==="balls")return ballInfo(v).name;
+    if(state.experiment==="dice")return String(v);
+    if(quantity()===1)return v===1?"T":"C";return v+"T";
   }
   function renderHistory(){
-    if(!state.results.length){history.innerHTML='<span style="color:var(--muted);font-size:12px">Nessun lancio ancora.</span>';return}
-    history.innerHTML="";state.results.slice(-16).reverse().forEach(function(v){var x=document.createElement("span");x.className="chip";x.textContent=historyLabel(v);history.appendChild(x)});
+    if(!state.results.length){history.innerHTML='<span style="color:var(--muted);font-size:12px">Nessuna prova ancora.</span>';return}
+    history.innerHTML="";
+    state.results.slice(-16).reverse().forEach(function(v){
+      var x=document.createElement("span");x.className="chip";
+      if(state.experiment==="balls"){x.classList.add("ball-chip");x.style.setProperty("--ball",ballInfo(v).hex)}
+      x.textContent=historyLabel(v);history.appendChild(x);
+    });
   }
   function xLabel(v){
+    if(state.experiment==="balls")return ballInfo(v).name;
     if(state.experiment==="coins"&&quantity()===1)return v===0?"CROCE":"TESTA";return String(v);
   }
-  function chartTitle(){return state.experiment==="dice"?"Distribuzione delle somme":"Distribuzione del numero di teste"}
-  function emptyMessage(){return state.experiment==="dice"?"Lancia i dadi per costruire l'istogramma.":"Lancia le monete per costruire l'istogramma."}
+  function chartTitle(){
+    if(state.experiment==="balls")return "Distribuzione dei colori estratti";
+    return state.experiment==="dice"?"Distribuzione delle somme":"Distribuzione del numero di teste";
+  }
+  function emptyMessage(){
+    if(state.experiment==="balls")return "Estrai una pallina per costruire l'istogramma.";
+    return state.experiment==="dice"?"Lancia i dadi per costruire l'istogramma.":"Lancia le monete per costruire l'istogramma.";
+  }
   function seriesDescription(){
     var n=state.results.length,q=quantity();
+    if(state.experiment==="balls")return fmt(n,0)+" estrazioni · "+(state.urn.replacement?"con reintroduzione":"senza reintroduzione");
     return state.experiment==="dice"?fmt(n,0)+" lanci · "+q+(q===1?" dado":" dadi"):fmt(n,0)+" lanci · "+q+(q===1?" moneta":" monete");
   }
-  function expectedValue(){var q=quantity();return state.experiment==="dice"?3.5*q:q/2}
+  function expectedText(){
+    if(state.experiment==="balls"){
+      return state.urn.replacement?"Probabilità teoriche = composizione dell'urna":"Le probabilità cambiano dopo ogni estrazione";
+    }
+    var q=quantity(),v=state.experiment==="dice"?3.5*q:q/2;
+    return "Valore atteso teorico: "+fmt(v,1);
+  }
 
   function renderChartInto(target){
     var n=state.results.length,obs=counts(),theory=theoreticalProbabilities(),values=[];
     domain().forEach(function(v){values.push({x:v,obs:state.relative?(n?obs[v]/n*100:0):obs[v],theory:state.relative?theory[v]*100:theory[v]*n})});
-    if(!n){target.innerHTML='<div class="empty-chart">I dati compariranno qui dopo il primo lancio.</div>';return}
-    var max=0;values.forEach(function(v){max=Math.max(max,v.obs,state.theory?v.theory:0)});if(max<=0)max=1;target.innerHTML="";
+    if(!n){target.innerHTML='<div class="empty-chart">I dati compariranno qui dopo la prima prova.</div>';return}
+    var showTheory=chartHasTheory(),max=0;
+    values.forEach(function(v){max=Math.max(max,v.obs,showTheory?v.theory:0)});if(max<=0)max=1;target.innerHTML="";
     values.forEach(function(v){
       var col=document.createElement("div"),slot=document.createElement("div");col.className="barcol";slot.className="barslot";
+      if(state.experiment==="balls"){col.classList.add("ball-bar");col.style.setProperty("--ball",ballInfo(v.x).hex)}
       var hO=v.obs/max*100,hT=v.theory/max*100;
-      if(state.theory){var t=document.createElement("div");t.className="bar-theory";t.style.height=hT+"%";t.title="Teorica: "+(state.relative?fmt(v.theory,2)+"%":fmt(v.theory,1));slot.appendChild(t)}
+      if(showTheory){var t=document.createElement("div");t.className="bar-theory";t.style.height=hT+"%";t.title="Teorica: "+(state.relative?fmt(v.theory,2)+"%":fmt(v.theory,1));slot.appendChild(t)}
       var b=document.createElement("div");b.className="bar-actual";b.style.height=hO+"%";b.title="Osservata: "+(state.relative?fmt(v.obs,2)+"%":fmt(v.obs,0));slot.appendChild(b);
       if(state.labels){var val=document.createElement("div");val.className="barvalue";val.style.setProperty("--h",hO+"%");val.textContent=state.relative?fmt(v.obs,1)+"%":fmt(v.obs,0);slot.appendChild(val)}
       var x=document.createElement("div");x.className="xlabel";x.textContent=xLabel(v.x);col.appendChild(slot);col.appendChild(x);target.appendChild(col);
     });
   }
   function syncProjectionButtons(){
-    $("#projRelativeBtn").classList.toggle("active",state.relative);$("#projTheoryBtn").classList.toggle("active",state.theory);$("#projLabelsBtn").classList.toggle("active",state.labels);
+    $("#projRelativeBtn").classList.toggle("active",state.relative);
+    $("#projTheoryBtn").classList.toggle("active",chartHasTheory());
+    $("#projTheoryBtn").disabled=state.experiment==="balls"&&!state.urn.replacement;
+    $("#projLabelsBtn").classList.toggle("active",state.labels);
   }
   function renderChart(){
-    $("#chartTitle").textContent=chartTitle();$("#projectionTitle").textContent=chartTitle();$("#theoryLegend").style.display=state.theory?"inline":"none";
+    $("#chartTitle").textContent=chartTitle();$("#projectionTitle").textContent=chartTitle();
+    $("#theoryLegend").style.display=chartHasTheory()?"inline":"none";
     $("#chartSubtitle").textContent=state.results.length?(state.relative?"Frequenze relative":"Frequenze assolute")+" · "+seriesDescription():emptyMessage();
-    $("#projectionSubtitle").textContent=state.results.length?(state.relative?"Frequenze relative":"Frequenze assolute")+" · "+seriesDescription()+" · valore atteso "+fmt(expectedValue(),1):emptyMessage();
+    $("#projectionSubtitle").textContent=state.results.length?(state.relative?"Frequenze relative":"Frequenze assolute")+" · "+seriesDescription()+" · "+expectedText():emptyMessage();
     renderChartInto(chart);if($("#projectionDialog").open)renderChartInto(projectionChart);syncProjectionButtons();
   }
+
+  function renderUrnConfig(){
+    var totalCurrent=urnTotal("current"),totalInitial=urnTotal("initial");
+    $("#urnTotalLabel").textContent=totalInitial+" "+(totalInitial===1?"pallina":"palline");
+    BALLS.forEach(function(info){
+      $("[data-urn-count="+info.id+"]").textContent=state.urn.initial[info.id]||0;
+      var basis=state.urn.replacement?state.urn.initial:state.urn.current,total=state.urn.replacement?totalInitial:totalCurrent;
+      var p=total?((basis[info.id]||0)/total*100):0;
+      $("[data-urn-prob="+info.id+"]").textContent=fmt(p,0)+"%";
+      var row=$("[data-color-row="+info.id+"]");row.style.opacity=(state.urn.initial[info.id]||0)>0?"1":".55";
+    });
+    $$("#replacementSeg button").forEach(function(b){b.classList.toggle("active",(b.dataset.replacement==="1")===state.urn.replacement)});
+    $("#replacementLabel").textContent=state.urn.replacement?"con reintroduzione":"senza reintroduzione";
+    $("#urnModeNote").textContent=state.urn.replacement
+      ?"La pallina estratta torna nell'urna: le probabilità restano costanti."
+      :"La pallina estratta non torna nell'urna: quantità e probabilità cambiano dopo ogni estrazione.";
+  }
+
   function updateExperimentUI(){
-    var q=quantity();
+    var q=quantity(),isBalls=state.experiment==="balls";
     $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
+    $("#standardQuantityField").hidden=isBalls;$("#ballsConfig").hidden=!isBalls;
     $$("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
+    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":"Lanci manuali";
+    $("#simNote").textContent=isBalls
+      ?(state.urn.replacement?"La simulazione avvia una nuova serie di estrazioni indipendenti.":"Senza reintroduzione la simulazione si ferma quando l'urna è vuota.")
+      :"La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.";
+
     if(state.experiment==="dice"){
       $("#quantityTitle").textContent="Numero di dadi";$("#quantityLabel").textContent=q+(q===1?" dado":" dadi");$("#rollBtn").textContent="🎲 LANCIA I DADI";$(".brandmark").textContent="🎲";
-    }else{
+    }else if(state.experiment==="coins"){
       $("#quantityTitle").textContent="Numero di monete";$("#quantityLabel").textContent=q+(q===1?" moneta":" monete");$("#rollBtn").textContent="🪙 LANCIA LE MONETE";$(".brandmark").textContent="🪙";
+    }else{
+      $("#rollBtn").textContent=urnTotal("current")>0?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";$("#rollBtn").disabled=urnTotal("current")===0;$(".brandmark").textContent="🔴";renderUrnConfig();
     }
   }
   function render(){
-    updateExperimentUI();renderHistory();renderChart();renderStats();$("#seriesInfo").textContent=seriesDescription();$("#expectedInfo").textContent="Valore atteso teorico: "+fmt(expectedValue(),1);
+    updateExperimentUI();renderHistory();renderChart();renderStats();$("#seriesInfo").textContent=seriesDescription();$("#expectedInfo").textContent=expectedText();
+    if(state.experiment==="balls")renderUrnVisual();
   }
   function resetSeries(sound){
-    state.results=[];state.lastOutcome=[];resultWrap.innerHTML="";
-    sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
+    state.results=[];state.lastOutcome=[];
+    if(state.experiment==="balls"){
+      state.urn.current=copyCounts(state.urn.initial);state.urn.lastColor=null;renderUrnVisual();sumDisplay.innerHTML="—<small>nessuna pallina estratta</small>";
+    }else{
+      resultWrap.innerHTML="";sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
+    }
     if(sound)beep("reset");render();
   }
   function setQuantity(n){state.quantities[state.experiment]=n;resetSeries(false)}
@@ -476,21 +706,50 @@
     if(exp===state.experiment)return;
     if(state.results.length&&!confirm("Cambiare esperimento? La serie corrente verrà azzerata."))return;
     state.experiment=exp;resetSeries(false);
-    if(state.experiment==="dice"&&!state.lastOutcome.length)showOutcome([1,6],false);
-    if(state.experiment==="coins"&&!state.lastOutcome.length)showOutcome([1],false);
+    if(exp==="dice")showOutcome([1,6],false);
+    if(exp==="coins")showOutcome([1],false);
+    if(exp==="balls")renderUrnVisual();
   }
+  function updateUrnCount(id,delta){
+    var old=state.urn.initial[id]||0,next=Math.max(0,Math.min(20,old+delta));
+    if(next===old)return;
+    if(state.results.length&&!confirm("Modificare l'urna? La serie corrente verrà azzerata."))return;
+    state.urn.initial[id]=next;state.urn.current=copyCounts(state.urn.initial);state.results=[];state.urn.lastColor=null;
+    render();
+  }
+  function setReplacement(value){
+    if(value===state.urn.replacement)return;
+    if(state.results.length&&!confirm("Cambiare tipo di estrazione? La serie corrente verrà azzerata."))return;
+    state.urn.replacement=value;state.urn.current=copyCounts(state.urn.initial);state.results=[];state.urn.lastColor=null;render();
+  }
+
   function exportCSV(){
-    if(!state.results.length){alert("Prima crea una serie di lanci.");return}
-    var c=counts(),t=theoreticalProbabilities(),variable=state.experiment==="dice"?"somma":"numero_teste";
-    var rows=[variable+";frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento"];
-    domain().forEach(function(v){rows.push([v,c[v],(c[v]/state.results.length*100).toFixed(4),(t[v]*100).toFixed(4)].join(";"))});
+    if(!state.results.length){alert("Prima crea una serie di prove.");return}
+    var c=counts(),t=theoreticalProbabilities(),rows=[],kind;
+    if(state.experiment==="balls"){
+      rows.push("colore;quantita_iniziale;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");
+      domain().forEach(function(id){rows.push([ballInfo(id).name,state.urn.initial[id],c[id],(c[id]/state.results.length*100).toFixed(4),(t[id]*100).toFixed(4)].join(";"))});
+      kind="palline";
+    }else{
+      var variable=state.experiment==="dice"?"somma":"numero_teste";
+      rows.push(variable+";frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
+      domain().forEach(function(v){rows.push([v,c[v],(c[v]/state.results.length*100).toFixed(4),(t[v]*100).toFixed(4)].join(";"))});
+      kind=state.experiment==="dice"?"dadi":"monete";
+    }
     var blob=new Blob(["\ufeff"+rows.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);
-    a.download="STATISTICA_"+(state.experiment==="dice"?"dadi":"monete")+"_"+quantity()+"_"+state.results.length+"lanci.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+    a.download="STATISTICA_"+kind+"_"+state.results.length+"prove.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
   }
 
   $$(".experiment-card").forEach(function(b){b.addEventListener("click",function(){setExperiment(b.dataset.experiment)})});
   $("#quantitySeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setQuantity(Number(b.dataset.n))});
-  $$(".tabs button").forEach(function(b){b.addEventListener("click",function(){$$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");$$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active")})});
+  $("#urnConfig").addEventListener("click",function(e){var b=e.target.closest(".urn-step");if(b)updateUrnCount(b.dataset.color,Number(b.dataset.delta))});
+  $("#replacementSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setReplacement(b.dataset.replacement==="1")});
+  $("#resetUrnBtn").addEventListener("click",function(){resetSeries(true)});
+
+  $$(".tabs button").forEach(function(b){b.addEventListener("click",function(){
+    $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
+    $$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active");
+  })});
   $("#rollBtn").addEventListener("click",oneRoll);
   $$(".quick button").forEach(function(b){b.addEventListener("click",function(){$("#simN").value=b.dataset.sim})});
   $("#simBtn").addEventListener("click",function(){simulate($("#simN").value)});
@@ -498,7 +757,7 @@
   $("#theoryToggle").addEventListener("change",function(e){state.theory=e.target.checked;renderChart()});
   $("#labelsToggle").addEventListener("change",function(e){state.labels=e.target.checked;renderChart()});
   $("#projRelativeBtn").addEventListener("click",function(){state.relative=!state.relative;$("#relativeToggle").checked=state.relative;renderChart()});
-  $("#projTheoryBtn").addEventListener("click",function(){state.theory=!state.theory;$("#theoryToggle").checked=state.theory;renderChart()});
+  $("#projTheoryBtn").addEventListener("click",function(){if(state.experiment==="balls"&&!state.urn.replacement)return;state.theory=!state.theory;$("#theoryToggle").checked=state.theory;renderChart()});
   $("#projLabelsBtn").addEventListener("click",function(){state.labels=!state.labels;$("#labelsToggle").checked=state.labels;renderChart()});
   $("#projectBtn").addEventListener("click",function(){$("#projectionDialog").showModal();renderChartInto(projectionChart);renderChart()});
   $("#closeProjection").addEventListener("click",function(){$("#projectionDialog").close()});
