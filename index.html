@@ -44,11 +44,13 @@
     .layout{display:grid;grid-template-columns:350px minmax(0,1fr);gap:16px}
     .panel{background:var(--panel);backdrop-filter:blur(15px);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:var(--radius);padding:18px}
     .section-title{font-weight:800;letter-spacing:-.02em;margin:0 0 12px;font-size:17px}
-    .mode-card{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;border:1px solid var(--accent);background:linear-gradient(135deg,rgba(41,98,255,.10),rgba(20,184,166,.07));border-radius:18px;padding:13px;margin-bottom:12px}
-    .mode-card .emoji{font-size:34px}.mode-card strong{display:block;font-size:16px}.mode-card span{font-size:12px;color:var(--muted)}
-    .badge{font-size:11px!important;color:var(--accent)!important;font-weight:800;border:1px solid currentColor;padding:4px 7px;border-radius:999px}
-    .future{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:18px}
-    .future div{border:1px dashed var(--line);border-radius:14px;padding:10px;text-align:center;color:var(--muted);font-size:12px}
+    .experiment-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+    .mode-card{display:grid;grid-template-columns:42px 1fr;gap:9px;align-items:center;width:100%;text-align:left;color:var(--text);cursor:pointer;border:1px solid var(--line);background:var(--panel2);border-radius:18px;padding:11px;transition:.16s ease}
+    .mode-card:hover{transform:translateY(-1px);border-color:var(--accent)}
+    .mode-card.active{border-color:var(--accent);background:linear-gradient(135deg,rgba(41,98,255,.12),rgba(20,184,166,.08));box-shadow:0 7px 18px rgba(41,98,255,.10)}
+    .mode-card .emoji{font-size:30px;text-align:center}.mode-card strong{display:block;font-size:14px}.mode-card span{font-size:11px;color:var(--muted)}
+    .future{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:18px}
+    .future div{border:1px dashed var(--line);border-radius:14px;padding:8px 4px;text-align:center;color:var(--muted);font-size:11px}
     .future b{display:block;font-size:21px;margin-bottom:2px}
     .field{margin:14px 0}
     .labelrow{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;font-size:13px;font-weight:750}
@@ -82,6 +84,8 @@
     .die{width:64px;height:64px;border-radius:15px;background:linear-gradient(145deg,#fff,#e7edf7);box-shadow:inset 0 -3px 7px rgba(20,35,55,.10),0 8px 16px rgba(20,35,55,.15);display:grid;grid-template:repeat(3,1fr)/repeat(3,1fr);padding:8px;transform:rotate(var(--rot,0deg));transition:transform .25s}
     html[data-theme="dark"] .die{background:linear-gradient(145deg,#f8fbff,#cfd8e7)}
     .pip{width:10px;height:10px;background:#122035;border-radius:50%;place-self:center}
+    .coin{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-size:24px;font-weight:950;color:#553600;border:3px solid #c88d14;background:radial-gradient(circle at 33% 28%,#fff4ad 0,#ffd557 34%,#e8a51d 72%,#b87508 100%);box-shadow:inset 0 0 0 3px rgba(255,255,255,.28),inset 0 0 0 7px rgba(119,72,0,.10),0 8px 16px rgba(20,35,55,.18);transition:transform .25s}
+    .coin.croce{color:#eef5ff;border-color:#8693a4;background:radial-gradient(circle at 33% 28%,#ffffff 0,#d9e0e8 38%,#a6b1bf 72%,#778493 100%)}
     .sum{font-size:29px;font-weight:950;letter-spacing:-.04em;margin-top:12px}
     .sum small{font-size:12px;color:var(--muted);font-weight:700;display:block;letter-spacing:0}
     .history-title{font-size:12px;color:var(--muted);font-weight:800;margin-bottom:8px}
@@ -108,7 +112,26 @@
     .stat .k{font-size:11px;color:var(--muted);font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .stat .v{font-size:19px;font-weight:950;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .bottom-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+    .chart-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .project-btn{border:1px solid var(--accent);background:var(--panel2);color:var(--accent);cursor:pointer;border-radius:12px;padding:8px 11px;font-size:12px;font-weight:900}
     dialog{border:1px solid var(--line);border-radius:22px;background:var(--panel2);color:var(--text);width:min(650px,calc(100vw - 28px));box-shadow:0 24px 80px rgba(0,0,0,.35);padding:0}
+    .projection-dialog{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;border:0;border-radius:0;background:var(--bg);padding:0;overflow:hidden}
+    .projection-shell{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;padding:18px 22px 22px}
+    .projection-head{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap}
+    .projection-head h2{font-size:clamp(25px,4vw,44px);margin:0;letter-spacing:-.035em}
+    .projection-head p{margin:4px 0 0;color:var(--muted);font-size:clamp(13px,1.5vw,19px)}
+    .projection-tools{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+    .projection-toggle{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:13px;padding:10px 12px;font-weight:850;cursor:pointer}
+    .projection-toggle.active{background:var(--accent);border-color:var(--accent);color:white}
+    .projection-close{width:44px;height:44px;border-radius:14px;border:1px solid var(--line);background:var(--panel2);color:var(--text);font-size:20px;cursor:pointer}
+    .projection-body{min-height:0;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:var(--shadow)}
+    .projection-dialog .chart-scroll{height:100%;overflow:auto}
+    .projection-dialog .chart{height:100%;min-height:430px;min-width:700px;padding-top:22px}
+    .projection-dialog .barslot{height:calc(100% - 58px)}
+    .projection-dialog .barvalue{font-size:clamp(13px,1.6vw,22px);bottom:calc(var(--h,0%) + 7px)}
+    .projection-dialog .xlabel{font-size:clamp(15px,1.8vw,24px);padding-top:10px}
+    .projection-dialog .bar-actual{width:56%;border-radius:10px 10px 3px 3px}
+    .projection-dialog .bar-theory{width:84%;border-radius:10px 10px 3px 3px}
     dialog::backdrop{background:rgba(0,0,0,.45);backdrop-filter:blur(3px)}
     .modal{padding:21px}.modal h2{margin:0 0 10px}.modal p,.modal li{line-height:1.5;color:var(--muted)}.modal .close{float:right}
     .foot{font-size:11px;color:var(--muted);text-align:center;padding:4px}
@@ -122,7 +145,8 @@
       .app{padding-left:10px;padding-right:10px}.panel{padding:14px}.brandmark{width:46px;height:46px;font-size:26px}
       .subtitle{display:none}.toolbar{gap:5px}.iconbtn{width:38px;height:38px}.future{display:none}
       .seg{gap:4px}.seg button{padding:9px 0}.chart{height:280px}.barslot{height:225px}.stats{grid-template-columns:repeat(2,1fr)}
-      .die{width:55px;height:55px}.pip{width:9px;height:9px}.dice-wrap{gap:7px}.legend{width:100%}
+      .die,.coin{width:55px;height:55px}.pip{width:9px;height:9px}.dice-wrap{gap:7px}.legend{width:100%}
+      .projection-shell{padding:10px}.projection-dialog .chart{min-width:620px;min-height:360px}
     }
   </style>
 </head>
@@ -144,16 +168,21 @@
   <div class="layout">
     <aside class="panel">
       <h2 class="section-title">Esperimento</h2>
-      <div class="mode-card">
-        <div class="emoji">🎲</div><div><strong>Dadi da gioco</strong><span>Dadi a 6 facce</span></div><span class="badge">ATTIVO</span>
+      <div class="experiment-grid">
+        <button class="mode-card experiment-card active" data-experiment="dice">
+          <div class="emoji">🎲</div><div><strong>Dadi</strong><span>Somma dei risultati</span></div>
+        </button>
+        <button class="mode-card experiment-card" data-experiment="coins">
+          <div class="emoji">🪙</div><div><strong>Monete</strong><span>Numero di teste</span></div>
+        </button>
       </div>
       <div class="future">
-        <div><b>🪙</b>Monete</div><div><b>🃏</b>Carte</div><div><b>🔴</b>Palline</div><div><b>🎡</b>Roulette</div>
+        <div><b>🃏</b>Carte</div><div><b>🔴</b>Palline</div><div><b>🎡</b>Roulette</div>
       </div>
 
       <div class="field">
-        <div class="labelrow"><span>Numero di dadi</span><span id="diceLabel">2 dadi</span></div>
-        <div class="seg" id="diceSeg">
+        <div class="labelrow"><span id="quantityTitle">Numero di dadi</span><span id="quantityLabel">2 dadi</span></div>
+        <div class="seg" id="quantitySeg">
           <button data-n="1">1</button><button class="active" data-n="2">2</button><button data-n="3">3</button>
           <button data-n="4">4</button><button data-n="5">5</button><button data-n="6">6</button>
         </div>
@@ -188,7 +217,7 @@
     <main class="maincol">
       <div class="topstat">
         <section class="panel dice-stage">
-          <div class="dice-wrap" id="diceWrap"></div>
+          <div class="dice-wrap" id="resultWrap"></div>
           <div class="sum" id="sumDisplay">—<small>somma dell'ultimo lancio</small></div>
         </section>
         <section class="panel">
@@ -196,15 +225,18 @@
           <div class="history" id="history"><span style="color:var(--muted);font-size:12px">Nessun lancio ancora.</span></div>
           <div style="height:12px"></div>
           <div class="charthead" style="margin:0">
-            <div><h2 style="font-size:17px">Serie corrente</h2><p id="seriesInfo">0 lanci · 2 dadi</p></div>
+            <div><h2 style="font-size:17px">Serie corrente</h2><p id="seriesInfo">0 lanci · 2 dadi</p><p id="expectedInfo">Valore atteso teorico: 7</p></div>
           </div>
         </section>
       </div>
 
       <section class="panel">
         <div class="charthead">
-          <div><h2>Distribuzione delle somme</h2><p id="chartSubtitle">Lancia i dadi per costruire l'istogramma.</p></div>
-          <div class="legend"><span><i class="dot actual"></i>osservata</span><span id="theoryLegend"><i class="dot theory"></i>teorica</span></div>
+          <div><h2 id="chartTitle">Distribuzione delle somme</h2><p id="chartSubtitle">Lancia i dadi per costruire l'istogramma.</p></div>
+          <div class="chart-actions">
+            <div class="legend"><span><i class="dot actual"></i>osservata</span><span id="theoryLegend"><i class="dot theory"></i>teorica</span></div>
+            <button class="project-btn" id="projectBtn">⛶ PROIETTA</button>
+          </div>
         </div>
         <div class="chart-scroll"><div class="chart" id="chart"><div class="empty-chart">I dati compariranno qui dopo il primo lancio.</div></div></div>
       </section>
@@ -232,35 +264,55 @@
 <dialog id="infoDialog">
   <div class="modal">
     <button class="iconbtn close" id="closeInfo">✕</button>
-    <h2>STATISTICA! – Dadi</h2>
-    <p>Un laboratorio per osservare come una distribuzione sperimentale prende forma aumentando il numero delle prove.</p>
+    <h2>STATISTICA!</h2>
+    <p>Laboratorio per osservare come le distribuzioni sperimentali prendono forma aumentando il numero delle prove.</p>
     <ul>
-      <li><b>Lanci manuali:</b> lancia uno o più dadi e osserva l'istogramma aggiornarsi dopo ogni prova.</li>
-      <li><b>Simulazione:</b> genera rapidamente da 1 a 1.000.000 di lanci.</li>
-      <li>Con più dadi viene registrata la <b>somma</b> dei valori ottenuti.</li>
+      <li><b>Dadi:</b> da 1 a 6 dadi a sei facce; la variabile osservata è la somma dei risultati.</li>
+      <li><b>Monete:</b> da 1 a 6 monete; la variabile osservata è il numero di teste. Con una sola moneta le categorie sono CROCE e TESTA.</li>
+      <li><b>Lanci manuali:</b> ogni prova aggiorna immediatamente istogramma e indici.</li>
+      <li><b>Simulazione:</b> genera rapidamente da 1 a 1.000.000 di prove.</li>
       <li><b>Frequenze relative:</b> passa dai conteggi alle percentuali.</li>
-      <li><b>Confronto teorico:</b> sovrappone la distribuzione di probabilità esatta attesa.</li>
-      <li>Gli indici mostrati sono media, mediana, moda, minimo, massimo, range e deviazione standard della serie.</li>
-      <li><b>Esporta CSV</b> salva la tabella delle frequenze osservate e teoriche.</li>
+      <li><b>Confronto teorico:</b> sovrappone la distribuzione esatta attesa; per le monete è la distribuzione binomiale con p = 0,5.</li>
+      <li><b>PROIETTA:</b> apre l'istogramma in una vista molto più grande, pensata per LIM e proiezione in classe.</li>
+      <li><b>Esporta CSV:</b> salva frequenze osservate e probabilità teoriche.</li>
     </ul>
-    <p><b>Idea didattica:</b> prova prima 10 lanci, poi 100, 1.000 e 100.000. Quanto deve crescere il campione perché il profilo osservato inizi ad assomigliare a quello teorico?</p>
-    <p style="font-size:12px">Questa è la prima modalità di STATISTICA!: l'architettura è predisposta per future esperienze con monete, carte, palline colorate, roulette e altro.</p>
+    <p><b>Idea didattica:</b> confronta 10, 100, 1.000 e 100.000 prove e osserva come la distribuzione sperimentale si avvicina a quella teorica.</p>
+  </div>
+</dialog>
+
+<dialog id="projectionDialog" class="projection-dialog">
+  <div class="projection-shell">
+    <div class="projection-head">
+      <div>
+        <h2 id="projectionTitle">Distribuzione delle somme</h2>
+        <p id="projectionSubtitle">Istogramma in modalità proiezione</p>
+      </div>
+      <div class="projection-tools">
+        <button class="projection-toggle" id="projRelativeBtn">%</button>
+        <button class="projection-toggle active" id="projTheoryBtn">TEORIA</button>
+        <button class="projection-toggle active" id="projLabelsBtn">VALORI</button>
+        <button class="projection-close" id="closeProjection" title="Chiudi">✕</button>
+      </div>
+    </div>
+    <div class="projection-body">
+      <div class="chart-scroll"><div class="chart" id="projectionChart"><div class="empty-chart">I dati compariranno qui dopo il primo lancio.</div></div></div>
+    </div>
   </div>
 </dialog>
 
 <script>
 (function(){
   "use strict";
-  var state={dice:2,results:[],lastDice:[],relative:false,theory:true,labels:true,sound:true,theme:"light"};
+  var state={experiment:"dice",quantities:{dice:2,coins:1},results:[],lastOutcome:[],relative:false,theory:true,labels:true,sound:true,theme:"light"};
   var $=function(s){return document.querySelector(s)}, $$=function(s){return Array.from(document.querySelectorAll(s))};
-  var diceWrap=$("#diceWrap"), chart=$("#chart"), history=$("#history"), sumDisplay=$("#sumDisplay");
+  var resultWrap=$("#resultWrap"),chart=$("#chart"),projectionChart=$("#projectionChart"),history=$("#history"),sumDisplay=$("#sumDisplay");
   var audioCtx=null;
 
+  function quantity(){return state.quantities[state.experiment]}
   function loadPrefs(){
     state.sound=localStorage.getItem("statistica-sound")!=="0";
-    state.theme=localStorage.getItem("statistica-theme") || (matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
-    applyTheme();
-    $("#soundBtn").textContent=state.sound?"🔊":"🔇";
+    state.theme=localStorage.getItem("statistica-theme")||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light");
+    applyTheme();$("#soundBtn").textContent=state.sound?"🔊":"🔇";
   }
   function applyTheme(){
     document.documentElement.dataset.theme=state.theme;
@@ -273,63 +325,79 @@
       audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();
       var o=audioCtx.createOscillator(),g=audioCtx.createGain();
       o.type="sine";o.frequency.value=kind==="roll"?420:kind==="reset"?260:620;
-      g.gain.setValueAtTime(.0001,audioCtx.currentTime);
-      g.gain.exponentialRampToValueAtTime(.07,audioCtx.currentTime+.01);
-      g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.12);
-      o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.13);
+      g.gain.setValueAtTime(.0001,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(.08,audioCtx.currentTime+.01);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+.13);
+      o.connect(g);g.connect(audioCtx.destination);o.start();o.stop(audioCtx.currentTime+.14);
     }catch(e){}
   }
 
-  var pipMap={
-    1:[[2,2]],2:[[1,1],[3,3]],3:[[1,1],[2,2],[3,3]],4:[[1,1],[1,3],[3,1],[3,3]],
-    5:[[1,1],[1,3],[2,2],[3,1],[3,3]],6:[[1,1],[1,3],[2,1],[2,3],[3,1],[3,3]]
-  };
+  var pipMap={1:[[2,2]],2:[[1,1],[3,3]],3:[[1,1],[2,2],[3,3]],4:[[1,1],[1,3],[3,1],[3,3]],5:[[1,1],[1,3],[2,2],[3,1],[3,3]],6:[[1,1],[1,3],[2,1],[2,3],[3,1],[3,3]]};
   function dieEl(v,rot){
     var d=document.createElement("div");d.className="die";d.style.setProperty("--rot",(rot||0)+"deg");
     pipMap[v].forEach(function(p){var x=document.createElement("i");x.className="pip";x.style.gridRow=p[0];x.style.gridColumn=p[1];d.appendChild(x)});
     return d;
   }
-  function showDice(vals,animate){
-    diceWrap.innerHTML="";
-    vals.forEach(function(v,i){var d=dieEl(v,((i%3)-1)*3);if(animate)d.classList.add("pulse");diceWrap.appendChild(d)});
+  function coinEl(v,rot){
+    var c=document.createElement("div");c.className="coin "+(v?"testa":"croce");c.style.transform="rotate("+(rot||0)+"deg)";
+    c.textContent=v?"T":"C";c.title=v?"TESTA":"CROCE";return c;
+  }
+  function showOutcome(vals,animate){
+    resultWrap.innerHTML="";
+    vals.forEach(function(v,i){var el=state.experiment==="dice"?dieEl(v,((i%3)-1)*3):coinEl(v,((i%3)-1)*3);if(animate)el.classList.add("pulse");resultWrap.appendChild(el)});
+  }
+  function trial(){
+    var q=quantity(),raw=[],value=0;
+    if(state.experiment==="dice"){
+      for(var i=0;i<q;i++){var v=1+Math.floor(Math.random()*6);raw.push(v);value+=v}
+    }else{
+      for(var j=0;j<q;j++){var head=Math.random()<.5?1:0;raw.push(head);value+=head}
+    }
+    return {raw:raw,value:value};
+  }
+  function resultText(value,simulated){
+    var q=quantity();
+    if(state.experiment==="dice")return value+"<small>"+(simulated?"ultimo lancio simulato":"somma dell'ultimo lancio")+"</small>";
+    if(q===1)return (value===1?"TESTA":"CROCE")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
+    return value+" "+(value===1?"TESTA":"TESTE")+" · "+(q-value)+" "+((q-value)===1?"CROCE":"CROCI")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
   }
   function oneRoll(){
-    var vals=[],sum=0;
-    for(var i=0;i<state.dice;i++){var v=1+Math.floor(Math.random()*6);vals.push(v);sum+=v}
-    state.lastDice=vals;state.results.push(sum);
-    showDice(vals,true);sumDisplay.innerHTML=sum+"<small>somma dell'ultimo lancio</small>";beep("roll");render();
+    var r=trial();state.lastOutcome=r.raw;state.results.push(r.value);showOutcome(r.raw,true);sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
   }
   function simulate(n){
-    n=Math.max(1,Math.min(1000000,Math.floor(Number(n)||0)));
-    state.results=new Array(n);
-    var last=[];
-    for(var i=0;i<n;i++){
-      var sum=0,vals=[];
-      for(var j=0;j<state.dice;j++){var v=1+Math.floor(Math.random()*6);sum+=v;if(i===n-1)vals.push(v)}
-      state.results[i]=sum;if(i===n-1)last=vals;
-    }
-    state.lastDice=last;showDice(last,true);
-    sumDisplay.innerHTML=state.results[n-1]+"<small>ultimo lancio simulato</small>";
-    beep("done");render();
+    n=Math.max(1,Math.min(1000000,Math.floor(Number(n)||0)));state.results=new Array(n);var last=null;
+    for(var i=0;i<n;i++){var r=trial();state.results[i]=r.value;if(i===n-1)last=r}
+    state.lastOutcome=last.raw;showOutcome(last.raw,true);sumDisplay.innerHTML=resultText(last.value,true);beep("done");render();
   }
-  function theoreticalCounts(){
+  function choose(n,k){
+    if(k<0||k>n)return 0;k=Math.min(k,n-k);var r=1;
+    for(var i=1;i<=k;i++)r=r*(n-k+i)/i;return r;
+  }
+  function domain(){
+    var q=quantity(),out=[];
+    if(state.experiment==="dice"){for(var s=q;s<=6*q;s++)out.push(s)}
+    else{for(var h=0;h<=q;h++)out.push(h)}
+    return out;
+  }
+  function theoreticalProbabilities(){
+    var q=quantity(),out={};
+    if(state.experiment==="coins"){
+      for(var h=0;h<=q;h++)out[h]=choose(q,h)/Math.pow(2,q);
+      return out;
+    }
     var dist=[1];
-    for(var d=0;d<state.dice;d++){
+    for(var d=0;d<q;d++){
       var next=new Array(dist.length+6).fill(0);
       for(var i=0;i<dist.length;i++)for(var face=1;face<=6;face++)next[i+face]+=dist[i];
       dist=next;
     }
-    var total=Math.pow(6,state.dice),out={};
-    for(var s=state.dice;s<=6*state.dice;s++)out[s]=(dist[s]||0)/total;
+    var total=Math.pow(6,q);
+    for(var s=q;s<=6*q;s++)out[s]=(dist[s]||0)/total;
     return out;
   }
   function counts(){
-    var out={};for(var s=state.dice;s<=6*state.dice;s++)out[s]=0;
-    state.results.forEach(function(v){out[v]=(out[v]||0)+1});return out;
+    var out={};domain().forEach(function(v){out[v]=0});state.results.forEach(function(v){out[v]=(out[v]||0)+1});return out;
   }
   function fmt(x,d){
-    if(!Number.isFinite(x))return "—";
-    return x.toLocaleString("it-IT",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d});
+    if(!Number.isFinite(x))return "—";return x.toLocaleString("it-IT",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d});
   }
   function calcStats(){
     var n=state.results.length;if(!n)return null;
@@ -341,69 +409,99 @@
   }
   function renderStats(){
     var s=calcStats(),vals=s||{n:0,mean:NaN,median:NaN,mode:"—",min:NaN,max:NaN,range:NaN,sd:NaN};
-    $("[data-stat=n]").textContent=fmt(vals.n,0);$("[data-stat=mean]").textContent=s?fmt(vals.mean,2):"—";
-    $("[data-stat=median]").textContent=s?fmt(vals.median,1):"—";$("[data-stat=mode]").textContent=s?vals.mode:"—";
-    ["min","max","range"].forEach(function(k){$("[data-stat="+k+"]").textContent=s?fmt(vals[k],0):"—"});
-    $("[data-stat=sd]").textContent=s?fmt(vals.sd,2):"—";
+    $("[data-stat=n]").textContent=fmt(vals.n,0);$("[data-stat=mean]").textContent=s?fmt(vals.mean,2):"—";$("[data-stat=median]").textContent=s?fmt(vals.median,1):"—";$("[data-stat=mode]").textContent=s?vals.mode:"—";
+    ["min","max","range"].forEach(function(k){$("[data-stat="+k+"]").textContent=s?fmt(vals[k],0):"—"});$("[data-stat=sd]").textContent=s?fmt(vals.sd,2):"—";
+  }
+  function historyLabel(v){
+    if(state.experiment==="dice")return String(v);if(quantity()===1)return v===1?"T":"C";return v+"T";
   }
   function renderHistory(){
     if(!state.results.length){history.innerHTML='<span style="color:var(--muted);font-size:12px">Nessun lancio ancora.</span>';return}
-    history.innerHTML="";
-    state.results.slice(-16).reverse().forEach(function(v){var x=document.createElement("span");x.className="chip";x.textContent=v;history.appendChild(x)});
+    history.innerHTML="";state.results.slice(-16).reverse().forEach(function(v){var x=document.createElement("span");x.className="chip";x.textContent=historyLabel(v);history.appendChild(x)});
   }
-  function renderChart(){
-    var n=state.results.length,obs=counts(),theory=theoreticalCounts(),values=[];
-    for(var s=state.dice;s<=6*state.dice;s++){
-      var observed=state.relative?(n?obs[s]/n*100:0):obs[s];
-      var expected=state.relative?theory[s]*100:theory[s]*n;
-      values.push({s:s,obs:observed,theory:expected});
-    }
-    $("#theoryLegend").style.display=state.theory?"inline":"none";
-    if(!n){chart.innerHTML='<div class="empty-chart">I dati compariranno qui dopo il primo lancio.</div>';$("#chartSubtitle").textContent="Lancia i dadi per costruire l'istogramma.";return}
-    var max=0;values.forEach(function(v){max=Math.max(max,v.obs,state.theory?v.theory:0)});if(max<=0)max=1;
-    chart.innerHTML="";
+  function xLabel(v){
+    if(state.experiment==="coins"&&quantity()===1)return v===0?"CROCE":"TESTA";return String(v);
+  }
+  function chartTitle(){return state.experiment==="dice"?"Distribuzione delle somme":"Distribuzione del numero di teste"}
+  function emptyMessage(){return state.experiment==="dice"?"Lancia i dadi per costruire l'istogramma.":"Lancia le monete per costruire l'istogramma."}
+  function seriesDescription(){
+    var n=state.results.length,q=quantity();
+    return state.experiment==="dice"?fmt(n,0)+" lanci · "+q+(q===1?" dado":" dadi"):fmt(n,0)+" lanci · "+q+(q===1?" moneta":" monete");
+  }
+  function expectedValue(){var q=quantity();return state.experiment==="dice"?3.5*q:q/2}
+
+  function renderChartInto(target){
+    var n=state.results.length,obs=counts(),theory=theoreticalProbabilities(),values=[];
+    domain().forEach(function(v){values.push({x:v,obs:state.relative?(n?obs[v]/n*100:0):obs[v],theory:state.relative?theory[v]*100:theory[v]*n})});
+    if(!n){target.innerHTML='<div class="empty-chart">I dati compariranno qui dopo il primo lancio.</div>';return}
+    var max=0;values.forEach(function(v){max=Math.max(max,v.obs,state.theory?v.theory:0)});if(max<=0)max=1;target.innerHTML="";
     values.forEach(function(v){
-      var col=document.createElement("div");col.className="barcol";
-      var slot=document.createElement("div");slot.className="barslot";
+      var col=document.createElement("div"),slot=document.createElement("div");col.className="barcol";slot.className="barslot";
       var hO=v.obs/max*100,hT=v.theory/max*100;
       if(state.theory){var t=document.createElement("div");t.className="bar-theory";t.style.height=hT+"%";t.title="Teorica: "+(state.relative?fmt(v.theory,2)+"%":fmt(v.theory,1));slot.appendChild(t)}
       var b=document.createElement("div");b.className="bar-actual";b.style.height=hO+"%";b.title="Osservata: "+(state.relative?fmt(v.obs,2)+"%":fmt(v.obs,0));slot.appendChild(b);
       if(state.labels){var val=document.createElement("div");val.className="barvalue";val.style.setProperty("--h",hO+"%");val.textContent=state.relative?fmt(v.obs,1)+"%":fmt(v.obs,0);slot.appendChild(val)}
-      var x=document.createElement("div");x.className="xlabel";x.textContent=v.s;
-      col.appendChild(slot);col.appendChild(x);chart.appendChild(col);
+      var x=document.createElement("div");x.className="xlabel";x.textContent=xLabel(v.x);col.appendChild(slot);col.appendChild(x);target.appendChild(col);
     });
-    $("#chartSubtitle").textContent=(state.relative?"Frequenze relative":"Frequenze assolute")+" · "+fmt(n,0)+" lanci · somma di "+state.dice+(state.dice===1?" dado":" dadi");
+  }
+  function syncProjectionButtons(){
+    $("#projRelativeBtn").classList.toggle("active",state.relative);$("#projTheoryBtn").classList.toggle("active",state.theory);$("#projLabelsBtn").classList.toggle("active",state.labels);
+  }
+  function renderChart(){
+    $("#chartTitle").textContent=chartTitle();$("#projectionTitle").textContent=chartTitle();$("#theoryLegend").style.display=state.theory?"inline":"none";
+    $("#chartSubtitle").textContent=state.results.length?(state.relative?"Frequenze relative":"Frequenze assolute")+" · "+seriesDescription():emptyMessage();
+    $("#projectionSubtitle").textContent=state.results.length?(state.relative?"Frequenze relative":"Frequenze assolute")+" · "+seriesDescription()+" · valore atteso "+fmt(expectedValue(),1):emptyMessage();
+    renderChartInto(chart);if($("#projectionDialog").open)renderChartInto(projectionChart);syncProjectionButtons();
+  }
+  function updateExperimentUI(){
+    var q=quantity();
+    $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
+    $$("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
+    if(state.experiment==="dice"){
+      $("#quantityTitle").textContent="Numero di dadi";$("#quantityLabel").textContent=q+(q===1?" dado":" dadi");$("#rollBtn").textContent="🎲 LANCIA I DADI";$(".brandmark").textContent="🎲";
+    }else{
+      $("#quantityTitle").textContent="Numero di monete";$("#quantityLabel").textContent=q+(q===1?" moneta":" monete");$("#rollBtn").textContent="🪙 LANCIA LE MONETE";$(".brandmark").textContent="🪙";
+    }
   }
   function render(){
-    renderHistory();renderChart();renderStats();
-    $("#seriesInfo").textContent=fmt(state.results.length,0)+" lanci · "+state.dice+(state.dice===1?" dado":" dadi");
+    updateExperimentUI();renderHistory();renderChart();renderStats();$("#seriesInfo").textContent=seriesDescription();$("#expectedInfo").textContent="Valore atteso teorico: "+fmt(expectedValue(),1);
   }
   function resetSeries(sound){
-    state.results=[];state.lastDice=[];diceWrap.innerHTML="";sumDisplay.innerHTML='—<small>somma dell\'ultimo lancio</small>';if(sound)beep("reset");render();
+    state.results=[];state.lastOutcome=[];resultWrap.innerHTML="";
+    sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
+    if(sound)beep("reset");render();
   }
-  function setDice(n){
-    state.dice=n;$$(".seg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===n)});
-    $("#diceLabel").textContent=n+(n===1?" dado":" dadi");resetSeries(false);
+  function setQuantity(n){state.quantities[state.experiment]=n;resetSeries(false)}
+  function setExperiment(exp){
+    if(exp===state.experiment)return;
+    if(state.results.length&&!confirm("Cambiare esperimento? La serie corrente verrà azzerata."))return;
+    state.experiment=exp;resetSeries(false);
+    if(state.experiment==="dice"&&!state.lastOutcome.length)showOutcome([1,6],false);
+    if(state.experiment==="coins"&&!state.lastOutcome.length)showOutcome([1],false);
   }
   function exportCSV(){
     if(!state.results.length){alert("Prima crea una serie di lanci.");return}
-    var c=counts(),t=theoreticalCounts(),rows=["somma;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento"];
-    for(var s=state.dice;s<=6*state.dice;s++)rows.push([s,c[s],(c[s]/state.results.length*100).toFixed(4),(t[s]*100).toFixed(4)].join(";"));
-    var blob=new Blob(["\ufeff"+rows.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");
-    a.href=URL.createObjectURL(blob);a.download="STATISTICA_dadi_"+state.dice+"d_"+state.results.length+"lanci.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
+    var c=counts(),t=theoreticalProbabilities(),variable=state.experiment==="dice"?"somma":"numero_teste";
+    var rows=[variable+";frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento"];
+    domain().forEach(function(v){rows.push([v,c[v],(c[v]/state.results.length*100).toFixed(4),(t[v]*100).toFixed(4)].join(";"))});
+    var blob=new Blob(["\ufeff"+rows.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);
+    a.download="STATISTICA_"+(state.experiment==="dice"?"dadi":"monete")+"_"+quantity()+"_"+state.results.length+"lanci.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
   }
 
-  $("#diceSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setDice(Number(b.dataset.n))});
-  $$(".tabs button").forEach(function(b){b.addEventListener("click",function(){
-    $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
-    $$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active");
-  })});
+  $$(".experiment-card").forEach(function(b){b.addEventListener("click",function(){setExperiment(b.dataset.experiment)})});
+  $("#quantitySeg").addEventListener("click",function(e){var b=e.target.closest("button");if(b)setQuantity(Number(b.dataset.n))});
+  $$(".tabs button").forEach(function(b){b.addEventListener("click",function(){$$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");$$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active")})});
   $("#rollBtn").addEventListener("click",oneRoll);
   $$(".quick button").forEach(function(b){b.addEventListener("click",function(){$("#simN").value=b.dataset.sim})});
   $("#simBtn").addEventListener("click",function(){simulate($("#simN").value)});
   $("#relativeToggle").addEventListener("change",function(e){state.relative=e.target.checked;renderChart()});
   $("#theoryToggle").addEventListener("change",function(e){state.theory=e.target.checked;renderChart()});
   $("#labelsToggle").addEventListener("change",function(e){state.labels=e.target.checked;renderChart()});
+  $("#projRelativeBtn").addEventListener("click",function(){state.relative=!state.relative;$("#relativeToggle").checked=state.relative;renderChart()});
+  $("#projTheoryBtn").addEventListener("click",function(){state.theory=!state.theory;$("#theoryToggle").checked=state.theory;renderChart()});
+  $("#projLabelsBtn").addEventListener("click",function(){state.labels=!state.labels;$("#labelsToggle").checked=state.labels;renderChart()});
+  $("#projectBtn").addEventListener("click",function(){$("#projectionDialog").showModal();renderChartInto(projectionChart);renderChart()});
+  $("#closeProjection").addEventListener("click",function(){$("#projectionDialog").close()});
   $("#resetBtn").addEventListener("click",function(){if(!state.results.length||confirm("Azzerare la serie corrente?"))resetSeries(true)});
   $("#csvBtn").addEventListener("click",exportCSV);
   $("#soundBtn").addEventListener("click",function(){state.sound=!state.sound;localStorage.setItem("statistica-sound",state.sound?"1":"0");this.textContent=state.sound?"🔊":"🔇";if(state.sound)beep("done")});
@@ -411,9 +509,9 @@
   $("#fullBtn").addEventListener("click",function(){if(!document.fullscreenElement)document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen();else document.exitFullscreen&&document.exitFullscreen()});
   $("#infoBtn").addEventListener("click",function(){$("#infoDialog").showModal()});$("#closeInfo").addEventListener("click",function(){$("#infoDialog").close()});
   $("#infoDialog").addEventListener("click",function(e){if(e.target===$("#infoDialog"))$("#infoDialog").close()});
-  document.addEventListener("keydown",function(e){if(e.code==="Space"&&!["INPUT","BUTTON"].includes(document.activeElement.tagName)){e.preventDefault();oneRoll()}});
+  document.addEventListener("keydown",function(e){if(e.code==="Space"&&!["INPUT","BUTTON"].includes(document.activeElement.tagName)&&!$("#projectionDialog").open&&!$("#infoDialog").open){e.preventDefault();oneRoll()}});
 
-  loadPrefs();showDice([1,6],false);render();
+  loadPrefs();$("#relativeToggle").checked=state.relative;$("#theoryToggle").checked=state.theory;$("#labelsToggle").checked=state.labels;showOutcome([1,6],false);render();
   if("serviceWorker" in navigator)window.addEventListener("load",function(){navigator.serviceWorker.register("service-worker.js").catch(function(){})});
 })();
 </script>
