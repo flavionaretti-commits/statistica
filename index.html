@@ -1262,9 +1262,9 @@
     $("#rouletteKindLabel").textContent=state.roulette.kind==="american"?"Americana · 38 numeri":"Europea · 37 numeri";
     $("#rouletteAnalysis").value=state.roulette.analysis;$("#rouletteAnalysisLabel").textContent=rouletteAnalysisName();
     $("#rouletteModeLabel").textContent=state.roulette.mode==="game"?"gioco":"laboratorio";
-    $("#rouletteKindSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteKind===state.roulette.kind)});
-    $("#rouletteModeSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteMode===state.roulette.mode)});
-    $("#rouletteChipSeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.chip)===state.roulette.chip)});
+    document.querySelectorAll("#rouletteKindSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteKind===state.roulette.kind)});
+    document.querySelectorAll("#rouletteModeSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteMode===state.roulette.mode)});
+    document.querySelectorAll("#rouletteChipSeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.chip)===state.roulette.chip)});
     $("#rouletteGamePanel").hidden=state.roulette.mode!=="game";
     $("#rouletteBankroll").textContent=fmt(state.roulette.bankroll,0);$("#rouletteChipLabel").textContent=state.roulette.chip;
     var stake=rouletteStakeTotal(),parts=Object.keys(state.roulette.bets).map(function(id){return rouletteBetDef(id).label+" "+state.roulette.bets[id]});
@@ -1427,7 +1427,7 @@
   $("#clearRouletteBetsBtn").addEventListener("click",function(){clearRouletteBets(true)});
   $("#newRouletteGameBtn").addEventListener("click",function(){state.roulette.bankroll=100;state.roulette.bets={};state.roulette.lastNet=null;renderRouletteConfig();renderRouletteTable()});
 
-  $(".tabs button").forEach(function(b){b.addEventListener("click",function(){
+  document.querySelectorAll(".tabs button").forEach(function(b){b.addEventListener("click",function(){
     $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
     $$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active");
   })});
