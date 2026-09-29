@@ -150,7 +150,7 @@
     }
     .experiment-grid{grid-template-columns:repeat(3,1fr)}
     .future{grid-template-columns:repeat(2,1fr)}
-    .urn-config{display:grid;gap:6px;margin:8px 0 12px}
+    .urn-draw-top{margin:2px 0 14px}.urn-composition-title{margin-top:2px}.urn-config{display:grid;gap:6px;margin:8px 0 12px}
     .urn-row{display:grid;grid-template-columns:18px 1fr 30px 24px 30px 44px;gap:5px;align-items:center;min-height:34px;font-size:12px}
     .urn-row span{font-weight:750;min-width:0}
     .urn-row b{text-align:center;font-size:13px}
@@ -244,7 +244,8 @@
       </div>
 
       <div class="field" id="ballsConfig" hidden>
-        <div class="labelrow"><span>Composizione dell'urna</span><span id="urnTotalLabel">10 palline</span></div>
+        <button class="primary urn-draw-top" id="urnDrawTopBtn">🔴 ESTRAI UNA PALLINA</button>
+        <div class="labelrow urn-composition-title"><span>Composizione dell'urna</span><span id="urnTotalLabel">10 palline</span></div>
         <div class="urn-config" id="urnConfig">
           <div class="urn-row" data-color-row="red"><i class="color-dot" style="--c:#ef4444"></i><span>Rosse</span><button class="urn-step" data-color="red" data-delta="-1">−</button><b data-urn-count="red">5</b><button class="urn-step" data-color="red" data-delta="1">+</button><em data-urn-prob="red">50%</em></div>
           <div class="urn-row" data-color-row="blue"><i class="color-dot" style="--c:#3b82f6"></i><span>Blu</span><button class="urn-step" data-color="blue" data-delta="-1">−</button><b data-urn-count="blue">3</b><button class="urn-step" data-color="blue" data-delta="1">+</button><em data-urn-prob="blue">30%</em></div>
@@ -690,8 +691,10 @@
     $("#standardQuantityField").hidden=isBalls;$("#ballsConfig").hidden=!isBalls;
     $("#theoryToggle").disabled=isBalls&&!state.urn.replacement;
     $("#theoryToggle").closest(".switchrow").style.opacity=(isBalls&&!state.urn.replacement)?".5":"1";
-    $("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
+    document.querySelectorAll("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
     $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":"Lanci manuali";
+    $("#manualPane").style.display=isBalls?"none":"";
+    $("#urnDrawTopBtn").hidden=!isBalls;
     $("#manualHelp").textContent=isBalls
       ?(state.urn.replacement
         ?"Ogni estrazione registra il colore; la pallina viene poi reintrodotta nell'urna."
@@ -713,8 +716,11 @@
       $("#rollBtn").textContent=q===1?"🪙 LANCIA LA MONETA":"🪙 LANCIA LE MONETE";
       $(".brandmark").textContent="🪙";
     }else{
-      $("#rollBtn").textContent=urnTotal("current")>0?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";
-      $("#rollBtn").disabled=urnTotal("current")===0;
+      var urnHasBalls=urnTotal("current")>0;
+      $("#rollBtn").textContent=urnHasBalls?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";
+      $("#rollBtn").disabled=!urnHasBalls;
+      $("#urnDrawTopBtn").textContent=urnHasBalls?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";
+      $("#urnDrawTopBtn").disabled=!urnHasBalls;
       $(".brandmark").textContent="🔴";
       renderUrnConfig();
     }
@@ -782,6 +788,7 @@
     $$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active");
   })});
   $("#rollBtn").addEventListener("click",oneRoll);
+  $("#urnDrawTopBtn").addEventListener("click",oneRoll);
   $$(".quick button").forEach(function(b){b.addEventListener("click",function(){$("#simN").value=b.dataset.sim})});
   $("#simBtn").addEventListener("click",function(){simulate($("#simN").value)});
   $("#relativeToggle").addEventListener("change",function(e){state.relative=e.target.checked;renderChart()});
