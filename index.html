@@ -253,6 +253,45 @@
       .playing-stage{grid-template-columns:1fr}.card-draw-info{display:flex;justify-content:center;align-items:center;gap:10px}
       .playing-card{width:70px;height:101px}.playing-card .center{font-size:38px}
     }
+    /* ROULETTE */
+    .roulette-spin-top{margin:2px 0 14px;background:linear-gradient(135deg,#087a45,#0ea968)}
+    .roulette-kind-title,.roulette-analysis-title,.roulette-mode-title{margin-top:13px}
+    .roulette-game-panel{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:14px;background:rgba(8,122,69,.05)}
+    .roulette-bank{display:flex;justify-content:space-between;align-items:center;padding:7px 0 10px;font-size:12px;font-weight:800}
+    .roulette-bank strong{font-size:22px}
+    .chip-seg{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+    .chip-seg button{border:2px solid var(--line);background:var(--panel2);color:var(--text);border-radius:50%;width:42px;height:42px;justify-self:center;font-weight:950;cursor:pointer}
+    .chip-seg button.active{border-color:var(--gold);box-shadow:0 0 0 3px rgba(245,158,11,.18);background:#fff8df;color:#654300}
+    .roulette-bet-summary{font-size:11px;line-height:1.4;color:var(--muted);padding:10px 2px 5px}
+    .roulette-game-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+    .roulette-main{overflow:hidden}
+    .roulette-main-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+    .roulette-main-head h2{margin:0;font-size:20px}.roulette-main-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+    .roulette-last-mini{min-width:54px;height:54px;border-radius:50%;display:grid;place-items:center;background:#087a45;color:white;font-size:18px;font-weight:950;border:3px solid rgba(255,255,255,.55);box-shadow:0 4px 12px rgba(0,0,0,.18)}
+    .roulette-table-scroll{overflow-x:auto;padding-bottom:5px}
+    .roulette-board{min-width:760px;background:#087a45;border:5px solid #d2ad55;border-radius:14px;padding:9px;color:white;display:grid;grid-template-columns:48px minmax(610px,1fr) 54px;gap:4px}
+    .roulette-zero-stack{display:grid;gap:4px;grid-template-rows:1fr 1fr;min-height:135px}
+    .roulette-zero-stack.single{grid-template-rows:1fr}
+    .roulette-core{display:grid;gap:4px}
+    .roulette-numbers{display:grid;grid-template-columns:repeat(12,1fr);grid-template-rows:repeat(3,43px);gap:3px}
+    .roulette-columns{display:grid;grid-template-rows:repeat(3,43px);gap:3px}
+    .roulette-dozens{display:grid;grid-template-columns:repeat(3,1fr);gap:3px}
+    .roulette-evenbets{display:grid;grid-template-columns:repeat(6,1fr);gap:3px}
+    .roulette-cell{position:relative;border:1px solid rgba(255,255,255,.82);background:#161b20;color:white;border-radius:4px;font-weight:900;cursor:pointer;min-width:0;padding:3px;font-size:12px}
+    .roulette-cell.red{background:#c92c35}.roulette-cell.black{background:#17191d}.roulette-cell.green{background:#087a45}
+    .roulette-cell.outside{background:#087a45;font-size:10px;min-height:34px}.roulette-cell.outside.red{background:#c92c35}.roulette-cell.outside.black{background:#17191d}
+    .roulette-cell.hit{outline:3px solid #ffd95a;outline-offset:-3px}
+    .roulette-cell.bet{box-shadow:inset 0 0 0 3px #ffd95a}
+    .bet-chip{position:absolute;right:2px;top:2px;min-width:18px;height:18px;padding:0 3px;border-radius:999px;background:#ffd95a;color:#4a3200;display:grid;place-items:center;font-size:9px;font-weight:950;border:1px solid #8d6800}
+    .roulette-result-stage{display:grid;place-items:center;text-align:center}
+    .roulette-result-ball{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;color:white;font-size:32px;font-weight:950;border:5px solid rgba(255,255,255,.72);box-shadow:0 8px 20px rgba(0,0,0,.24)}
+    .roulette-result-ball.red{background:#c92c35}.roulette-result-ball.black{background:#17191d}.roulette-result-ball.green{background:#087a45}
+    .roulette-result-caption{font-size:11px;font-weight:850;color:var(--muted);margin-top:8px}
+    .roulette-chip-history.red{background:#c92c35;color:white;border-color:#c92c35}.roulette-chip-history.black{background:#17191d;color:white;border-color:#17191d}.roulette-chip-history.green{background:#087a45;color:white;border-color:#087a45}
+    .barcol.roulette-bar .bar-actual{background:var(--roulettebar)!important}
+    .barcol.roulette-bar .bar-theory{background:var(--roulettebar)!important;border-color:var(--roulettebar)!important;opacity:.22}
+    @media(max-width:940px){.roulette-board{min-width:720px}}
+    @media(max-width:560px){.roulette-main{padding:10px}.roulette-board{min-width:680px}.roulette-main-head{align-items:flex-start}}
   </style>
 </head>
 <body>
@@ -286,9 +325,9 @@
         <button class="mode-card experiment-card" data-experiment="cards">
           <div class="emoji">🃏</div><div><strong>Carte</strong><span>Mazzo da 40</span></div>
         </button>
-      </div>
-      <div class="future">
-        <div><b>🎡</b>Roulette</div>
+        <button class="mode-card experiment-card" data-experiment="roulette">
+          <div class="emoji">🎡</div><div><strong>Roulette</strong><span>0 / 00</span></div>
+        </button>
       </div>
 
       <div class="field" id="standardQuantityField">
@@ -350,6 +389,48 @@
         <p class="urn-note" id="cardModeNote">La carta pescata torna nel mazzo: le probabilità restano costanti.</p>
       </div>
 
+      <div class="field" id="rouletteConfig" hidden>
+        <button class="primary roulette-spin-top" id="rouletteSpinTopBtn">🎡 GIRA LA PALLINA</button>
+
+        <div class="labelrow roulette-kind-title"><span>Tipo di roulette</span><span id="rouletteKindLabel">Europea · 37 numeri</span></div>
+        <div class="replacement-seg" id="rouletteKindSeg">
+          <button class="active" data-roulette-kind="european">EUROPEA · 0</button>
+          <button data-roulette-kind="american">AMERICANA · 0 + 00</button>
+        </div>
+
+        <div class="labelrow roulette-analysis-title"><span>Analizza i giri per</span><span id="rouletteAnalysisLabel">colore</span></div>
+        <select id="rouletteAnalysis" class="card-select">
+          <option value="color">Colore: Rosso / Nero / Verde</option>
+          <option value="parity">Pari / Dispari</option>
+          <option value="range">1–18 / 19–36</option>
+          <option value="dozen">Dozzine</option>
+          <option value="column">Colonne</option>
+          <option value="number">Numero singolo</option>
+        </select>
+
+        <div class="labelrow roulette-mode-title"><span>Modalità</span><span id="rouletteModeLabel">laboratorio</span></div>
+        <div class="replacement-seg" id="rouletteModeSeg">
+          <button class="active" data-roulette-mode="lab">LABORATORIO</button>
+          <button data-roulette-mode="game">GIOCO</button>
+        </div>
+
+        <div class="roulette-game-panel" id="rouletteGamePanel" hidden>
+          <div class="roulette-bank">
+            <span>Saldo virtuale</span><strong id="rouletteBankroll">100</strong>
+          </div>
+          <div class="labelrow"><span>Valore fiche</span><span id="rouletteChipLabel">1</span></div>
+          <div class="chip-seg" id="rouletteChipSeg">
+            <button class="active" data-chip="1">1</button><button data-chip="5">5</button><button data-chip="10">10</button>
+          </div>
+          <div class="roulette-bet-summary" id="rouletteBetSummary">Nessuna fiche piazzata.</div>
+          <div class="roulette-game-actions">
+            <button class="smallbtn" id="clearRouletteBetsBtn">RITIRA FICHES</button>
+            <button class="smallbtn" id="newRouletteGameBtn">NUOVA PARTITA</button>
+          </div>
+          <p class="urn-note">Solo fiche virtuali: tocca una casella del tavolo per puntare la fiche selezionata.</p>
+        </div>
+      </div>
+
       <div class="tabs">
         <button class="active" data-tab="manual">Lanci manuali</button>
         <button data-tab="simulation">Simulazione</button>
@@ -377,7 +458,18 @@
     </aside>
 
     <main class="maincol">
-      <div class="topstat">
+      <section class="panel roulette-main" id="rouletteMain" hidden>
+        <div class="roulette-main-head">
+          <div>
+            <h2>Tavolo della roulette</h2>
+            <p id="rouletteTableHint">Tutti i numeri hanno la stessa probabilità di uscita.</p>
+          </div>
+          <div class="roulette-last-mini" id="rouletteLastMini">—</div>
+        </div>
+        <div class="roulette-table-scroll"><div id="rouletteTable"></div></div>
+      </section>
+
+      <div class="topstat" id="topStatArea">
         <section class="panel dice-stage">
           <div class="dice-wrap" id="resultWrap"></div>
           <div class="sum" id="sumDisplay">—<small>somma dell'ultimo lancio</small></div>
@@ -434,6 +526,8 @@
       <li><b>Palline:</b> costruisci un'urna scegliendo fino a 6 colori e da 0 a 20 palline per colore. Puoi estrarre con reintroduzione oppure senza reintrodurre la pallina.</li>
       <li><b>Carte:</b> usa il mazzo da 40 carte (A, 2–7, Fante, Donna, Re nei quattro semi) oppure costruisci un mazzo personalizzato selezionando le carte.</li>
       <li><b>Analisi carte:</b> la stessa serie di pescate può essere studiata per seme, valore, tipo di carta o colore rosso/nero.</li>
+      <li><b>Roulette:</b> scegli la versione europea (0–36) oppure americana (0, 00, 1–36), gira la pallina o simula molte prove e analizza numero, colore, pari/dispari, basso/alto, dozzine o colonne.</li>
+      <li><b>Gioco roulette:</b> usa fiche esclusivamente virtuali e piazzale su numeri, rosso/nero, pari/dispari, 1–18/19–36, dozzine e colonne.</li>
       <li><b>Senza reintroduzione:</b> urna e mazzo si svuotano realmente e le probabilità cambiano dopo ogni estrazione/pescata.</li>
       <li><b>Lanci manuali:</b> ogni prova aggiorna immediatamente istogramma e indici.</li>
       <li><b>Simulazione:</b> genera rapidamente da 1 a 1.000.000 di prove.</li>
@@ -514,6 +608,7 @@
   });
 
   var allCardIds=CARDS.map(function(c){return c.id});
+  var RED_NUMBERS=[1,3,5,7,9,12,14,16,18,19,21,23,25,27,30,32,34,36];
 
   var state={
     experiment:"dice",
@@ -537,6 +632,16 @@
       replacement:true,
       analysis:"suit",
       lastCard:null
+    },
+    roulette:{
+      kind:"european",
+      analysis:"color",
+      mode:"lab",
+      last:null,
+      bankroll:100,
+      chip:1,
+      bets:{},
+      lastNet:null
     }
   };
 
@@ -555,6 +660,18 @@
   }
   function activeBallIds(){return BALLS.filter(function(b){return (state.urn.initial[b.id]||0)>0}).map(function(b){return b.id})}
   function deckTotal(which){return (which==="current"?state.deck.current:state.deck.initial).length}
+  function roulettePockets(){var a=["0"];if(state.roulette.kind==="american")a.push("00");for(var i=1;i<=36;i++)a.push(String(i));return a}
+  function rouletteColor(v){if(v==="0"||v==="00")return "green";return RED_NUMBERS.indexOf(Number(v))!==-1?"red":"black"}
+  function rouletteColumn(v){var n=Number(v);if(!n)return "zero";return n%3===1?"c1":n%3===2?"c2":"c3"}
+  function rouletteCategory(v){
+    var n=Number(v),isZero=(v==="0"||v==="00"),a=state.roulette.analysis;
+    if(a==="number")return String(v);
+    if(a==="color")return rouletteColor(v);
+    if(a==="parity")return isZero?"zero":(n%2===0?"even":"odd");
+    if(a==="range")return isZero?"zero":(n<=18?"low":"high");
+    if(a==="dozen")return isZero?"zero":(n<=12?"d1":n<=24?"d2":"d3");
+    return isZero?"zero":rouletteColumn(v);
+  }
   function chartHasTheory(){
     if(state.experiment==="balls"&&!state.urn.replacement)return false;
     if(state.experiment==="cards"&&!state.deck.replacement)return false;
@@ -639,9 +756,19 @@
     wrap.appendChild(draw);resultWrap.appendChild(wrap);
   }
 
+  function renderRouletteVisual(){
+    resultWrap.innerHTML="";
+    var wrap=document.createElement("div");wrap.className="roulette-result-stage";
+    var ball=document.createElement("div");ball.className="roulette-result-ball "+(state.roulette.last?rouletteColor(state.roulette.last):"green");
+    ball.textContent=state.roulette.last||"?";wrap.appendChild(ball);
+    var cap=document.createElement("div");cap.className="roulette-result-caption";
+    cap.textContent=state.roulette.last?"ULTIMO NUMERO · "+rouletteColor(state.roulette.last).toUpperCase():"NESSUN GIRO";
+    wrap.appendChild(cap);resultWrap.appendChild(wrap);
+  }
   function showOutcome(vals,animate){
     if(state.experiment==="balls"){renderUrnVisual();return}
     if(state.experiment==="cards"){renderCardVisual();return}
+    if(state.experiment==="roulette"){renderRouletteVisual();return}
     resultWrap.innerHTML="";
     vals.forEach(function(v,i){var el=state.experiment==="dice"?dieEl(v,((i%3)-1)*3):coinEl(v,((i%3)-1)*3);if(animate)el.classList.add("pulse");resultWrap.appendChild(el)});
   }
@@ -663,6 +790,10 @@
     return id;
   }
   function trial(){
+    if(state.experiment==="roulette"){
+      var pockets=roulettePockets(),rv=pockets[Math.floor(Math.random()*pockets.length)];
+      return {raw:[rv],value:rv};
+    }
     if(state.experiment==="balls"){
       var id=weightedBallDraw();return id===null?null:{raw:[id],value:id};
     }
@@ -679,6 +810,10 @@
   }
   function resultText(value,simulated){
     var q=quantity();
+    if(state.experiment==="roulette"){
+      var c=rouletteColor(value),label=c==="red"?"ROSSO":c==="black"?"NERO":"VERDE";
+      return value+"<small>"+label+" · "+(simulated?"ultimo giro simulato":"ultimo giro")+"</small>";
+    }
     if(state.experiment==="balls"){
       var info=ballInfo(value);
       return info.name.toUpperCase()+"<small>"+(state.urn.replacement?"pallina reintrodotta nell'urna":"pallina non reintrodotta")+"</small>";
@@ -699,6 +834,10 @@
     state.lastOutcome=r.raw;state.results.push(r.value);
     if(state.experiment==="balls")state.urn.lastColor=r.value;
     if(state.experiment==="cards")state.deck.lastCard=r.value;
+    if(state.experiment==="roulette"){
+      state.roulette.last=r.value;
+      if(state.roulette.mode==="game")resolveRouletteBets(r.value);
+    }
     showOutcome(r.raw,true);sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
   }
 
@@ -715,6 +854,13 @@
       for(var i=0;i<n;i++){var rb=trial();if(!rb)break;state.results.push(rb.value);lastBall=rb}
       if(lastBall){state.lastOutcome=lastBall.raw;state.urn.lastColor=lastBall.value;sumDisplay.innerHTML=resultText(lastBall.value,true)}
       renderUrnVisual();beep("done");render();return;
+    }
+
+    if(state.experiment==="roulette"){
+      state.results=new Array(n);var lastRoulette=null;
+      for(var rr=0;rr<n;rr++){var rt=trial();state.results[rr]=rt.value;if(rr===n-1)lastRoulette=rt}
+      state.roulette.last=lastRoulette.value;state.lastOutcome=lastRoulette.raw;
+      sumDisplay.innerHTML=resultText(lastRoulette.value,true);renderRouletteVisual();beep("done");render();return;
     }
 
     if(state.experiment==="cards"){
@@ -748,9 +894,18 @@
     if(state.deck.analysis==="type")return ["asso","numero","figura"];
     return ["red","black"];
   }
+  function rouletteDomain(){
+    if(state.roulette.analysis==="number")return roulettePockets();
+    if(state.roulette.analysis==="color")return ["green","red","black"];
+    if(state.roulette.analysis==="parity")return ["zero","even","odd"];
+    if(state.roulette.analysis==="range")return ["zero","low","high"];
+    if(state.roulette.analysis==="dozen")return ["zero","d1","d2","d3"];
+    return ["zero","c1","c2","c3"];
+  }
   function domain(){
     if(state.experiment==="balls")return activeBallIds();
     if(state.experiment==="cards")return cardDomain();
+    if(state.experiment==="roulette")return rouletteDomain();
     var q=quantity(),out=[];
     if(state.experiment==="dice"){for(var s=q;s<=6*q;s++)out.push(s)}
     else{for(var h=0;h<=q;h++)out.push(h)}
@@ -759,6 +914,11 @@
 
   function theoreticalProbabilities(){
     var out={};
+    if(state.experiment==="roulette"){
+      var rd=rouletteDomain(),rp=roulettePockets();rd.forEach(function(k){out[k]=0});
+      rp.forEach(function(v){var k=rouletteCategory(v);out[k]=(out[k]||0)+1});
+      rd.forEach(function(k){out[k]=out[k]/rp.length});return out;
+    }
     if(state.experiment==="balls"){
       var total=urnTotal("initial");
       activeBallIds().forEach(function(id){out[id]=total?(state.urn.initial[id]||0)/total:0});
@@ -785,7 +945,7 @@
   function counts(){
     var out={};domain().forEach(function(v){out[v]=0});
     state.results.forEach(function(v){
-      var key=state.experiment==="cards"?cardCategory(v):v;
+      var key=state.experiment==="cards"?cardCategory(v):state.experiment==="roulette"?rouletteCategory(v):v;
       out[key]=(out[key]||0)+1;
     });
     return out;
@@ -794,7 +954,7 @@
   function fmt(x,d){if(!Number.isFinite(x))return "—";return x.toLocaleString("it-IT",{minimumFractionDigits:d||0,maximumFractionDigits:d==null?2:d})}
 
   function calcStats(){
-    if(state.experiment==="balls"||state.experiment==="cards")return null;
+    if(state.experiment==="balls"||state.experiment==="cards"||state.experiment==="roulette")return null;
     var n=state.results.length;if(!n)return null;
     var a=state.results.slice().sort(function(x,y){return x-y}),sum=a.reduce(function(x,y){return x+y},0),mean=sum/n;
     var med=n%2?a[(n-1)/2]:(a[n/2-1]+a[n/2])/2,c=counts(),maxC=0,modes=[];
@@ -813,13 +973,17 @@
       if(state.deck.analysis==="type")return k==="asso"?"Asso":k==="numero"?"Numerale":"Figura";
       return k==="red"?"Rosso":"Nero";
     }
+    if(state.experiment==="roulette"){
+      var labels={green:"Verde",red:"Rosso",black:"Nero",zero:"Zero",even:"Pari",odd:"Dispari",low:"1–18",high:"19–36",d1:"1ª dozzina",d2:"2ª dozzina",d3:"3ª dozzina",c1:"1ª colonna",c2:"2ª colonna",c3:"3ª colonna"};
+      return labels[k]||String(k);
+    }
     return String(k);
   }
   function renderStats(){
-    if(state.experiment==="balls"||state.experiment==="cards"){
+    if(state.experiment==="balls"||state.experiment==="cards"||state.experiment==="roulette"){
       var c=counts(),ids=domain(),best=null,bestN=0,used=0;
       ids.forEach(function(id){var n=c[id]||0;if(n>0)used++;if(n>bestN){bestN=n;best=id}});
-      setStat("n",state.experiment==="cards"?"Pescate":"Estrazioni",fmt(state.results.length,0));
+      setStat("n",state.experiment==="cards"?"Pescate":state.experiment==="roulette"?"Giri":"Estrazioni",fmt(state.results.length,0));
       setStat("mean","Più frequente",best?categoryLabel(best):"—");
       setStat("median","Frequenza max",best?fmt(bestN,0):"—");
       setStat("mode","Categorie viste",fmt(used,0));
@@ -828,11 +992,16 @@
         setStat("max","Palline rimaste",fmt(urnTotal("current"),0));
         setStat("range","Colori attivi",fmt(ids.length,0));
         setStat("sd","Modalità",state.urn.replacement?"CON":"SENZA");
-      }else{
+      }else if(state.experiment==="cards"){
         setStat("min","Carte iniziali",fmt(deckTotal("initial"),0));
         setStat("max","Carte rimaste",fmt(deckTotal("current"),0));
         setStat("range","Categorie",fmt(ids.length,0));
         setStat("sd","Modalità",state.deck.replacement?"CON":"SENZA");
+      }else{
+        setStat("min","Caselle",fmt(roulettePockets().length,0));
+        setStat("max","Rossi",18);
+        setStat("range","Neri",18);
+        setStat("sd","Zeri",state.roulette.kind==="american"?2:1);
       }
       return;
     }
@@ -844,6 +1013,7 @@
   function historyLabel(v){
     if(state.experiment==="balls")return ballInfo(v).name;
     if(state.experiment==="cards"){var c=cardInfo(v);return c.rank+c.symbol}
+    if(state.experiment==="roulette")return String(v);
     if(state.experiment==="dice")return String(v);
     if(quantity()===1)return v===1?"T":"C";return v+"T";
   }
@@ -854,6 +1024,7 @@
       var x=document.createElement("span");x.className="chip";
       if(state.experiment==="balls"){x.classList.add("ball-chip");x.style.setProperty("--ball",ballInfo(v).hex)}
       if(state.experiment==="cards"){var c=cardInfo(v);x.classList.add("card-chip");if(c.color==="red")x.classList.add("red")}
+      if(state.experiment==="roulette"){x.classList.add("roulette-chip-history");x.classList.add(rouletteColor(v))}
       x.textContent=historyLabel(v);history.appendChild(x);
     });
   }
@@ -861,6 +1032,7 @@
   function xLabel(v){
     if(state.experiment==="balls")return ballInfo(v).name;
     if(state.experiment==="cards")return categoryLabel(v);
+    if(state.experiment==="roulette")return categoryLabel(v);
     if(state.experiment==="coins"&&quantity()===1)return v===0?"CROCE":"TESTA";
     return String(v);
   }
@@ -870,27 +1042,38 @@
       var names={suit:"Distribuzione per seme",rank:"Distribuzione per valore",type:"Distribuzione per tipo di carta",color:"Distribuzione per colore"};
       return names[state.deck.analysis];
     }
+    if(state.experiment==="roulette"){
+      var rn={color:"Roulette · colori",parity:"Roulette · pari/dispari",range:"Roulette · 1–18 / 19–36",dozen:"Roulette · dozzine",column:"Roulette · colonne",number:"Roulette · numeri"};
+      return rn[state.roulette.analysis];
+    }
     return state.experiment==="dice"?"Distribuzione delle somme":"Distribuzione del numero di teste";
   }
   function emptyMessage(){
     if(state.experiment==="balls")return "Estrai una pallina per costruire l'istogramma.";
     if(state.experiment==="cards")return "Pesca una carta per costruire l'istogramma.";
+    if(state.experiment==="roulette")return "Gira la pallina per costruire l'istogramma.";
     return state.experiment==="dice"?"Lancia i dadi per costruire l'istogramma.":"Lancia le monete per costruire l'istogramma.";
   }
   function seriesDescription(){
     var n=state.results.length,q=quantity();
     if(state.experiment==="balls")return fmt(n,0)+" estrazioni · "+(state.urn.replacement?"con reintroduzione":"senza reintroduzione");
     if(state.experiment==="cards")return fmt(n,0)+" pescate · "+(state.deck.replacement?"con reintroduzione":"senza reintroduzione")+" · "+deckTotal("initial")+" carte";
+    if(state.experiment==="roulette")return fmt(n,0)+" giri · "+(state.roulette.kind==="american"?"americana 0+00":"europea 0");
     return state.experiment==="dice"?fmt(n,0)+" lanci · "+q+(q===1?" dado":" dadi"):fmt(n,0)+" lanci · "+q+(q===1?" moneta":" monete");
   }
   function expectedText(){
     if(state.experiment==="balls")return state.urn.replacement?"Probabilità teoriche = composizione dell'urna":"Le probabilità cambiano dopo ogni estrazione";
     if(state.experiment==="cards")return state.deck.replacement?"Probabilità teoriche = composizione del mazzo · analisi per "+analysisName():"Le probabilità cambiano dopo ogni pescata";
+    if(state.experiment==="roulette")return (state.roulette.kind==="american"?"38":"37")+" esiti equiprobabili · analisi per "+rouletteAnalysisName();
     var q=quantity(),v=state.experiment==="dice"?3.5*q:q/2;
     return "Valore atteso teorico: "+fmt(v,1);
   }
   function analysisName(){
     return state.deck.analysis==="suit"?"seme":state.deck.analysis==="rank"?"valore":state.deck.analysis==="type"?"tipo":"colore";
+  }
+  function rouletteAnalysisName(){
+    var x={color:"colore",parity:"pari/dispari",range:"1–18 / 19–36",dozen:"dozzine",column:"colonne",number:"numero"};
+    return x[state.roulette.analysis];
   }
   function cardSeriesColor(k){
     if(state.deck.analysis==="suit"){
@@ -904,6 +1087,13 @@
     return "#2962ff";
   }
 
+  function rouletteSeriesColor(k){
+    if(k==="red")return "#c92c35";if(k==="black")return "#3b4148";if(k==="green"||k==="zero")return "#087a45";
+    if(k==="even"||k==="low"||k==="d1"||k==="c1")return "#2962ff";
+    if(k==="odd"||k==="high"||k==="d2"||k==="c2")return "#8b5cf6";
+    if(k==="d3"||k==="c3")return "#f59e0b";
+    return rouletteColor(String(k))==="red"?"#c92c35":rouletteColor(String(k))==="black"?"#3b4148":"#087a45";
+  }
   function renderChartInto(target){
     var n=state.results.length,obs=counts(),theory=theoreticalProbabilities(),values=[];
     domain().forEach(function(v){values.push({x:v,obs:state.relative?(n?obs[v]/n*100:0):obs[v],theory:state.relative?theory[v]*100:theory[v]*n})});
@@ -914,6 +1104,7 @@
       var col=document.createElement("div"),slot=document.createElement("div");col.className="barcol";slot.className="barslot";
       if(state.experiment==="balls"){col.classList.add("ball-bar");col.style.setProperty("--ball",ballInfo(v.x).hex)}
       if(state.experiment==="cards"){col.classList.add("card-bar");col.style.setProperty("--cardbar",cardSeriesColor(v.x))}
+      if(state.experiment==="roulette"){col.classList.add("roulette-bar");col.style.setProperty("--roulettebar",rouletteSeriesColor(v.x))}
       var hO=v.obs/max*100,hT=v.theory/max*100;
       if(showTheory){var t=document.createElement("div");t.className="bar-theory";t.style.height=hT+"%";t.title="Teorica: "+(state.relative?fmt(v.theory,2)+"%":fmt(v.theory,1));slot.appendChild(t)}
       var b=document.createElement("div");b.className="bar-actual";b.style.height=hO+"%";b.title="Osservata: "+(state.relative?fmt(v.obs,2)+"%":fmt(v.obs,0));slot.appendChild(b);
@@ -997,17 +1188,102 @@
     renderDeckGrid();
   }
 
+  function rouletteBetDef(id){
+    var p=id.split(":");
+    if(p[0]==="num")return {id:id,label:p[1],payout:35,win:function(v){return String(v)===p[1]}};
+    var defs={
+      red:{label:"Rosso",payout:1,win:function(v){return rouletteColor(v)==="red"}},
+      black:{label:"Nero",payout:1,win:function(v){return rouletteColor(v)==="black"}},
+      even:{label:"Pari",payout:1,win:function(v){var n=Number(v);return v!=="0"&&v!=="00"&&n%2===0}},
+      odd:{label:"Dispari",payout:1,win:function(v){var n=Number(v);return v!=="0"&&v!=="00"&&n%2===1}},
+      low:{label:"1–18",payout:1,win:function(v){var n=Number(v);return n>=1&&n<=18}},
+      high:{label:"19–36",payout:1,win:function(v){var n=Number(v);return n>=19&&n<=36}},
+      d1:{label:"1ª dozzina",payout:2,win:function(v){var n=Number(v);return n>=1&&n<=12}},
+      d2:{label:"2ª dozzina",payout:2,win:function(v){var n=Number(v);return n>=13&&n<=24}},
+      d3:{label:"3ª dozzina",payout:2,win:function(v){var n=Number(v);return n>=25&&n<=36}},
+      c1:{label:"1ª colonna",payout:2,win:function(v){return rouletteColumn(v)==="c1"}},
+      c2:{label:"2ª colonna",payout:2,win:function(v){return rouletteColumn(v)==="c2"}},
+      c3:{label:"3ª colonna",payout:2,win:function(v){return rouletteColumn(v)==="c3"}}
+    };
+    var d=defs[id];return {id:id,label:d.label,payout:d.payout,win:d.win};
+  }
+  function rouletteStakeTotal(){
+    return Object.keys(state.roulette.bets).reduce(function(s,k){return s+state.roulette.bets[k]},0);
+  }
+  function placeRouletteBet(id){
+    if(state.roulette.mode!=="game")return;
+    var chip=state.roulette.chip;if(state.roulette.bankroll<chip){alert("Saldo virtuale insufficiente.");return}
+    state.roulette.bankroll-=chip;state.roulette.bets[id]=(state.roulette.bets[id]||0)+chip;renderRouletteConfig();renderRouletteTable();
+  }
+  function clearRouletteBets(refund){
+    if(refund!==false)state.roulette.bankroll+=rouletteStakeTotal();
+    state.roulette.bets={};renderRouletteConfig();renderRouletteTable();
+  }
+  function resolveRouletteBets(value){
+    var stake=rouletteStakeTotal(),returns=0;
+    Object.keys(state.roulette.bets).forEach(function(id){
+      var amount=state.roulette.bets[id],def=rouletteBetDef(id);
+      if(def.win(value))returns+=amount*(def.payout+1);
+    });
+    state.roulette.bankroll+=returns;state.roulette.lastNet=returns-stake;state.roulette.bets={};
+  }
+  function rouletteCell(text,cls,betId){
+    var b=document.createElement("button");b.type="button";b.className="roulette-cell "+cls;b.textContent=text;
+    if(betId){
+      b.dataset.bet=betId;b.addEventListener("click",function(){placeRouletteBet(betId)});
+      var amt=state.roulette.bets[betId]||0;if(amt>0){b.classList.add("bet");var ch=document.createElement("span");ch.className="bet-chip";ch.textContent=amt;b.appendChild(ch)}
+    }
+    return b;
+  }
+  function renderRouletteTable(){
+    var host=$("#rouletteTable");host.innerHTML="";
+    var board=document.createElement("div");board.className="roulette-board";
+    var zero=document.createElement("div");zero.className="roulette-zero-stack"+(state.roulette.kind==="european"?" single":"");
+    zero.appendChild(rouletteCell("0","green"+(state.roulette.last==="0"?" hit":""),"num:0"));
+    if(state.roulette.kind==="american")zero.appendChild(rouletteCell("00","green"+(state.roulette.last==="00"?" hit":""),"num:00"));
+    board.appendChild(zero);
+
+    var core=document.createElement("div");core.className="roulette-core";
+    var nums=document.createElement("div");nums.className="roulette-numbers";
+    [3,2,1].forEach(function(start){for(var n=start;n<=36;n+=3){var v=String(n),c=rouletteColor(v);nums.appendChild(rouletteCell(v,c+(state.roulette.last===v?" hit":""),"num:"+v))}});
+    core.appendChild(nums);
+    var dozens=document.createElement("div");dozens.className="roulette-dozens";
+    dozens.appendChild(rouletteCell("1ª DOZZINA","outside","d1"));dozens.appendChild(rouletteCell("2ª DOZZINA","outside","d2"));dozens.appendChild(rouletteCell("3ª DOZZINA","outside","d3"));core.appendChild(dozens);
+    var ev=document.createElement("div");ev.className="roulette-evenbets";
+    ev.appendChild(rouletteCell("1–18","outside","low"));ev.appendChild(rouletteCell("PARI","outside","even"));ev.appendChild(rouletteCell("ROSSO","outside red","red"));
+    ev.appendChild(rouletteCell("NERO","outside black","black"));ev.appendChild(rouletteCell("DISPARI","outside","odd"));ev.appendChild(rouletteCell("19–36","outside","high"));core.appendChild(ev);
+    board.appendChild(core);
+
+    var cols=document.createElement("div");cols.className="roulette-columns";
+    cols.appendChild(rouletteCell("2:1","outside","c3"));cols.appendChild(rouletteCell("2:1","outside","c2"));cols.appendChild(rouletteCell("2:1","outside","c1"));board.appendChild(cols);
+    host.appendChild(board);
+  }
+  function renderRouletteConfig(){
+    $("#rouletteKindLabel").textContent=state.roulette.kind==="american"?"Americana · 38 numeri":"Europea · 37 numeri";
+    $("#rouletteAnalysis").value=state.roulette.analysis;$("#rouletteAnalysisLabel").textContent=rouletteAnalysisName();
+    $("#rouletteModeLabel").textContent=state.roulette.mode==="game"?"gioco":"laboratorio";
+    $("#rouletteKindSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteKind===state.roulette.kind)});
+    $("#rouletteModeSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteMode===state.roulette.mode)});
+    $("#rouletteChipSeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.chip)===state.roulette.chip)});
+    $("#rouletteGamePanel").hidden=state.roulette.mode!=="game";
+    $("#rouletteBankroll").textContent=fmt(state.roulette.bankroll,0);$("#rouletteChipLabel").textContent=state.roulette.chip;
+    var stake=rouletteStakeTotal(),parts=Object.keys(state.roulette.bets).map(function(id){return rouletteBetDef(id).label+" "+state.roulette.bets[id]});
+    $("#rouletteBetSummary").textContent=parts.length?parts.join(" · ")+" · Totale "+stake:(state.roulette.lastNet==null?"Nessuna fiche piazzata.":"Ultimo giro: "+(state.roulette.lastNet>=0?"+":"")+state.roulette.lastNet+" · nessuna fiche piazzata.");
+    $("#rouletteTableHint").textContent=state.roulette.mode==="game"?"Tocca il tavolo per piazzare fiche virtuali.":"Tutti i numeri hanno la stessa probabilità di uscita.";
+    var mini=$("#rouletteLastMini");mini.textContent=state.roulette.last||"—";mini.style.background=state.roulette.last?(rouletteColor(state.roulette.last)==="red"?"#c92c35":rouletteColor(state.roulette.last)==="black"?"#17191d":"#087a45"):"#087a45";
+  }
+
   function updateExperimentUI(){
-    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isCategorical=isBalls||isCards;
+    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isRoulette=state.experiment==="roulette",isCategorical=isBalls||isCards||isRoulette;
     $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
-    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;
+    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;$("#rouletteConfig").hidden=!isRoulette;$("#rouletteMain").hidden=!isRoulette;
     var noFixedTheory=(isBalls&&!state.urn.replacement)||(isCards&&!state.deck.replacement);
     $("#theoryToggle").disabled=noFixedTheory;$("#theoryToggle").closest(".switchrow").style.opacity=noFixedTheory?".5":"1";
     document.querySelectorAll("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
 
-    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":isCards?"Pescate manuali":"Lanci manuali";
+    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":isCards?"Pescate manuali":isRoulette?"Giri manuali":"Lanci manuali";
     $("#manualPane").style.display=isCategorical?"none":"";
-    $("#urnDrawTopBtn").hidden=!isBalls;$("#cardDrawTopBtn").hidden=!isCards;
+    $("#urnDrawTopBtn").hidden=!isBalls;$("#cardDrawTopBtn").hidden=!isCards;$("#rouletteSpinTopBtn").hidden=!isRoulette;
     $("#manualHelp").textContent=isBalls
       ?(state.urn.replacement?"Ogni estrazione registra il colore; la pallina viene poi reintrodotta nell'urna.":"Ogni estrazione registra il colore e rimuove la pallina dall'urna.")
       :isCards
@@ -1016,6 +1292,7 @@
 
     if(isBalls)$("#simNote").textContent=state.urn.replacement?"La simulazione avvia una nuova serie di estrazioni indipendenti.":"Senza reintroduzione la simulazione si ferma quando l'urna è vuota.";
     else if(isCards)$("#simNote").textContent=state.deck.replacement?"La simulazione avvia una nuova serie di pescate indipendenti.":"Senza reintroduzione la simulazione si ferma quando il mazzo è vuoto.";
+    else if(isRoulette)$("#simNote").textContent="La simulazione genera una nuova serie di giri della roulette.";
     else $("#simNote").textContent="La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.";
 
     $("#rollBtn").disabled=false;
@@ -1026,9 +1303,11 @@
     }else if(isBalls){
       var urnHasBalls=urnTotal("current")>0;
       $("#urnDrawTopBtn").textContent=urnHasBalls?"🔴 ESTRAI UNA PALLINA":"URNA VUOTA";$("#urnDrawTopBtn").disabled=!urnHasBalls;$(".brandmark").textContent="🔴";renderUrnConfig();
-    }else{
+    }else if(isCards){
       var deckHasCards=deckTotal("current")>0;
       $("#cardDrawTopBtn").textContent=deckHasCards?"🃏 PESCA UNA CARTA":"MAZZO VUOTO";$("#cardDrawTopBtn").disabled=!deckHasCards;$(".brandmark").textContent="🃏";renderDeckConfig();
+    }else{
+      $("#rouletteSpinTopBtn").textContent="🎡 GIRA LA PALLINA";$("#rouletteSpinTopBtn").disabled=false;$(".brandmark").textContent="🎡";renderRouletteConfig();renderRouletteTable();
     }
   }
 
@@ -1036,6 +1315,7 @@
     updateExperimentUI();renderHistory();renderChart();renderStats();$("#seriesInfo").textContent=seriesDescription();$("#expectedInfo").textContent=expectedText();
     if(state.experiment==="balls")renderUrnVisual();
     if(state.experiment==="cards")renderCardVisual();
+    if(state.experiment==="roulette"){renderRouletteVisual();renderRouletteConfig();renderRouletteTable();}
   }
 
   function resetSeries(sound){
@@ -1044,6 +1324,8 @@
       state.urn.current=copyCounts(state.urn.initial);state.urn.lastColor=null;renderUrnVisual();sumDisplay.innerHTML="—<small>nessuna pallina estratta</small>";
     }else if(state.experiment==="cards"){
       state.deck.current=state.deck.initial.slice();state.deck.lastCard=null;renderCardVisual();sumDisplay.innerHTML="—<small>nessuna carta pescata</small>";
+    }else if(state.experiment==="roulette"){
+      state.roulette.last=null;state.roulette.lastNet=null;if(state.roulette.mode==="game")clearRouletteBets(true);renderRouletteVisual();sumDisplay.innerHTML="—<small>nessun giro</small>";
     }else{
       resultWrap.innerHTML="";sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
     }
@@ -1059,6 +1341,7 @@
     if(exp==="coins")showOutcome([1],false);
     if(exp==="balls")renderUrnVisual();
     if(exp==="cards")renderCardVisual();
+    if(exp==="roulette"){renderRouletteVisual();renderRouletteConfig();renderRouletteTable();}
   }
 
   function updateUrnCount(id,delta){
@@ -1095,6 +1378,10 @@
       rows.push("colore;quantita_iniziale;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");
       domain().forEach(function(id){rows.push([ballInfo(id).name,state.urn.initial[id],c[id],(c[id]/state.results.length*100).toFixed(4),(t[id]*100).toFixed(4)].join(";"))});
       kind="palline";
+    }else if(state.experiment==="roulette"){
+      rows.push("roulette;analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
+      domain().forEach(function(k){rows.push([state.roulette.kind,rouletteAnalysisName(),categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
+      kind="roulette_"+state.roulette.kind+"_"+state.roulette.analysis;
     }else if(state.experiment==="cards"){
       rows.push("analisi;categoria;carte_iniziali_categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");
       var initialCategoryCounts={};domain().forEach(function(k){initialCategoryCounts[k]=0});
@@ -1125,7 +1412,22 @@
   $("#cardDrawTopBtn").addEventListener("click",oneRoll);
   $("#cardAnalysis").addEventListener("change",function(e){state.deck.analysis=e.target.value;render()});
 
-  $$(".tabs button").forEach(function(b){b.addEventListener("click",function(){
+  $("#rouletteSpinTopBtn").addEventListener("click",oneRoll);
+  $("#rouletteAnalysis").addEventListener("change",function(e){state.roulette.analysis=e.target.value;render()});
+  $("#rouletteKindSeg").addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;var k=b.dataset.rouletteKind;if(k===state.roulette.kind)return;
+    if(state.results.length&&!confirm("Cambiare tipo di roulette? La serie corrente verrà azzerata."))return;
+    clearRouletteBets(true);state.roulette.kind=k;state.results=[];state.roulette.last=null;state.roulette.lastNet=null;render();
+  });
+  $("#rouletteModeSeg").addEventListener("click",function(e){
+    var b=e.target.closest("button");if(!b)return;var mode=b.dataset.rouletteMode;if(mode===state.roulette.mode)return;
+    clearRouletteBets(true);state.roulette.mode=mode;state.roulette.lastNet=null;render();
+  });
+  $("#rouletteChipSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;state.roulette.chip=Number(b.dataset.chip);renderRouletteConfig()});
+  $("#clearRouletteBetsBtn").addEventListener("click",function(){clearRouletteBets(true)});
+  $("#newRouletteGameBtn").addEventListener("click",function(){state.roulette.bankroll=100;state.roulette.bets={};state.roulette.lastNet=null;renderRouletteConfig();renderRouletteTable()});
+
+  $(".tabs button").forEach(function(b){b.addEventListener("click",function(){
     $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
     $$(".modepane").forEach(function(x){x.classList.remove("active")});$("#"+b.dataset.tab+"Pane").classList.add("active");
   })});
