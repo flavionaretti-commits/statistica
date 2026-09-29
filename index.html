@@ -186,6 +186,20 @@
       .urn-row{grid-template-columns:16px 1fr 30px 22px 30px 40px}
       .urn-display{grid-template-columns:1fr}.draw-zone{display:flex;align-items:center;justify-content:center;gap:8px}.drawn-ball{width:48px;height:48px;margin:0}
     }
+    /* Correzione selector esperimenti nella colonna laterale stretta */
+    .experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .mode-card{min-width:0;grid-template-columns:34px minmax(0,1fr);padding:9px}
+    .mode-card>div:last-child{min-width:0}
+    .mode-card strong,.mode-card span{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .experiment-card[data-experiment="balls"]{grid-column:1/-1}
+    @media(max-width:940px){
+      .experiment-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+      .experiment-card[data-experiment="balls"]{grid-column:auto}
+      .mode-card{grid-template-columns:38px minmax(0,1fr)}
+    }
+    @media(max-width:560px){
+      .mode-card{grid-template-columns:1fr;padding:9px 4px}
+    }
   </style>
 </head>
 <body>
@@ -256,7 +270,7 @@
       <div class="modepane active" id="manualPane">
         <div style="height:12px"></div>
         <button class="primary" id="rollBtn">🎲 LANCIA I DADI</button>
-        <p style="font-size:12px;color:var(--muted);line-height:1.45;margin:10px 2px 0">Ogni lancio si aggiunge alla serie e aggiorna immediatamente distribuzione e indici.</p>
+        <p id="manualHelp" style="font-size:12px;color:var(--muted);line-height:1.45;margin:10px 2px 0">Ogni lancio si aggiunge alla serie e aggiorna immediatamente distribuzione e indici.</p>
       </div>
 
       <div class="modepane" id="simulationPane">
@@ -678,10 +692,16 @@
     $("#theoryToggle").closest(".switchrow").style.opacity=(isBalls&&!state.urn.replacement)?".5":"1";
     $("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
     $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":"Lanci manuali";
+    $("#manualHelp").textContent=isBalls
+      ?(state.urn.replacement
+        ?"Ogni estrazione registra il colore; la pallina viene poi reintrodotta nell'urna."
+        :"Ogni estrazione registra il colore e rimuove la pallina dall'urna.")
+      :"Ogni lancio si aggiunge alla serie e aggiorna immediatamente distribuzione e indici.";
     $("#simNote").textContent=isBalls
       ?(state.urn.replacement?"La simulazione avvia una nuova serie di estrazioni indipendenti.":"Senza reintroduzione la simulazione si ferma quando l'urna è vuota.")
       :"La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.";
 
+    $("#rollBtn").disabled=false;
     if(state.experiment==="dice"){
       $("#quantityTitle").textContent="Numero di dadi";$("#quantityLabel").textContent=q+(q===1?" dado":" dadi");$("#rollBtn").textContent="🎲 LANCIA I DADI";$(".brandmark").textContent="🎲";
     }else if(state.experiment==="coins"){
