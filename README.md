@@ -45,6 +45,17 @@ Laboratorio didattico interattivo di statistica e probabilità.
 - modalità giorno/notte, fullscreen e suoni
 - PWA installabile e utilizzabile offline
 
-Architettura predisposta per future modalità: roulette e altri esperimenti casuali.
+### 🎡 Roulette
+- tavolo completo con numeri 0–36 e principali puntate esterne
+- versione europea con 0 singolo oppure americana con 0 e 00
+- giri manuali e simulazioni
+- analisi per numero, colore, pari/dispari, 1–18/19–36, dozzine e colonne
+- confronto con le probabilità teoriche
+- modalità GIOCO con saldo e fiche esclusivamente virtuali
+- puntate virtuali su numero pieno, rosso/nero, pari/dispari, basso/alto, dozzine e colonne
+- quote virtuali standard: 35:1 sul pieno, 2:1 su dozzine/colonne, 1:1 sulle chance semplici
+- esportazione CSV e modalità PROIEZIONE
+
+STATISTICA! comprende ora dadi, monete, urna, carte e roulette.
 
 © prof. Flavio Naretti
