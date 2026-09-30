@@ -1143,26 +1143,9 @@
   }
 
   function showOutcome(vals,animate){
-    if(state.experiment==="galton"){
-      rows.push("canale;deviazioni_destra;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
-      domain().forEach(function(k){rows.push([k,k,c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
-      kind="galton_"+state.galton.rows+"file";
-    }else if(state.experiment==="balls"){renderUrnVisual();return}
+    if(state.experiment==="balls"){renderUrnVisual();return}
     if(state.experiment==="cards"){renderCardVisual();return}
     if(state.experiment==="roulette"){renderRouletteVisual();return}
-    if(state.experiment==="galton"){
-      state.galton.token++;state.galton.animating=false;state.galton.lastPath=[];state.galton.lastBin=null;
-      state.results=new Array(n);var lastGalton=null;
-      for(var gg=0;gg<n;gg++){var gr=galtonTrial();state.results[gg]=gr.value;if(gg===n-1)lastGalton=gr}
-      if(lastGalton){state.lastOutcome=lastGalton.raw;state.galton.lastPath=lastGalton.raw;state.galton.lastBin=lastGalton.value;sumDisplay.innerHTML=resultText(lastGalton.value,true)}
-      renderGaltonMini();renderGaltonMachine();beep("done");render();return;
-    }
-
-    if(state.experiment==="galton"){
-      for(var g=0;g<=state.galton.rows;g++)out[g]=choose(state.galton.rows,g)/Math.pow(2,state.galton.rows);
-      return out;
-    }
-    if(state.experiment==="galton")return "Macchina di Galton · canale finale";
     if(state.experiment==="tombola"){renderTombolaVisual();return}
     if(state.experiment==="galton"){renderGaltonMini();return}
     resultWrap.innerHTML="";
@@ -1252,11 +1235,6 @@
 
   function oneRoll(){
     if(state.experiment==="galton"){dropGaltonAnimated();return}
-    if(state.experiment==="galton"){
-      var gs=calcStats();
-      setStat("n","Palline",fmt(gs?gs.n:0,0));setStat("mean","Media destra",gs?fmt(gs.mean,2):"—");setStat("median","Mediana",gs?fmt(gs.median,1):"—");setStat("mode","Moda",gs?gs.mode:"—");
-      setStat("min","Min destra",gs?fmt(gs.min,0):"—");setStat("max","Max destra",gs?fmt(gs.max,0):"—");setStat("range","Range",gs?fmt(gs.range,0):"—");setStat("sd","Dev. std.",gs?fmt(gs.sd,2):"—");return;
-    }
     if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"){
       if(state.results.length&&!confirm("Iniziare una partita manuale? La simulazione corrente verrà azzerata."))return;
       state.results=[];state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";
@@ -1280,41 +1258,40 @@
     n=Math.max(1,Math.min(1000000,Math.floor(Number(n)||0)));
     state.results=[];state.lastOutcome=[];
 
+    if(state.experiment==="galton"){
+      state.galton.token++;state.galton.animating=false;state.galton.lastPath=[];state.galton.lastBin=null;
+      state.results=new Array(n);var lastGalton=null;
+      for(var gg=0;gg<n;gg++){var gr=galtonTrial();state.results[gg]=gr.value;if(gg===n-1)lastGalton=gr}
+      if(lastGalton){state.lastOutcome=lastGalton.raw;state.galton.lastPath=lastGalton.raw;state.galton.lastBin=lastGalton.value;sumDisplay.innerHTML=resultText(lastGalton.value,true)}
+      renderGaltonMini();renderGaltonMachine();beep("done");render();return;
+    }
     if(state.experiment==="tombola"){
       n=Math.min(n,100000);state.tombola.dataMode="waiting";state.tombola.last=null;state.tombola.remaining=range90();
       state.results=new Array(n);for(var tg=0;tg<n;tg++)state.results[tg]=tombolaWaitForEvent(state.tombola.waitEvent);
       sumDisplay.innerHTML="—<small>"+n.toLocaleString("it-IT")+" partite simulate · "+tombolaWaitName()+"</small>";beep("done");render();return;
     }
-
     if(state.experiment==="balls"){
       state.urn.current=copyCounts(state.urn.initial);state.urn.lastColor=null;
-      var available=urnTotal("current");
-      if(available<=0){alert("Inserisci almeno una pallina nell'urna.");render();return}
+      var available=urnTotal("current");if(available<=0){alert("Inserisci almeno una pallina nell'urna.");render();return}
       if(!state.urn.replacement)n=Math.min(n,available);
-      var lastBall=null;
-      for(var i=0;i<n;i++){var rb=trial();if(!rb)break;state.results.push(rb.value);lastBall=rb}
+      var lastBall=null;for(var i=0;i<n;i++){var rb=trial();if(!rb)break;state.results.push(rb.value);lastBall=rb}
       if(lastBall){state.lastOutcome=lastBall.raw;state.urn.lastColor=lastBall.value;sumDisplay.innerHTML=resultText(lastBall.value,true)}
       renderUrnVisual();beep("done");render();return;
     }
-
     if(state.experiment==="roulette"){
       state.results=new Array(n);var lastRoulette=null;
       for(var rr=0;rr<n;rr++){var rt=trial();state.results[rr]=rt.value;if(rr===n-1)lastRoulette=rt}
       state.roulette.last=lastRoulette.value;state.lastOutcome=lastRoulette.raw;
       sumDisplay.innerHTML=resultText(lastRoulette.value,true);renderRouletteVisual();beep("done");render();return;
     }
-
     if(state.experiment==="cards"){
       state.deck.current=state.deck.initial.slice();state.deck.lastCard=null;
-      var availableCards=deckTotal("current");
-      if(availableCards<=0){alert("Seleziona almeno una carta nel mazzo.");render();return}
+      var availableCards=deckTotal("current");if(availableCards<=0){alert("Seleziona almeno una carta nel mazzo.");render();return}
       if(!state.deck.replacement)n=Math.min(n,availableCards);
-      var lastCard=null;
-      for(var j=0;j<n;j++){var rc=trial();if(!rc)break;state.results.push(rc.value);lastCard=rc}
+      var lastCard=null;for(var j=0;j<n;j++){var rc=trial();if(!rc)break;state.results.push(rc.value);lastCard=rc}
       if(lastCard){state.lastOutcome=lastCard.raw;state.deck.lastCard=lastCard.value;sumDisplay.innerHTML=resultText(lastCard.value,true)}
       renderCardVisual();beep("done");render();return;
     }
-
     state.results=new Array(n);var final=null;
     for(var k=0;k<n;k++){var r=trial();state.results[k]=r.value;if(k===n-1)final=r}
     state.lastOutcome=final.raw;showOutcome(final.raw,true);sumDisplay.innerHTML=resultText(final.value,true);beep("done");render();
@@ -1376,37 +1353,28 @@
 
   function theoreticalProbabilities(){
     var out={};
+    if(state.experiment==="galton"){
+      for(var g=0;g<=state.galton.rows;g++)out[g]=choose(state.galton.rows,g)/Math.pow(2,state.galton.rows);
+      return out;
+    }
     if(state.experiment==="tombola"){
-      var td=tombolaDomain();td.forEach(function(k){out[k]=0});
-      if(state.tombola.dataMode==="waiting")return out;
-      range90().forEach(function(v){var k=tombolaCategory(v);out[k]=(out[k]||0)+1});
-      td.forEach(function(k){out[k]=out[k]/90});return out;
+      var td=tombolaDomain();td.forEach(function(k){out[k]=0});if(state.tombola.dataMode==="waiting")return out;
+      range90().forEach(function(v){var k=tombolaCategory(v);out[k]=(out[k]||0)+1});td.forEach(function(k){out[k]=out[k]/90});return out;
     }
     if(state.experiment==="roulette"){
       var rd=rouletteDomain(),rp=roulettePockets();rd.forEach(function(k){out[k]=0});
-      rp.forEach(function(v){var k=rouletteCategory(v);out[k]=(out[k]||0)+1});
-      rd.forEach(function(k){out[k]=out[k]/rp.length});return out;
+      rp.forEach(function(v){var k=rouletteCategory(v);out[k]=(out[k]||0)+1});rd.forEach(function(k){out[k]=out[k]/rp.length});return out;
     }
     if(state.experiment==="balls"){
-      var total=urnTotal("initial");
-      activeBallIds().forEach(function(id){out[id]=total?(state.urn.initial[id]||0)/total:0});
-      return out;
+      var total=urnTotal("initial");activeBallIds().forEach(function(id){out[id]=total?(state.urn.initial[id]||0)/total:0});return out;
     }
     if(state.experiment==="cards"){
-      var d=cardDomain(),totalCards=deckTotal("initial");
-      d.forEach(function(k){out[k]=0});
-      state.deck.initial.forEach(function(id){var k=cardCategory(id);out[k]=(out[k]||0)+1});
-      d.forEach(function(k){out[k]=totalCards?out[k]/totalCards:0});
-      return out;
+      var d=cardDomain(),totalCards=deckTotal("initial");d.forEach(function(k){out[k]=0});
+      state.deck.initial.forEach(function(id){var k=cardCategory(id);out[k]=(out[k]||0)+1});d.forEach(function(k){out[k]=totalCards?out[k]/totalCards:0});return out;
     }
     var q=quantity();
     if(state.experiment==="coins"){for(var h=0;h<=q;h++)out[h]=choose(q,h)/Math.pow(2,q);return out}
-    var dist=[1];
-    for(var di=0;di<q;di++){
-      var next=new Array(dist.length+6).fill(0);
-      for(var x=0;x<dist.length;x++)for(var face=1;face<=6;face++)next[x+face]+=dist[x];
-      dist=next;
-    }
+    var dist=[1];for(var di=0;di<q;di++){var next=new Array(dist.length+6).fill(0);for(var x=0;x<dist.length;x++)for(var face=1;face<=6;face++)next[x+face]+=dist[x];dist=next}
     var total=Math.pow(6,q);for(var s=q;s<=6*q;s++)out[s]=(dist[s]||0)/total;return out;
   }
 
@@ -1455,6 +1423,11 @@
     return String(k);
   }
   function renderStats(){
+    if(state.experiment==="galton"){
+      var gs=calcStats();
+      setStat("n","Palline",fmt(gs?gs.n:0,0));setStat("mean","Media destra",gs?fmt(gs.mean,2):"—");setStat("median","Mediana",gs?fmt(gs.median,1):"—");setStat("mode","Moda",gs?gs.mode:"—");
+      setStat("min","Min destra",gs?fmt(gs.min,0):"—");setStat("max","Max destra",gs?fmt(gs.max,0):"—");setStat("range","Range",gs?fmt(gs.range,0):"—");setStat("sd","Dev. std.",gs?fmt(gs.sd,2):"—");return;
+    }
     if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"){
       var ts=calcStats();setStat("n","Partite",fmt(ts?ts.n:0,0));setStat("mean","Media estrazione",ts?fmt(ts.mean,2):"—");setStat("median","Mediana",ts?fmt(ts.median,1):"—");setStat("mode","Moda",ts?ts.mode:"—");
       setStat("min","Più presto",ts?fmt(ts.min,0):"—");setStat("max","Più tardi",ts?fmt(ts.max,0):"—");setStat("range","Range",ts?fmt(ts.range,0):"—");setStat("sd","Dev. std.",ts?fmt(ts.sd,2):"—");return;
@@ -1464,28 +1437,11 @@
       setStat("min","Mancano",15-hi.total);setStat("max","Rimasti",state.tombola.remaining.length);setStat("range","Premio",hi.prize);setStat("sd","Modalità","SENZA");return;
     }
     if(state.experiment==="balls"||state.experiment==="cards"||state.experiment==="roulette"){
-      var c=counts(),ids=domain(),best=null,bestN=0,used=0;
-      ids.forEach(function(id){var n=c[id]||0;if(n>0)used++;if(n>bestN){bestN=n;best=id}});
-      setStat("n",state.experiment==="cards"?"Pescate":state.experiment==="roulette"?"Giri":"Estrazioni",fmt(state.results.length,0));
-      setStat("mean","Più frequente",best?categoryLabel(best):"—");
-      setStat("median","Frequenza max",best?fmt(bestN,0):"—");
-      setStat("mode","Categorie viste",fmt(used,0));
-      if(state.experiment==="balls"){
-        setStat("min","Palline iniziali",fmt(urnTotal("initial"),0));
-        setStat("max","Palline rimaste",fmt(urnTotal("current"),0));
-        setStat("range","Colori attivi",fmt(ids.length,0));
-        setStat("sd","Modalità",state.urn.replacement?"CON":"SENZA");
-      }else if(state.experiment==="cards"){
-        setStat("min","Carte iniziali",fmt(deckTotal("initial"),0));
-        setStat("max","Carte rimaste",fmt(deckTotal("current"),0));
-        setStat("range","Categorie",fmt(ids.length,0));
-        setStat("sd","Modalità",state.deck.replacement?"CON":"SENZA");
-      }else{
-        setStat("min","Caselle",fmt(roulettePockets().length,0));
-        setStat("max","Rossi",18);
-        setStat("range","Neri",18);
-        setStat("sd","Zeri",state.roulette.kind==="american"?2:1);
-      }
+      var c=counts(),ids=domain(),best=null,bestN=0,used=0;ids.forEach(function(id){var n=c[id]||0;if(n>0)used++;if(n>bestN){bestN=n;best=id}});
+      setStat("n",state.experiment==="cards"?"Pescate":state.experiment==="roulette"?"Giri":"Estrazioni",fmt(state.results.length,0));setStat("mean","Più frequente",best?categoryLabel(best):"—");setStat("median","Frequenza max",best?fmt(bestN,0):"—");setStat("mode","Categorie viste",fmt(used,0));
+      if(state.experiment==="balls"){setStat("min","Palline iniziali",fmt(urnTotal("initial"),0));setStat("max","Palline rimaste",fmt(urnTotal("current"),0));setStat("range","Colori attivi",fmt(ids.length,0));setStat("sd","Modalità",state.urn.replacement?"CON":"SENZA")}
+      else if(state.experiment==="cards"){setStat("min","Carte iniziali",fmt(deckTotal("initial"),0));setStat("max","Carte rimaste",fmt(deckTotal("current"),0));setStat("range","Categorie",fmt(ids.length,0));setStat("sd","Modalità",state.deck.replacement?"CON":"SENZA")}
+      else{setStat("min","Caselle",fmt(roulettePockets().length,0));setStat("max","Rossi",18);setStat("range","Neri",18);setStat("sd","Zeri",state.roulette.kind==="american"?2:1)}
       return;
     }
     var s=calcStats(),vals=s||{n:0,mean:NaN,median:NaN,mode:"—",min:NaN,max:NaN,range:NaN,sd:NaN};
@@ -1526,21 +1482,13 @@
   }
   function chartTitle(){
     if(state.experiment==="balls")return "Distribuzione dei colori estratti";
-    if(state.experiment==="cards"){
-      var names={suit:"Distribuzione per seme",rank:"Distribuzione per valore",type:"Distribuzione per tipo di carta",color:"Distribuzione per colore"};
-      return names[state.deck.analysis];
-    }
-    if(state.experiment==="roulette"){
-      var rn={color:"Roulette · colori",parity:"Roulette · pari/dispari",range:"Roulette · 1–18 / 19–36",dozen:"Roulette · dozzine",column:"Roulette · colonne",number:"Roulette · numeri"};
-      return rn[state.roulette.analysis];
-    }
-    if(state.experiment==="tombola"){
-      if(state.tombola.dataMode==="waiting")return "Tempo di attesa · "+tombolaWaitName();
-      var tn={decade:"Tombola · decine",parity:"Tombola · pari/dispari",half:"Tombola · 1–45 / 46–90",number:"Tombola · numeri"};
-      return tn[state.tombola.analysis];
-    }
+    if(state.experiment==="cards"){var names={suit:"Distribuzione per seme",rank:"Distribuzione per valore",type:"Distribuzione per tipo di carta",color:"Distribuzione per colore"};return names[state.deck.analysis]}
+    if(state.experiment==="roulette"){var rn={color:"Roulette · colori",parity:"Roulette · pari/dispari",range:"Roulette · 1–18 / 19–36",dozen:"Roulette · dozzine",column:"Roulette · colonne",number:"Roulette · numeri"};return rn[state.roulette.analysis]}
+    if(state.experiment==="tombola"){if(state.tombola.dataMode==="waiting")return "Tempo di attesa · "+tombolaWaitName();var tn={decade:"Tombola · decine",parity:"Tombola · pari/dispari",half:"Tombola · 1–45 / 46–90",number:"Tombola · numeri"};return tn[state.tombola.analysis]}
+    if(state.experiment==="galton")return "Macchina di Galton · canale finale";
     return state.experiment==="dice"?"Distribuzione delle somme":"Distribuzione del numero di teste";
   }
+
   function emptyMessage(){
     if(state.experiment==="balls")return "Estrai una pallina per costruire l'istogramma.";
     if(state.experiment==="cards")return "Pesca una carta per costruire l'istogramma.";
@@ -1894,37 +1842,25 @@
   function exportCSV(){
     if(!state.results.length){alert("Prima crea una serie di prove.");return}
     var c=counts(),t=theoreticalProbabilities(),rows=[],kind;
-    if(state.experiment==="balls"){
+    if(state.experiment==="galton"){
+      rows.push("canale;deviazioni_destra;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
+      domain().forEach(function(k){rows.push([k,k,c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});kind="galton_"+state.galton.rows+"file";
+    }else if(state.experiment==="balls"){
       rows.push("colore;quantita_iniziale;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");
-      domain().forEach(function(id){rows.push([ballInfo(id).name,state.urn.initial[id],c[id],(c[id]/state.results.length*100).toFixed(4),(t[id]*100).toFixed(4)].join(";"))});
-      kind="palline";
+      domain().forEach(function(id){rows.push([ballInfo(id).name,state.urn.initial[id],c[id],(c[id]/state.results.length*100).toFixed(4),(t[id]*100).toFixed(4)].join(";"))});kind="palline";
     }else if(state.experiment==="tombola"){
-      if(state.tombola.dataMode==="waiting"){
-        rows.push("premio;estrazione;frequenza_assoluta;frequenza_relativa_percento");
-        domain().forEach(function(k){rows.push([tombolaWaitName(),k,c[k]||0,(c[k]/state.results.length*100).toFixed(4)].join(";"))});
-        kind="tombola_attesa_"+state.tombola.waitEvent;
-      }else{
-        rows.push("analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
-        domain().forEach(function(k){rows.push([state.tombola.analysis,categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
-        kind="tombola_"+state.tombola.analysis;
-      }
+      if(state.tombola.dataMode==="waiting"){rows.push("premio;estrazione;frequenza_assoluta;frequenza_relativa_percento");domain().forEach(function(k){rows.push([tombolaWaitName(),k,c[k]||0,(c[k]/state.results.length*100).toFixed(4)].join(";"))});kind="tombola_attesa_"+state.tombola.waitEvent}
+      else{rows.push("analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");domain().forEach(function(k){rows.push([state.tombola.analysis,categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});kind="tombola_"+state.tombola.analysis}
     }else if(state.experiment==="roulette"){
-      rows.push("roulette;analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
-      domain().forEach(function(k){rows.push([state.roulette.kind,rouletteAnalysisName(),categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
-      kind="roulette_"+state.roulette.kind+"_"+state.roulette.analysis;
+      rows.push("roulette;analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");domain().forEach(function(k){rows.push([state.roulette.kind,rouletteAnalysisName(),categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});kind="roulette_"+state.roulette.kind+"_"+state.roulette.analysis;
     }else if(state.experiment==="cards"){
-      rows.push("analisi;categoria;carte_iniziali_categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");
-      var initialCategoryCounts={};domain().forEach(function(k){initialCategoryCounts[k]=0});
-      state.deck.initial.forEach(function(id){var k=cardCategory(id);initialCategoryCounts[k]=(initialCategoryCounts[k]||0)+1});
-      domain().forEach(function(k){rows.push([analysisName(),categoryLabel(k),initialCategoryCounts[k]||0,c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
-      kind="carte_"+state.deck.analysis;
+      rows.push("analisi;categoria;carte_iniziali_categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");var initialCategoryCounts={};domain().forEach(function(k){initialCategoryCounts[k]=0});
+      state.deck.initial.forEach(function(id){var k=cardCategory(id);initialCategoryCounts[k]=(initialCategoryCounts[k]||0)+1});domain().forEach(function(k){rows.push([analysisName(),categoryLabel(k),initialCategoryCounts[k]||0,c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});kind="carte_"+state.deck.analysis;
     }else{
-      var variable=state.experiment==="dice"?"somma":"numero_teste";
-      rows.push(variable+";frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
-      domain().forEach(function(v){rows.push([v,c[v],(c[v]/state.results.length*100).toFixed(4),(t[v]*100).toFixed(4)].join(";"))});
-      kind=state.experiment==="dice"?"dadi":"monete";
+      var variable=state.experiment==="dice"?"somma":"numero_teste";rows.push(variable+";frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
+      domain().forEach(function(v){rows.push([v,c[v],(c[v]/state.results.length*100).toFixed(4),(t[v]*100).toFixed(4)].join(";"))});kind=state.experiment==="dice"?"dadi":"monete";
     }
-    var blob=new Blob(["\ufeff"+rows.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");
+    var blob=new Blob(["﻿"+rows.join("\n")],{type:"text/csv;charset=utf-8"}),a=document.createElement("a");
     a.href=URL.createObjectURL(blob);a.download="STATISTICA_"+kind+"_"+state.results.length+"prove.csv";a.click();setTimeout(function(){URL.revokeObjectURL(a.href)},1000);
   }
 
