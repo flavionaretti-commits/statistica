@@ -319,10 +319,53 @@
     .barcol.tombola-bar .bar-theory{background:#d99b2b!important;border-color:#d99b2b!important;opacity:.24}
     .instructions-modal{max-width:760px}.instructions-modal h3{margin:17px 0 4px;font-size:15px}.instructions-modal p{margin:5px 0}
     .credits-modal{max-width:520px}.credits-modal p{margin:10px 0}.credits-copy{font-weight:850}.credits-next{padding-top:9px;border-top:1px solid var(--line)}
-    /* sei modalità: griglia piena 2x3 nella sidebar, 3x2 quando c'è spazio */
+    /* MACCHINA DI GALTON */
+    .galton-drop-top{margin:2px 0 14px}
+    .galton-range{width:100%;accent-color:var(--accent);margin:2px 0 5px}
+    .galton-row-quick{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin:4px 0 12px}
+    .galton-row-quick button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:9px;padding:7px 2px;font-size:10px;font-weight:850;cursor:pointer}
+    .galton-row-quick button.active{background:var(--accent);border-color:var(--accent);color:white}
+    .galton-speed{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:10px 11px;font-weight:750}
+    .galton-main{overflow:hidden}
+    .galton-main-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+    .galton-main-head h2{margin:0;font-size:20px}
+    .galton-main-head p{margin:3px 0 0;color:var(--muted);font-size:12px}
+    .galton-badge{padding:7px 10px;border:1px solid var(--line);border-radius:999px;background:var(--panel2);font-size:11px;font-weight:900;color:var(--muted)}
+    .galton-machine{position:relative;height:clamp(390px,48vw,550px);min-height:390px;border:1px solid var(--line);border-radius:20px;overflow:hidden;background:
+      linear-gradient(180deg,rgba(255,255,255,.34),rgba(41,98,255,.035)),
+      repeating-linear-gradient(90deg,transparent 0,transparent 49px,rgba(127,145,170,.055) 50px),
+      var(--panel2)}
+    html[data-theme="dark"] .galton-machine{background:
+      linear-gradient(180deg,rgba(255,255,255,.025),rgba(118,160,255,.035)),
+      repeating-linear-gradient(90deg,transparent 0,transparent 49px,rgba(160,180,205,.035) 50px),
+      var(--panel2)}
+    .galton-frame-top{position:absolute;left:45%;right:45%;top:1.5%;height:5.5%;border:2px solid var(--line);border-bottom:0;border-radius:12px 12px 0 0;background:linear-gradient(180deg,#b9c5d4,#7f8da0);box-shadow:inset 0 1px 2px rgba(255,255,255,.6)}
+    .galton-peg{position:absolute;width:11px;height:11px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 35% 28%,#fff,#cbd5e1 38%,#7a899b 76%,#4d5967);box-shadow:0 2px 4px rgba(0,0,0,.24)}
+    .galton-bin{position:absolute;bottom:7%;height:21%;transform:translateX(-50%);border-left:2px solid rgba(119,137,160,.55);border-right:2px solid rgba(119,137,160,.55);border-bottom:3px solid rgba(119,137,160,.72);border-radius:0 0 7px 7px;pointer-events:none}
+    .galton-pile{position:absolute;bottom:8.5%;height:18%;transform:translateX(-50%);display:flex;flex-wrap:wrap-reverse;align-content:flex-start;justify-content:center;gap:2px;overflow:hidden;padding:2px}
+    .galton-pile-dot{width:8px;height:8px;border-radius:50%;flex:0 0 8px;background:radial-gradient(circle at 32% 28%,#fff8c7,#f8b84e 42%,#e67f22 78%,#a94b12);box-shadow:0 1px 2px rgba(0,0,0,.2)}
+    .galton-bin-label{position:absolute;bottom:1%;transform:translateX(-50%);text-align:center;line-height:1.05;font-size:10px;font-weight:900;color:var(--text);white-space:nowrap}
+    .galton-bin-label small{display:block;color:var(--muted);font-size:8px;margin-top:2px;font-weight:750}
+    .galton-moving-ball{position:absolute;z-index:8;width:17px;height:17px;border-radius:50%;transform:translate(-50%,-50%);background:radial-gradient(circle at 32% 28%,#fff9cf,#ffca58 38%,#ef8c25 72%,#ac4e13);box-shadow:0 3px 7px rgba(0,0,0,.28),inset -2px -3px 4px rgba(94,45,4,.18);pointer-events:none}
+    .galton-axis-caption{position:absolute;left:50%;bottom:27.5%;transform:translateX(-50%);color:var(--muted);font-size:9px;font-weight:800;letter-spacing:.03em;white-space:nowrap}
+    .galton-mini{display:grid;place-items:center;text-align:center}
+    .galton-mini-ball{width:72px;height:72px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 32% 28%,#fff9cf,#ffca58 38%,#ef8c25 72%,#ac4e13);color:#613109;font-size:24px;font-weight:950;box-shadow:0 8px 18px rgba(0,0,0,.18)}
+    .galton-mini-caption{font-size:11px;color:var(--muted);font-weight:850;margin-top:8px}
+    .barcol.galton-bar .bar-actual{background:linear-gradient(180deg,#f8b84e,#e67f22)!important}
+    .barcol.galton-bar .bar-theory{background:rgba(230,127,34,.22)!important;border-color:rgba(230,127,34,.5)!important}
+    @media(max-width:560px){
+      .galton-machine{height:420px;min-height:420px}
+      .galton-peg{width:9px;height:9px}
+      .galton-pile-dot{width:6px;height:6px;flex-basis:6px}
+      .galton-row-quick{grid-template-columns:repeat(3,1fr)}
+    }
+
+    /* sette modalità: Galton occupa una riga propria */
     .experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    @media(max-width:940px){.experiment-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-    @media(max-width:560px){.experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tombola-board{gap:2px}.tombola-number{min-height:27px;border-radius:5px;font-size:9px}.tombola-ticket{grid-template-rows:repeat(3,38px)}}
+    .experiment-card[data-experiment="balls"]{grid-column:auto}
+    .experiment-card[data-experiment="galton"]{grid-column:1/-1}
+    @media(max-width:940px){.experiment-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.experiment-card[data-experiment="balls"]{grid-column:auto}.experiment-card[data-experiment="galton"]{grid-column:1/-1}}
+    @media(max-width:560px){.experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.experiment-card[data-experiment="galton"]{grid-column:1/-1}.tombola-board{gap:2px}.tombola-number{min-height:27px;border-radius:5px;font-size:9px}.tombola-ticket{grid-template-rows:repeat(3,38px)}}
   </style>
 </head>
 <body>
@@ -362,6 +405,9 @@
         </button>
         <button class="mode-card experiment-card" data-experiment="tombola">
           <div class="emoji">🎱</div><div><strong>Tombola</strong><span>1–90</span></div>
+        </button>
+        <button class="mode-card experiment-card" data-experiment="galton">
+          <div class="emoji">⚙️</div><div><strong>Macchina di Galton</strong><span>Binomiale in caduta</span></div>
         </button>
       </div>
 
@@ -490,6 +536,25 @@
         <p class="urn-note">La partita manuale estrae senza reintroduzione. In SIMULAZIONE il numero richiesto indica quante partite complete simulare per studiare il tempo di attesa del premio scelto.</p>
       </div>
 
+      <div class="field" id="galtonConfig" hidden>
+        <button class="primary galton-drop-top" id="galtonDropTopBtn">🟠 LASCIA CADERE UNA PALLINA</button>
+
+        <div class="labelrow"><span>File di pioli</span><span id="galtonRowsLabel">10 file · 11 canali</span></div>
+        <input class="galton-range" id="galtonRows" type="range" min="4" max="16" step="1" value="10">
+        <div class="galton-row-quick" id="galtonRowQuick">
+          <button data-galton-rows="4">4</button><button data-galton-rows="6">6</button><button data-galton-rows="8">8</button>
+          <button class="active" data-galton-rows="10">10</button><button data-galton-rows="12">12</button><button data-galton-rows="16">16</button>
+        </div>
+
+        <div class="labelrow"><span>Velocità della pallina singola</span><span id="galtonSpeedLabel">normale</span></div>
+        <select id="galtonSpeed" class="galton-speed">
+          <option value="slow">Lenta · osserva ogni deviazione</option>
+          <option value="normal" selected>Normale</option>
+          <option value="fast">Veloce</option>
+        </select>
+        <p class="urn-note">A ogni piolo: <b>sinistra = CROCE</b>, <b>destra = TESTA</b>. Il canale finale conta quanti passaggi a destra sono avvenuti.</p>
+      </div>
+
       <div class="tabs">
         <button class="active" data-tab="manual">Lanci manuali</button>
         <button data-tab="simulation">Simulazione</button>
@@ -517,6 +582,17 @@
     </aside>
 
     <main class="maincol">
+      <section class="panel galton-main" id="galtonMain" hidden>
+        <div class="galton-main-head">
+          <div>
+            <h2>Macchina di Galton</h2>
+            <p id="galtonStatusText">10 file di pioli · 11 canali · nessuna pallina</p>
+          </div>
+          <div class="galton-badge" id="galtonBadge">SINISTRA 50% · DESTRA 50%</div>
+        </div>
+        <div class="galton-machine" id="galtonMachine" aria-label="Macchina di Galton"></div>
+      </section>
+
       <section class="panel tombola-main" id="tombolaMain" hidden>
         <div class="tombola-main-head">
           <div>
@@ -550,7 +626,7 @@
           <div class="sum" id="sumDisplay">—<small>somma dell'ultimo lancio</small></div>
         </section>
         <section class="panel">
-          <div class="history-title">ULTIMI LANCI</div>
+          <div class="history-title" id="historyTitle">ULTIMI LANCI</div>
           <div class="history" id="history"><span style="color:var(--muted);font-size:12px">Nessun lancio ancora.</span></div>
           <div style="height:12px"></div>
           <div class="charthead" style="margin:0">
@@ -614,6 +690,9 @@
     <h3>🎱 Tombola</h3>
     <p>Estrai numeri da 1 a 90 senza reintroduzione: il tabellone si completa e una cartella 3×9 da 15 numeri viene segnata automaticamente. L'app riconosce <b>ambo, terno, quaterna, cinquina e tombola</b>. In SIMULAZIONE puoi generare molte partite e studiare <b>dopo quante estrazioni</b> compare il premio scelto.</p>
 
+    <h3>⚙️ Macchina di Galton</h3>
+    <p>Scegli da 4 a 16 file di pioli. Ogni urto manda la pallina a sinistra o a destra con probabilità 50%. Il canale finale corrisponde al <b>numero di deviazioni a destra</b>: è quindi lo stesso esperimento di una serie di lanci di moneta. Con molte palline emerge la distribuzione binomiale e, aumentando i livelli, la caratteristica forma a campana.</p>
+
     <h3>📊 Grafici e strumenti comuni</h3>
     <p><b>Frequenze relative</b> passa dai conteggi alle percentuali. <b>Teoria</b> mostra la distribuzione attesa quando ha senso. <b>Valori</b> mostra i numeri sulle barre. <b>PROIETTA</b> ingrandisce l'istogramma per LIM e proiezione. <b>Esporta CSV</b> salva i dati della serie corrente.</p>
 
@@ -629,9 +708,8 @@
     <p><b>Ideazione e progettazione didattica:</b><br>prof. Flavio Naretti</p>
     <p><b>Sviluppo dell'app:</b><br>realizzato in collaborazione con ChatGPT · OpenAI</p>
     <p><b>Finalità:</b><br>strumento didattico per esplorare probabilità e statistica attraverso esperimenti, giochi e simulazioni.</p>
-    <p><b>Grafica:</b><br>interfaccia, carte, urna, roulette, tabellone e cartelle realizzati in HTML/CSS senza librerie grafiche esterne.</p>
+    <p><b>Grafica:</b><br>interfaccia, carte, urna, roulette, tabellone, cartelle e macchina di Galton realizzati in HTML/CSS senza librerie grafiche esterne.</p>
     <p class="credits-copy">© 2026 prof. Flavio Naretti · uso didattico</p>
-    <p class="credits-next">Prossima estensione prevista: <b>macchina di Galton</b>.</p>
   </div>
 </dialog>
 
@@ -782,6 +860,14 @@
       ticket:generateTombolaTicket(),
       waitEvent:"tombola",
       lastPrize:""
+    },
+    galton:{
+      rows:10,
+      lastPath:[],
+      lastBin:null,
+      speed:"normal",
+      animating:false,
+      token:0
     }
   };
 
@@ -939,11 +1025,146 @@
     $("#tombolaStatusText").textContent=state.tombola.dataMode==="waiting"?"Simulazione dei tempi di attesa":state.tombola.remaining.length+" numeri disponibili · "+state.results.length+" estratti";
     $("#tombolaLastMini").textContent=state.tombola.last||"—";
   }
+  function galtonTrial(){
+    var path=[],rights=0;
+    for(var i=0;i<state.galton.rows;i++){
+      var right=Math.random()<.5?0:1;
+      path.push(right);rights+=right;
+    }
+    return {raw:path,value:rights};
+  }
+
+  function renderGaltonMini(){
+    resultWrap.innerHTML="";
+    var wrap=document.createElement("div");wrap.className="galton-mini";
+    var ball=document.createElement("div");ball.className="galton-mini-ball";
+    ball.textContent=state.galton.lastBin==null?"?":state.galton.lastBin;
+    wrap.appendChild(ball);
+    var cap=document.createElement("div");cap.className="galton-mini-caption";
+    if(state.galton.lastBin==null)cap.textContent="NESSUNA PALLINA";
+    else{
+      var r=state.galton.lastBin,l=state.galton.rows-r;
+      cap.textContent=r+" DESTRA · "+l+" SINISTRA";
+    }
+    wrap.appendChild(cap);resultWrap.appendChild(wrap);
+  }
+
+  function renderGaltonMachine(){
+    var host=$("#galtonMachine");if(!host)return;
+    host.innerHTML="";
+    var rows=state.galton.rows,step=84/rows;
+    var funnel=document.createElement("div");funnel.className="galton-frame-top";host.appendChild(funnel);
+
+    for(var r=0;r<rows;r++){
+      var y=9+(rows===1?0:r*(58/(rows-1)));
+      for(var j=0;j<=r;j++){
+        var peg=document.createElement("i");peg.className="galton-peg";
+        peg.style.left=(50+(j-r/2)*step)+"%";peg.style.top=y+"%";host.appendChild(peg);
+      }
+    }
+
+    var c=counts(),maxCount=0;
+    for(var mc=0;mc<=rows;mc++)maxCount=Math.max(maxCount,c[mc]||0);
+
+    for(var k=0;k<=rows;k++){
+      var x=50+(k-rows/2)*step,w=step*.82;
+      var bin=document.createElement("div");bin.className="galton-bin";bin.style.left=x+"%";bin.style.width=w+"%";host.appendChild(bin);
+
+      var pile=document.createElement("div");pile.className="galton-pile";pile.style.left=x+"%";pile.style.width=(step*.74)+"%";
+      var count=c[k]||0,visual=maxCount<=42?count:(maxCount?Math.round(count/maxCount*42):0);
+      visual=Math.min(42,visual);
+      for(var p=0;p<visual;p++){var dot=document.createElement("i");dot.className="galton-pile-dot";pile.appendChild(dot)}
+      host.appendChild(pile);
+
+      var lab=document.createElement("div");lab.className="galton-bin-label";lab.style.left=x+"%";
+      lab.innerHTML=k+"<small>"+fmt(count,0)+"</small>";host.appendChild(lab);
+    }
+
+    var caption=document.createElement("div");caption.className="galton-axis-caption";caption.textContent="numero di deviazioni a DESTRA →";host.appendChild(caption);
+    $("#galtonStatusText").textContent=rows+" file di pioli · "+(rows+1)+" canali · "+fmt(state.results.length,0)+" "+(state.results.length===1?"pallina":"palline");
+  }
+
+  function galtonAnimationDuration(){
+    return state.galton.speed==="slow"?3200:state.galton.speed==="fast"?950:1850;
+  }
+
+  function animateGaltonBall(path,done){
+    renderGaltonMachine();
+    var host=$("#galtonMachine"),ball=document.createElement("div");ball.className="galton-moving-ball";host.appendChild(ball);
+    var rows=state.galton.rows,step=84/rows,rights=0,frames=[{left:"50%",top:"3%"}];
+    for(var i=0;i<rows;i++){
+      var pegY=9+(rows===1?0:i*(58/(rows-1)));
+      var beforeX=50+(rights-i/2)*step;
+      frames.push({left:beforeX+"%",top:(pegY-1.5)+"%"});
+      rights+=path[i];
+      var afterX=50+(rights-(i+1)/2)*step;
+      frames.push({left:afterX+"%",top:(pegY+Math.max(2.5,27/rows))+"%"});
+    }
+    frames.push({left:(50+(rights-rows/2)*step)+"%",top:"86%"});
+    var duration=galtonAnimationDuration();
+    if(ball.animate){
+      var a=ball.animate(frames,{duration:duration,easing:"linear",fill:"forwards"});
+      a.onfinish=function(){if(ball.parentNode)ball.remove();done()};
+      a.oncancel=function(){if(ball.parentNode)ball.remove()};
+    }else{
+      ball.style.left=(50+(rights-rows/2)*step)+"%";ball.style.top="86%";
+      setTimeout(function(){if(ball.parentNode)ball.remove();done()},duration);
+    }
+  }
+
+  function dropGaltonAnimated(){
+    if(state.galton.animating)return;
+    var r=galtonTrial(),token=++state.galton.token;
+    state.galton.animating=true;state.galton.lastPath=r.raw;
+    $("#galtonDropTopBtn").disabled=true;$("#galtonDropTopBtn").textContent="🟠 PALLINA IN CADUTA…";
+    beep("roll");
+    animateGaltonBall(r.raw,function(){
+      if(token!==state.galton.token||state.experiment!=="galton")return;
+      state.galton.animating=false;state.galton.lastBin=r.value;state.results.push(r.value);state.lastOutcome=r.raw;
+      sumDisplay.innerHTML=resultText(r.value,false);beep("done");render();
+    });
+  }
+
+  function setGaltonRows(n){
+    n=Math.max(4,Math.min(16,Math.round(Number(n)||10)));
+    if(n===state.galton.rows)return;
+    if(state.results.length&&!confirm("Cambiare il numero di file? La serie corrente verrà azzerata.")){$("#galtonRows").value=state.galton.rows;return}
+    state.galton.token++;state.galton.animating=false;state.galton.rows=n;state.galton.lastPath=[];state.galton.lastBin=null;state.results=[];state.lastOutcome=[];
+    sumDisplay.innerHTML="—<small>nessuna pallina caduta</small>";render();
+  }
+
+  function renderGaltonConfig(){
+    var rows=state.galton.rows;
+    $("#galtonRows").value=rows;$("#galtonRowsLabel").textContent=rows+" file · "+(rows+1)+" canali";
+    $("#galtonSpeed").value=state.galton.speed;$("#galtonSpeedLabel").textContent=state.galton.speed==="slow"?"lenta":state.galton.speed==="fast"?"veloce":"normale";
+    document.querySelectorAll("#galtonRowQuick button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.galtonRows)===rows)});
+    $("#galtonDropTopBtn").disabled=state.galton.animating;
+    $("#galtonDropTopBtn").textContent=state.galton.animating?"🟠 PALLINA IN CADUTA…":"🟠 LASCIA CADERE UNA PALLINA";
+  }
+
   function showOutcome(vals,animate){
-    if(state.experiment==="balls"){renderUrnVisual();return}
+    if(state.experiment==="galton"){
+      rows.push("canale;deviazioni_destra;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");
+      domain().forEach(function(k){rows.push([k,k,c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});
+      kind="galton_"+state.galton.rows+"file";
+    }else if(state.experiment==="balls"){renderUrnVisual();return}
     if(state.experiment==="cards"){renderCardVisual();return}
     if(state.experiment==="roulette"){renderRouletteVisual();return}
+    if(state.experiment==="galton"){
+      state.galton.token++;state.galton.animating=false;state.galton.lastPath=[];state.galton.lastBin=null;
+      state.results=new Array(n);var lastGalton=null;
+      for(var gg=0;gg<n;gg++){var gr=galtonTrial();state.results[gg]=gr.value;if(gg===n-1)lastGalton=gr}
+      if(lastGalton){state.lastOutcome=lastGalton.raw;state.galton.lastPath=lastGalton.raw;state.galton.lastBin=lastGalton.value;sumDisplay.innerHTML=resultText(lastGalton.value,true)}
+      renderGaltonMini();renderGaltonMachine();beep("done");render();return;
+    }
+
+    if(state.experiment==="galton"){
+      for(var g=0;g<=state.galton.rows;g++)out[g]=choose(state.galton.rows,g)/Math.pow(2,state.galton.rows);
+      return out;
+    }
+    if(state.experiment==="galton")return "Macchina di Galton · canale finale";
     if(state.experiment==="tombola"){renderTombolaVisual();return}
+    if(state.experiment==="galton"){renderGaltonMini();return}
     resultWrap.innerHTML="";
     vals.forEach(function(v,i){var el=state.experiment==="dice"?dieEl(v,((i%3)-1)*3):coinEl(v,((i%3)-1)*3);if(animate)el.classList.add("pulse");resultWrap.appendChild(el)});
   }
@@ -980,6 +1201,7 @@
     if(state.experiment==="cards"){
       var cid=drawCard();return cid===null?null:{raw:[cid],value:cid};
     }
+    if(state.experiment==="galton")return galtonTrial();
     var q=quantity(),raw=[],value=0;
     if(state.experiment==="dice"){
       for(var i=0;i<q;i++){var v=1+Math.floor(Math.random()*6);raw.push(v);value+=v}
@@ -1005,6 +1227,9 @@
       var c=cardInfo(value);
       return c.rank+c.symbol+"<small>"+c.rankName+" di "+c.suitName+(state.deck.replacement?" · carta reintrodotta":" · carta non reintrodotta")+"</small>";
     }
+    if(state.experiment==="galton"){
+      return "CANALE "+value+"<small>"+value+" a destra · "+(state.galton.rows-value)+" a sinistra"+(simulated?" · ultima pallina simulata":"")+"</small>";
+    }
     if(state.experiment==="dice")return value+"<small>"+(simulated?"ultimo lancio simulato":"somma dell'ultimo lancio")+"</small>";
     if(q===1)return (value===1?"TESTA":"CROCE")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
     return value+" "+(value===1?"TESTA":"TESTE")+" · "+(q-value)+" "+((q-value)===1?"CROCE":"CROCI")+"<small>"+(simulated?"ultimo lancio simulato":"ultimo lancio")+"</small>";
@@ -1026,6 +1251,12 @@
   }
 
   function oneRoll(){
+    if(state.experiment==="galton"){dropGaltonAnimated();return}
+    if(state.experiment==="galton"){
+      var gs=calcStats();
+      setStat("n","Palline",fmt(gs?gs.n:0,0));setStat("mean","Media destra",gs?fmt(gs.mean,2):"—");setStat("median","Mediana",gs?fmt(gs.median,1):"—");setStat("mode","Moda",gs?gs.mode:"—");
+      setStat("min","Min destra",gs?fmt(gs.min,0):"—");setStat("max","Max destra",gs?fmt(gs.max,0):"—");setStat("range","Range",gs?fmt(gs.range,0):"—");setStat("sd","Dev. std.",gs?fmt(gs.sd,2):"—");return;
+    }
     if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"){
       if(state.results.length&&!confirm("Iniziare una partita manuale? La simulazione corrente verrà azzerata."))return;
       state.results=[];state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";
@@ -1136,6 +1367,7 @@
     if(state.experiment==="cards")return cardDomain();
     if(state.experiment==="roulette")return rouletteDomain();
     if(state.experiment==="tombola")return tombolaDomain();
+    if(state.experiment==="galton"){var gd=[];for(var g=0;g<=state.galton.rows;g++)gd.push(g);return gd}
     var q=quantity(),out=[];
     if(state.experiment==="dice"){for(var s=q;s<=6*q;s++)out.push(s)}
     else{for(var h=0;h<=q;h++)out.push(h)}
@@ -1266,6 +1498,7 @@
     if(state.experiment==="cards"){var c=cardInfo(v);return c.rank+c.symbol}
     if(state.experiment==="roulette")return String(v);
     if(state.experiment==="tombola")return String(v);
+    if(state.experiment==="galton")return String(v);
     if(state.experiment==="dice")return String(v);
     if(quantity()===1)return v===1?"T":"C";return v+"T";
   }
@@ -1287,6 +1520,7 @@
     if(state.experiment==="cards")return categoryLabel(v);
     if(state.experiment==="roulette")return categoryLabel(v);
     if(state.experiment==="tombola")return categoryLabel(v);
+    if(state.experiment==="galton")return String(v);
     if(state.experiment==="coins"&&quantity()===1)return v===0?"CROCE":"TESTA";
     return String(v);
   }
@@ -1312,6 +1546,7 @@
     if(state.experiment==="cards")return "Pesca una carta per costruire l'istogramma.";
     if(state.experiment==="roulette")return "Gira la pallina per costruire l'istogramma.";
     if(state.experiment==="tombola")return "Estrai un numero oppure simula molte partite.";
+    if(state.experiment==="galton")return "Lascia cadere una pallina oppure avvia una simulazione.";
     return state.experiment==="dice"?"Lancia i dadi per costruire l'istogramma.":"Lancia le monete per costruire l'istogramma.";
   }
   function seriesDescription(){
@@ -1320,6 +1555,7 @@
     if(state.experiment==="cards")return fmt(n,0)+" pescate · "+(state.deck.replacement?"con reintroduzione":"senza reintroduzione")+" · "+deckTotal("initial")+" carte";
     if(state.experiment==="roulette")return fmt(n,0)+" giri · "+(state.roulette.kind==="american"?"americana 0+00":"europea 0");
     if(state.experiment==="tombola")return state.tombola.dataMode==="waiting"?fmt(n,0)+" partite · attesa per "+tombolaWaitName():fmt(n,0)+" estrazioni · senza reintroduzione";
+    if(state.experiment==="galton")return fmt(n,0)+" "+(n===1?"pallina":"palline")+" · "+state.galton.rows+" file · "+(state.galton.rows+1)+" canali";
     return state.experiment==="dice"?fmt(n,0)+" lanci · "+q+(q===1?" dado":" dadi"):fmt(n,0)+" lanci · "+q+(q===1?" moneta":" monete");
   }
   function expectedText(){
@@ -1327,6 +1563,7 @@
     if(state.experiment==="cards")return state.deck.replacement?"Probabilità teoriche = composizione del mazzo · analisi per "+analysisName():"Le probabilità cambiano dopo ogni pescata";
     if(state.experiment==="roulette")return (state.roulette.kind==="american"?"38 esiti equiprobabili · vantaggio banco 5,26%":"37 esiti equiprobabili · vantaggio banco 2,70%")+" · analisi per "+rouletteAnalysisName();
     if(state.experiment==="tombola")return state.tombola.dataMode==="waiting"?"Numero di estrazione in cui compare "+tombolaWaitName():"Campione casuale senza reintroduzione da 1 a 90";
+    if(state.experiment==="galton")return "Valore atteso: "+fmt(state.galton.rows/2,1)+" deviazioni a destra · equivalente a "+state.galton.rows+" lanci di moneta";
     var q=quantity(),v=state.experiment==="dice"?3.5*q:q/2;
     return "Valore atteso teorico: "+fmt(v,1);
   }
@@ -1368,6 +1605,7 @@
       if(state.experiment==="cards"){col.classList.add("card-bar");col.style.setProperty("--cardbar",cardSeriesColor(v.x))}
       if(state.experiment==="roulette"){col.classList.add("roulette-bar");col.style.setProperty("--roulettebar",rouletteSeriesColor(v.x))}
       if(state.experiment==="tombola")col.classList.add("tombola-bar");
+      if(state.experiment==="galton")col.classList.add("galton-bar");
       var hO=v.obs/max*100,hT=v.theory/max*100;
       if(showTheory){var t=document.createElement("div");t.className="bar-theory";t.style.height=hT+"%";t.title="Teorica: "+(state.relative?fmt(v.theory,2)+"%":fmt(v.theory,1));slot.appendChild(t)}
       var b=document.createElement("div");b.className="bar-actual";b.style.height=hO+"%";b.title="Osservata: "+(state.relative?fmt(v.obs,2)+"%":fmt(v.obs,0));slot.appendChild(b);
@@ -1537,16 +1775,16 @@
   }
 
   function updateExperimentUI(){
-    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isRoulette=state.experiment==="roulette",isTombola=state.experiment==="tombola",isCategorical=isBalls||isCards||isRoulette||isTombola;
+    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isRoulette=state.experiment==="roulette",isTombola=state.experiment==="tombola",isGalton=state.experiment==="galton",isCategorical=isBalls||isCards||isRoulette||isTombola||isGalton;
     $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
-    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;$("#rouletteConfig").hidden=!isRoulette;$("#tombolaConfig").hidden=!isTombola;$("#rouletteMain").hidden=!isRoulette;$("#tombolaMain").hidden=!isTombola;
+    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;$("#rouletteConfig").hidden=!isRoulette;$("#tombolaConfig").hidden=!isTombola;$("#galtonConfig").hidden=!isGalton;$("#rouletteMain").hidden=!isRoulette;$("#tombolaMain").hidden=!isTombola;$("#galtonMain").hidden=!isGalton;
     var noFixedTheory=(isBalls&&!state.urn.replacement)||(isCards&&!state.deck.replacement)||(isTombola&&state.tombola.dataMode==="waiting");
     $("#theoryToggle").disabled=noFixedTheory;$("#theoryToggle").closest(".switchrow").style.opacity=noFixedTheory?".5":"1";
     document.querySelectorAll("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
 
-    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":isCards?"Pescate manuali":isRoulette?"Giri manuali":isTombola?"Estrazioni manuali":"Lanci manuali";
+    $(".tabs button[data-tab=manual]").textContent=isBalls?"Estrazioni manuali":isCards?"Pescate manuali":isRoulette?"Giri manuali":isTombola?"Estrazioni manuali":isGalton?"Caduta manuale":"Lanci manuali";
     $("#manualPane").style.display=isCategorical?"none":"";
-    $("#urnDrawTopBtn").hidden=!isBalls;$("#cardDrawTopBtn").hidden=!isCards;$("#rouletteSpinTopBtn").hidden=!isRoulette;$("#tombolaDrawTopBtn").hidden=!isTombola;
+    $("#urnDrawTopBtn").hidden=!isBalls;$("#cardDrawTopBtn").hidden=!isCards;$("#rouletteSpinTopBtn").hidden=!isRoulette;$("#tombolaDrawTopBtn").hidden=!isTombola;$("#galtonDropTopBtn").hidden=!isGalton;
     $("#manualHelp").textContent=isBalls
       ?(state.urn.replacement?"Ogni estrazione registra il colore; la pallina viene poi reintrodotta nell'urna.":"Ogni estrazione registra il colore e rimuove la pallina dall'urna.")
       :isCards
@@ -1557,8 +1795,10 @@
     else if(isCards)$("#simNote").textContent=state.deck.replacement?"La simulazione avvia una nuova serie di pescate indipendenti.":"Senza reintroduzione la simulazione si ferma quando il mazzo è vuoto.";
     else if(isRoulette)$("#simNote").textContent="La simulazione genera una nuova serie di giri della roulette.";
     else if(isTombola)$("#simNote").textContent="Il numero indica quante partite simulare (massimo 100.000). Si misura il tempo di attesa per "+tombolaWaitName()+".";
+    else if(isGalton)$("#simNote").textContent="La simulazione genera rapidamente molte palline. Per seguire i rimbalzi usa LASCIA CADERE UNA PALLINA.";
     else $("#simNote").textContent="La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.";
 
+    $("#historyTitle").textContent=isBalls?"ULTIME ESTRAZIONI":isCards?"ULTIME PESCATE":isRoulette?"ULTIMI GIRI":isTombola?"ULTIMI NUMERI":isGalton?"ULTIME PALLINE":"ULTIMI LANCI";
     $("#rollBtn").disabled=false;
     if(state.experiment==="dice"){
       $("#quantityTitle").textContent="Numero di dadi";$("#quantityLabel").textContent=q+(q===1?" dado":" dadi");$("#rollBtn").textContent=q===1?"🎲 LANCIA IL DADO":"🎲 LANCIA I DADI";$(".brandmark").textContent="🎲";
@@ -1572,10 +1812,12 @@
       $("#cardDrawTopBtn").textContent=deckHasCards?"🃏 PESCA UNA CARTA":"MAZZO VUOTO";$("#cardDrawTopBtn").disabled=!deckHasCards;$(".brandmark").textContent="🃏";renderDeckConfig();
     }else if(isRoulette){
       $("#rouletteSpinTopBtn").textContent="🎡 GIRA LA PALLINA";$("#rouletteSpinTopBtn").disabled=false;$(".brandmark").textContent="🎡";renderRouletteConfig();renderRouletteTable();
-    }else{
+    }else if(isTombola){
       $("#tombolaDrawTopBtn").textContent=state.tombola.remaining.length?"🎱 ESTRAI UN NUMERO":"TABELLONE COMPLETO";$("#tombolaDrawTopBtn").disabled=!state.tombola.remaining.length;$(".brandmark").textContent="🎱";
       $("#tombolaAnalysis").value=state.tombola.analysis;$("#tombolaAnalysisLabel").textContent=state.tombola.analysis==="decade"?"decine":state.tombola.analysis==="parity"?"pari/dispari":state.tombola.analysis==="half"?"1–45 / 46–90":"numero";
       $("#tombolaWaitEvent").value=state.tombola.waitEvent;$("#tombolaWaitLabel").textContent=tombolaWaitName();renderTombolaMain();
+    }else if(isGalton){
+      $(".brandmark").textContent="⚙️";renderGaltonConfig();renderGaltonMachine();
     }
   }
 
@@ -1585,6 +1827,7 @@
     if(state.experiment==="cards")renderCardVisual();
     if(state.experiment==="roulette"){renderRouletteVisual();renderRouletteConfig();renderRouletteTable();}
     if(state.experiment==="tombola"){renderTombolaVisual();renderTombolaMain();}
+    if(state.experiment==="galton"){renderGaltonMini();renderGaltonConfig();renderGaltonMachine();}
   }
 
   function resetSeries(sound){
@@ -1597,6 +1840,8 @@
       state.roulette.last=null;state.roulette.lastNet=null;if(state.roulette.mode==="game")clearRouletteBets(true);renderRouletteVisual();sumDisplay.innerHTML="—<small>nessun giro</small>";
     }else if(state.experiment==="tombola"){
       state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";state.tombola.lastPrize="";renderTombolaVisual();sumDisplay.innerHTML="—<small>nessun numero estratto</small>";
+    }else if(state.experiment==="galton"){
+      state.galton.token++;state.galton.animating=false;state.galton.lastPath=[];state.galton.lastBin=null;renderGaltonMini();renderGaltonMachine();sumDisplay.innerHTML="—<small>nessuna pallina caduta</small>";
     }else{
       resultWrap.innerHTML="";sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
     }
@@ -1607,13 +1852,16 @@
   function setExperiment(exp){
     if(exp===state.experiment)return;
     if(state.results.length&&!confirm("Cambiare esperimento? La serie corrente verrà azzerata."))return;
+    if(state.experiment==="galton"){state.galton.token++;state.galton.animating=false}
     state.experiment=exp;resetSeries(false);
+    if(exp==="galton")$("#simN").value=100;
     if(exp==="dice")showOutcome([1,6],false);
     if(exp==="coins")showOutcome([1],false);
     if(exp==="balls")renderUrnVisual();
     if(exp==="cards")renderCardVisual();
     if(exp==="roulette"){renderRouletteVisual();renderRouletteConfig();renderRouletteTable();}
     if(exp==="tombola"){renderTombolaVisual();renderTombolaMain();}
+    if(exp==="galton"){renderGaltonMini();renderGaltonConfig();renderGaltonMachine();}
   }
 
   function updateUrnCount(id,delta){
@@ -1716,6 +1964,12 @@
     if(state.results.length&&!confirm("Generare una nuova cartella? La serie corrente verrà azzerata."))return;
     state.tombola.ticket=generateTombolaTicket();state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";state.results=[];sumDisplay.innerHTML="—<small>nessun numero estratto</small>";render();
   });
+
+  $("#galtonDropTopBtn").addEventListener("click",dropGaltonAnimated);
+  $("#galtonRows").addEventListener("input",function(e){$("#galtonRowsLabel").textContent=e.target.value+" file · "+(Number(e.target.value)+1)+" canali"});
+  $("#galtonRows").addEventListener("change",function(e){setGaltonRows(e.target.value)});
+  $("#galtonRowQuick").addEventListener("click",function(e){var b=e.target.closest("[data-galton-rows]");if(b)setGaltonRows(b.dataset.galtonRows)});
+  $("#galtonSpeed").addEventListener("change",function(e){state.galton.speed=e.target.value;renderGaltonConfig()});
 
   document.querySelectorAll(".tabs button").forEach(function(b){b.addEventListener("click",function(){
     $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
