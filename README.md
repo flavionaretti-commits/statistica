@@ -66,14 +66,21 @@ Laboratorio didattico interattivo di statistica e probabilità.
 - simulazione di molte partite per studiare il tempo di attesa di ciascun premio
 - esportazione CSV e modalità PROIEZIONE
 
+### ⚙️ Macchina di Galton
+- da 4 a 16 file di pioli, con n+1 canali finali
+- caduta animata di una singola pallina per seguire ogni deviazione
+- sinistra/destra equiprobabili, interpretabili come CROCE/TESTA
+- accumulo visivo delle palline nei canali finali
+- simulazioni rapide fino a 1.000.000 di palline
+- istogramma della posizione finale
+- confronto con la distribuzione binomiale teorica
+- frequenze assolute/relative, statistiche, PROIEZIONE ed esportazione CSV
+
 ## Crediti
 Ideazione e progettazione didattica: prof. Flavio Naretti.  
 Sviluppo dell'app in collaborazione con ChatGPT · OpenAI.  
 © 2026 prof. Flavio Naretti · uso didattico.
 
-## Prossima estensione
-Macchina di Galton: visualizzazione della binomiale e del progressivo emergere della distribuzione a campana.
-
-STATISTICA! comprende ora dadi, monete, urna, carte, roulette e tombola.
+STATISTICA! comprende ora dadi, monete, urna, carte, roulette, tombola e macchina di Galton.
 
 © prof. Flavio Naretti
