@@ -750,8 +750,8 @@
       <div class="field" id="eventsConfig" hidden>
         <div class="labelrow"><span>EVENTI · fase 1</span><span>1 dado</span></div>
         <div class="events-preset-grid" id="eventsPresetGrid">
-          <button data-events-preset="compatible">ESEMPIO COMPATIBILI</button>
-          <button data-events-preset="incompatible">ESEMPIO INCOMPATIBILI</button>
+          <button data-events-preset="compatible">PARI / MAGGIORE DI 3</button>
+          <button data-events-preset="incompatible">PARI / DISPARI</button>
           <button data-events-preset="clear">MODALITÀ LIBERA · AZZERA A e B</button>
         </div>
         <p class="events-config-note">Costruisci due eventi scegliendo direttamente gli esiti del dado. Il diagramma e le probabilità si aggiornano in tempo reale.</p>
@@ -1018,6 +1018,9 @@
     <h3>⚙️ Macchina di Galton</h3>
     <p>Scegli da 4 a 16 file di pioli. Ogni urto manda la pallina a sinistra o a destra con probabilità 50%. Il canale finale corrisponde al <b>numero di deviazioni a destra</b>: è quindi lo stesso esperimento di una serie di lanci di moneta. Con molte palline emerge la distribuzione binomiale e, aumentando i livelli, la caratteristica forma a campana.</p>
 
+    <h3>🔵 Eventi · fase 1</h3>
+    <p>Con un dado equilibrato costruisci liberamente due eventi <b>A</b> e <b>B</b> scegliendo gli esiti. Il diagramma di Venn mostra A, B, l'intersezione e gli esiti esterni. Prima fai una previsione su compatibilità/incompatibilità, poi verifica il verdetto. La sezione <b>A O B</b> costruisce la regola della somma e la semplifica automaticamente quando A e B sono incompatibili. Puoi infine lanciare il dado o simulare molte prove per confrontare frequenza relativa e probabilità teorica.</p>
+
     <h3>📊 Grafici e strumenti comuni</h3>
     <p><b>Frequenze relative</b> passa dai conteggi alle percentuali. <b>Teoria</b> mostra la distribuzione attesa quando ha senso. <b>Valori</b> mostra i numeri sulle barre. <b>PROIETTA</b> ingrandisce l'istogramma per LIM e proiezione. <b>Esporta CSV</b> salva i dati della serie corrente.</p>
 
@@ -1033,7 +1036,7 @@
     <p><b>Ideazione e progettazione didattica:</b><br>prof. Flavio Naretti</p>
     <p><b>Sviluppo dell'app:</b><br>realizzato in collaborazione con ChatGPT · OpenAI</p>
     <p><b>Finalità:</b><br>strumento didattico per esplorare probabilità e statistica attraverso esperimenti, giochi e simulazioni.</p>
-    <p><b>Grafica:</b><br>interfaccia, carte, urna, roulette, tabellone, cartelle e macchina di Galton realizzati in HTML/CSS senza librerie grafiche esterne.</p>
+    <p><b>Grafica:</b><br>interfaccia, carte, urna, roulette, tabellone, cartelle, diagrammi degli eventi e macchina di Galton realizzati in HTML/CSS senza librerie grafiche esterne.</p>
     <p class="credits-copy">© 2026 prof. Flavio Naretti · uso didattico</p>
   </div>
 </dialog>
@@ -1691,6 +1694,7 @@
   }
 
   function oneRoll(){
+    if(state.experiment==="events"){eventRoll();return}
     if(state.experiment==="galton"){dropGaltonAnimated();return}
     if(state.experiment==="roulette"&&state.roulette.mode==="martingale"){runMartingaleSingle();return}
     if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"){
@@ -2431,7 +2435,7 @@
     var u=eventUnion(),out=[];for(var n=1;n<=6;n++)if(u.indexOf(n)===-1)out.push(n);return out;
   }
   function eventSetLabel(arr){
-    return "{"+(arr.length?arr.join(", "):"∅")+"}";
+    return arr.length?"{"+arr.join(", ")+"}":"∅";
   }
   function gcd(a,b){while(b){var t=a%b;a=b;b=t}return a}
   function eventProbText(n){
@@ -2474,9 +2478,12 @@
     var inter=eventIntersection(),uni=eventUnion(),onlyA=eventOnlyA(),onlyB=eventOnlyB(),outside=eventOutside(),compatible=inter.length>0;
     fillVennRegion("#vennAOnly",onlyA,false);fillVennRegion("#vennIntersection",inter,false);fillVennRegion("#vennBOnly",onlyB,false);fillVennRegion("#vennOutside",outside,true);
 
-    $("#eventsCompatibility").innerHTML="<strong>"+(compatible?"EVENTI COMPATIBILI":"EVENTI INCOMPATIBILI")+"</strong><br>A ∩ B = "+eventSetLabel(inter)+(compatible?" → esistono esiti che realizzano contemporaneamente A e B.":" → i due eventi non possono verificarsi nello stesso lancio.");
-
     var predButtons=document.querySelectorAll("#eventsPredict button"),pred=state.events.prediction,correctKey=compatible?"compatible":"incompatible";
+    if(!pred){
+      $("#eventsCompatibility").innerHTML="<strong>A ∩ B = "+eventSetLabel(inter)+"</strong><br>Osserva il diagramma e fai la tua previsione prima di mostrare il verdetto.";
+    }else{
+      $("#eventsCompatibility").innerHTML="<strong>"+(compatible?"EVENTI COMPATIBILI":"EVENTI INCOMPATIBILI")+"</strong><br>A ∩ B = "+eventSetLabel(inter)+(compatible?" → esistono esiti che realizzano contemporaneamente A e B.":" → i due eventi non possono verificarsi nello stesso lancio.");
+    }
     predButtons.forEach(function(b){
       b.classList.remove("correct","wrong");
       if(pred){if(b.dataset.eventPrediction===correctKey)b.classList.add("correct");else if(b.dataset.eventPrediction===pred)b.classList.add("wrong")}
