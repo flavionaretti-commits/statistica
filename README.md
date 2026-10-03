@@ -83,11 +83,22 @@ Laboratorio didattico interattivo di statistica e probabilità.
 - confronto con la distribuzione binomiale teorica
 - frequenze assolute/relative, statistiche, PROIEZIONE ed esportazione CSV
 
+### 🔵 Eventi · fase 1
+- spazio campionario di un dado equilibrato: Ω = {1,2,3,4,5,6}
+- costruzione libera di due eventi A e B selezionando direttamente gli esiti
+- diagramma di Venn dinamico con A, B, intersezione e risultati esterni
+- previsione prima del verdetto su eventi compatibili/incompatibili
+- due preset non-spoiler: pari / maggiore di 3 e pari / dispari
+- calcolo di P(A), P(B), P(A∩B) e P(A∪B)
+- costruzione della regola della somma e semplificazione automatica per eventi incompatibili
+- lanci singoli e simulazioni da 10, 100 o 1.000 prove
+- confronto tra frequenza sperimentale di A∪B e probabilità teorica
+
 ## Crediti
 Ideazione e progettazione didattica: prof. Flavio Naretti.  
 Sviluppo dell'app in collaborazione con ChatGPT · OpenAI.  
 © 2026 prof. Flavio Naretti · uso didattico.
 
-STATISTICA! comprende ora dadi, monete, urna, carte, roulette, tombola e macchina di Galton.
+STATISTICA! comprende ora dadi, monete, urna, carte, roulette, tombola, macchina di Galton e un laboratorio sugli eventi probabilistici.
 
 © prof. Flavio Naretti
