@@ -292,6 +292,41 @@
     .barcol.roulette-bar .bar-theory{background:var(--roulettebar)!important;border-color:var(--roulettebar)!important;opacity:.22}
     @media(max-width:940px){.roulette-board{min-width:720px}}
     @media(max-width:560px){.roulette-main{padding:10px}.roulette-board{min-width:680px}.roulette-main-head{align-items:flex-start}}
+    /* MARTINGALA */
+    .roulette-martingale-panel{margin-top:10px;padding:11px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,rgba(201,44,53,.055),rgba(8,122,69,.045))}
+    .martingale-scenario{display:grid;grid-template-columns:1fr;gap:5px;margin:6px 0 11px}
+    .martingale-scenario button,.martingale-side button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:11px;padding:8px 6px;font-size:10px;font-weight:900;cursor:pointer}
+    .martingale-scenario button.active,.martingale-side button.active{background:var(--accent);border-color:var(--accent);color:#fff}
+    .martingale-side{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:10px}
+    .martingale-side button[data-martingale-side="red"].active{background:#c92c35;border-color:#c92c35}
+    .martingale-side button[data-martingale-side="black"].active{background:#17191d;border-color:#17191d}
+    .martingale-input-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .martingale-input{display:grid;gap:4px}
+    .martingale-input span{font-size:10px;color:var(--muted);font-weight:800}
+    .martingale-input input{padding:9px 8px;font-size:12px}
+    .martingale-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}
+    .martingale-actions button{font-size:10px;padding:9px 5px}
+    .martingale-prob{font-size:10px;line-height:1.45;color:var(--muted);margin:9px 1px 0}
+    .martingale-main{margin-top:12px;border-top:1px solid var(--line);padding-top:12px}
+    .martingale-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:10px;flex-wrap:wrap}
+    .martingale-head h3{margin:0;font-size:17px}.martingale-head p{margin:3px 0 0;color:var(--muted);font-size:11px}
+    .martingale-status{padding:6px 9px;border-radius:999px;background:var(--grid);font-size:10px;font-weight:950}
+    .martingale-status.running{background:rgba(20,184,166,.14);color:var(--accent2)}
+    .martingale-status.stopped{background:rgba(229,72,77,.14);color:var(--danger)}
+    .martingale-kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:10px}
+    .martingale-kpi{border:1px solid var(--line);border-radius:12px;background:var(--panel2);padding:8px;text-align:center;min-width:0}
+    .martingale-kpi span{display:block;font-size:9px;color:var(--muted);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .martingale-kpi strong{display:block;font-size:15px;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .martingale-chart-wrap{border:1px solid var(--line);border-radius:14px;background:var(--panel2);padding:8px}
+    .martingale-chart-title{display:flex;justify-content:space-between;gap:8px;font-size:10px;color:var(--muted);font-weight:850;margin:0 3px 5px}
+    .martingale-chart{display:block;width:100%;height:190px}
+    .martingale-insight{margin-top:9px;padding:10px 11px;border-radius:12px;background:var(--grid);font-size:11px;line-height:1.45;color:var(--muted)}
+    .martingale-insight strong{color:var(--text)}
+    .martingale-progression{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+    .martingale-progression span{padding:4px 6px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);font-size:9px;font-weight:850}
+    @media(max-width:760px){.martingale-kpis{grid-template-columns:repeat(3,1fr)}}
+    @media(max-width:560px){.martingale-input-grid{grid-template-columns:1fr}.martingale-actions{grid-template-columns:1fr}.martingale-chart{height:160px}}
+
     /* TOMBOLA */
     .tombola-draw-top{margin:2px 0 14px;background:linear-gradient(135deg,#b7791f,#d99b2b)}
     .tombola-analysis-title,.tombola-wait-title{margin-top:13px}
@@ -493,6 +528,7 @@
         <div class="replacement-seg" id="rouletteModeSeg">
           <button class="active" data-roulette-mode="lab">LABORATORIO</button>
           <button data-roulette-mode="game">GIOCO</button>
+          <button data-roulette-mode="martingale">MARTINGALA</button>
         </div>
 
         <div class="roulette-game-panel" id="rouletteGamePanel" hidden>
@@ -509,6 +545,32 @@
             <button class="smallbtn" id="newRouletteGameBtn">NUOVA PARTITA</button>
           </div>
           <p class="urn-note">Solo fiche virtuali: tocca una casella del tavolo per puntare la fiche selezionata.</p>
+        </div>
+        <div class="roulette-martingale-panel" id="rouletteMartingalePanel" hidden>
+          <div class="labelrow"><span>Scenario</span><span id="martingaleScenarioLabel">capitale + massimale</span></div>
+          <div class="martingale-scenario" id="martingaleScenarioSeg">
+            <button class="active" data-martingale-scenario="realistic">CAPITALE + MASSIMALE</button>
+            <button data-martingale-scenario="finite">SOLO CAPITALE</button>
+            <button data-martingale-scenario="ideal">IDEALE · ∞</button>
+          </div>
+
+          <div class="labelrow"><span>Punta sempre su</span><span id="martingaleSideLabel">rosso</span></div>
+          <div class="martingale-side" id="martingaleSideSeg">
+            <button class="active" data-martingale-side="red">ROSSO</button>
+            <button data-martingale-side="black">NERO</button>
+          </div>
+
+          <div class="martingale-input-grid">
+            <label class="martingale-input"><span>Puntata iniziale</span><input id="martingaleBaseBet" type="number" min="1" max="1000000" step="1" value="1"></label>
+            <label class="martingale-input" id="martingaleCapitalField"><span>Capitale iniziale</span><input id="martingaleInitialBankroll" type="number" min="1" max="1000000000" step="1" value="1000"></label>
+            <label class="martingale-input" id="martingaleLimitField"><span>Massimale del banco</span><input id="martingaleTableLimit" type="number" min="1" max="1000000000" step="1" value="512"></label>
+          </div>
+
+          <div class="martingale-actions">
+            <button class="smallbtn" id="resetMartingaleBtn">↺ AZZERA MARTINGALA</button>
+            <button class="smallbtn" id="collapseMartingaleBtn">▶ FINO AL CROLLO</button>
+          </div>
+          <p class="martingale-prob" id="martingaleProbabilityText">Europea: P(vittoria) = 18/37 · P(perdita) = 19/37. Lo zero fa perdere la puntata sul colore.</p>
         </div>
       </div>
 
@@ -617,7 +679,33 @@
           </div>
           <div class="roulette-last-mini" id="rouletteLastMini">—</div>
         </div>
-        <div class="roulette-table-scroll"><div id="rouletteTable"></div></div>
+        <div class="roulette-table-scroll" id="rouletteTableWrap"><div id="rouletteTable"></div></div>
+
+        <div class="martingale-main" id="rouletteMartingaleMain" hidden>
+          <div class="martingale-head">
+            <div>
+              <h3>Laboratorio della martingala</h3>
+              <p id="martingaleSubtitle">Raddoppia dopo ogni perdita; torna alla puntata iniziale dopo una vincita.</p>
+            </div>
+            <div class="martingale-status running" id="martingaleStatus">PRONTA</div>
+          </div>
+
+          <div class="martingale-kpis">
+            <div class="martingale-kpi"><span>Saldo / profitto</span><strong id="martingaleBalance">1000</strong></div>
+            <div class="martingale-kpi"><span>Puntata prossima</span><strong id="martingaleCurrentBet">1</strong></div>
+            <div class="martingale-kpi"><span>Puntata max</span><strong id="martingaleMaxBet">1</strong></div>
+            <div class="martingale-kpi"><span>Serie perdite max</span><strong id="martingaleMaxStreak">0</strong></div>
+            <div class="martingale-kpi"><span>Volume puntato</span><strong id="martingaleWagered">0</strong></div>
+            <div class="martingale-kpi"><span>Giri</span><strong id="martingaleSpins">0</strong></div>
+          </div>
+
+          <div class="martingale-chart-wrap">
+            <div class="martingale-chart-title"><span>Andamento del capitale</span><span id="martingaleChartRange">0 → 0</span></div>
+            <svg class="martingale-chart" id="martingaleChart" viewBox="0 0 800 190" preserveAspectRatio="none" aria-label="Grafico del capitale nella martingala"></svg>
+          </div>
+          <div class="martingale-progression" id="martingaleProgression"></div>
+          <div class="martingale-insight" id="martingaleInsight"><strong>Idea chiave:</strong> molte piccole vincite non cancellano il rischio di una rara sequenza di perdite che richiede puntate enormi.</div>
+        </div>
       </section>
 
       <div class="topstat" id="topStatArea">
@@ -686,6 +774,9 @@
 
     <h3>🎡 Roulette</h3>
     <p>Scegli europea (0) o americana (0 e 00). Analizza i giri per numero, colore, pari/dispari, 1–18/19–36, dozzine o colonne. La modalità GIOCO usa esclusivamente <b>fiche virtuali</b> e permette puntate didattiche sul tavolo.</p>
+
+    <h3>🎡 Martingala</h3>
+    <p>Nella modalità MARTINGALA si punta virtualmente sempre sullo stesso colore: dopo una perdita la puntata raddoppia, dopo una vincita torna al valore iniziale. Puoi confrontare tre scenari: <b>capitale + massimale del banco</b>, <b>capitale finito senza massimale</b> e <b>modello ideale con risorse illimitate</b>. Il cruscotto mostra saldo, massima puntata, serie negativa più lunga e volume totale puntato. Nello scenario ideale non esiste un “crollo” per mancanza di fondi: serve a mostrare quanto rapidamente può crescere l'esposizione richiesta.</p>
 
     <h3>🎱 Tombola</h3>
     <p>Estrai numeri da 1 a 90 senza reintroduzione: il tabellone si completa e una cartella 3×9 da 15 numeri viene segnata automaticamente. L'app riconosce <b>ambo, terno, quaterna, cinquina e tombola</b>. In SIMULAZIONE puoi generare molte partite e studiare <b>dopo quante estrazioni</b> compare il premio scelto.</p>
@@ -850,7 +941,29 @@
       bankroll:100,
       chip:1,
       bets:{},
-      lastNet:null
+      lastNet:null,
+      martingale:{
+        side:"red",
+        scenario:"realistic",
+        initialBankroll:1000,
+        baseBet:1,
+        tableLimit:512,
+        net:0,
+        currentBet:1,
+        maxBetReached:1,
+        maxRequired:1,
+        lossStreak:0,
+        maxLossStreak:0,
+        spins:0,
+        wins:0,
+        losses:0,
+        zeros:0,
+        cycles:0,
+        totalWagered:0,
+        stopped:false,
+        stopReason:"",
+        trace:[{spin:0,value:1000}]
+      }
     },
     tombola:{
       remaining:range90(),
