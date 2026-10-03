@@ -959,6 +959,8 @@
       chip:1,
       bets:{},
       lastNet:null,
+      spinning:false,
+      pending:null,
       martingale:{
         side:"red",
         scenario:"realistic",
@@ -1133,11 +1135,11 @@
     var wheel=document.createElement("div");wheel.className="roulette-wheel-shell";wheel.id="rouletteWheelVisual";
 
     var ring=document.createElement("div");ring.className="roulette-pocket-ring";
-    var order=rouletteWheelOrder(),radius=roulettePocketRadius();
+    var order=rouletteWheelOrder(),radius=roulettePocketRadius(),visibleLast=state.roulette.spinning?null:state.roulette.last;
     order.forEach(function(num,i){
       var angle=i*360/order.length,rad=(angle-90)*Math.PI/180;
       var p=document.createElement("div"),x=50+Math.cos(rad)*radius,y=50+Math.sin(rad)*radius;
-      p.className="roulette-pocket-mini "+rouletteColor(num)+(state.roulette.last===num?" winner":"");
+      p.className="roulette-pocket-mini "+rouletteColor(num)+(visibleLast===num?" winner":"");
       p.dataset.roulettePocket=num;p.textContent=num;
       p.style.left=x+"%";p.style.top=y+"%";
       p.style.transform="rotate("+angle+"deg)";
@@ -1146,22 +1148,22 @@
     wheel.appendChild(ring);
 
     var inner=document.createElement("div");inner.className="roulette-wheel-inner";
-    var center=document.createElement("div");center.className="roulette-wheel-center-number "+(state.roulette.last?rouletteColor(state.roulette.last):"green");
-    center.id="rouletteWheelCenter";center.textContent=state.roulette.last||"?";inner.appendChild(center);wheel.appendChild(inner);
+    var center=document.createElement("div");center.className="roulette-wheel-center-number "+(visibleLast?rouletteColor(visibleLast):"green");
+    center.id="rouletteWheelCenter";center.textContent=state.roulette.spinning?"":(visibleLast||"?");inner.appendChild(center);wheel.appendChild(inner);
 
     var orbit=document.createElement("div");orbit.className="roulette-ball-orbit";orbit.id="rouletteBallOrbit";
-    orbit.style.transform="rotate("+rouletteWheelTargetAngle(state.roulette.last)+"deg)";
+    orbit.style.transform="rotate("+rouletteWheelTargetAngle(visibleLast)+"deg)";
     var whiteBall=document.createElement("i");whiteBall.className="roulette-wheel-white-ball";orbit.appendChild(whiteBall);wheel.appendChild(orbit);
 
     wrap.appendChild(wheel);
     var cap=document.createElement("div");cap.className="roulette-result-caption";cap.id="rouletteWheelCaption";
-    cap.textContent=state.roulette.last?"ULTIMO NUMERO · "+rouletteColor(state.roulette.last).toUpperCase():"NESSUN GIRO";
+    cap.textContent=state.roulette.spinning?"LA PALLINA GIRA…":(visibleLast?"ULTIMO NUMERO · "+rouletteColor(visibleLast).toUpperCase():"NESSUN GIRO");
     wrap.appendChild(cap);resultWrap.appendChild(wrap);
   }
 
-  function animateRouletteVisual(value){
+  function animateRouletteVisual(value,onReveal){
     var orbit=$("#rouletteBallOrbit"),center=$("#rouletteWheelCenter"),caption=$("#rouletteWheelCaption");
-    if(!orbit||value==null)return;
+    if(!orbit||value==null){if(onReveal)onReveal();return}
     var target=rouletteWheelTargetAngle(value),turns=6+Math.floor(Math.random()*3),finalAngle=turns*360+target;
     document.querySelectorAll(".roulette-pocket-mini").forEach(function(p){p.classList.remove("winner")});
     if(center){center.textContent="";center.className="roulette-wheel-center-number green"}
@@ -1177,7 +1179,7 @@
         if(center){center.textContent=value;center.className="roulette-wheel-center-number "+rouletteColor(value)}
         var winner=document.querySelector('.roulette-pocket-mini[data-roulette-pocket="'+String(value)+'"]');if(winner)winner.classList.add("winner");
         if(caption)caption.textContent="ULTIMO NUMERO · "+rouletteColor(value).toUpperCase();
-        beep("done");
+        if(onReveal)onReveal();else beep("done");
       };
     }else{
       orbit.style.transition="transform 2.4s cubic-bezier(.08,.62,.18,1)";
@@ -1187,7 +1189,7 @@
         if(center){center.textContent=value;center.className="roulette-wheel-center-number "+rouletteColor(value)}
         var winner=document.querySelector('.roulette-pocket-mini[data-roulette-pocket="'+String(value)+'"]');if(winner)winner.classList.add("winner");
         if(caption)caption.textContent="ULTIMO NUMERO · "+rouletteColor(value).toUpperCase();
-        beep("done");
+        if(onReveal)onReveal();else beep("done");
       },2450);
     }
   }
@@ -1443,17 +1445,25 @@
     if(state.experiment==="balls"&&urnTotal("current")===0){alert("L'urna è vuota. Premi “Ripristina urna” oppure azzera la serie.");return}
     if(state.experiment==="cards"&&deckTotal("current")===0){alert("Il mazzo è vuoto. Premi “Ripristina mazzo completo” oppure azzera la serie.");return}
     var r=trial();if(!r)return;
+    if(state.experiment==="roulette"){
+      if(state.roulette.spinning)return;
+      state.roulette.spinning=true;state.roulette.pending=r.value;
+      sumDisplay.innerHTML="…<small>la pallina sta girando</small>";
+      beep("roll");render();
+      requestAnimationFrame(function(){
+        animateRouletteVisual(r.value,function(){
+          state.roulette.spinning=false;state.roulette.pending=null;
+          state.roulette.last=r.value;state.lastOutcome=r.raw;state.results.push(r.value);
+          if(state.roulette.mode==="game")resolveRouletteBets(r.value);
+          sumDisplay.innerHTML=resultText(r.value,false);beep("done");render();
+        });
+      });
+      return;
+    }
     state.lastOutcome=r.raw;state.results.push(r.value);
     if(state.experiment==="balls")state.urn.lastColor=r.value;
     if(state.experiment==="cards")state.deck.lastCard=r.value;
     if(state.experiment==="tombola"){state.tombola.last=r.value;state.tombola.dataMode="draws";state.tombola.lastPrize=tombolaHitInfo(state.results).prize}
-    if(state.experiment==="roulette"){
-      state.roulette.last=r.value;
-      if(state.roulette.mode==="game")resolveRouletteBets(r.value);
-      sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
-      requestAnimationFrame(function(){animateRouletteVisual(r.value)});
-      return;
-    }
     showOutcome(r.raw,true);sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
   }
 
@@ -2042,13 +2052,14 @@
     var host=$("#rouletteTable");host.innerHTML="";
     var board=document.createElement("div");board.className="roulette-board";
     var zero=document.createElement("div");zero.className="roulette-zero-stack"+(state.roulette.kind==="european"?" single":"");
-    zero.appendChild(rouletteCell("0","green"+(state.roulette.last==="0"?" hit":""),"num:0"));
-    if(state.roulette.kind==="american")zero.appendChild(rouletteCell("00","green"+(state.roulette.last==="00"?" hit":""),"num:00"));
+    var tableLast=state.roulette.spinning?null:state.roulette.last;
+    zero.appendChild(rouletteCell("0","green"+(tableLast==="0"?" hit":""),"num:0"));
+    if(state.roulette.kind==="american")zero.appendChild(rouletteCell("00","green"+(tableLast==="00"?" hit":""),"num:00"));
     board.appendChild(zero);
 
     var core=document.createElement("div");core.className="roulette-core";
     var nums=document.createElement("div");nums.className="roulette-numbers";
-    [3,2,1].forEach(function(start){for(var n=start;n<=36;n+=3){var v=String(n),c=rouletteColor(v);nums.appendChild(rouletteCell(v,c+(state.roulette.last===v?" hit":""),"num:"+v))}});
+    [3,2,1].forEach(function(start){for(var n=start;n<=36;n+=3){var v=String(n),c=rouletteColor(v);nums.appendChild(rouletteCell(v,c+(tableLast===v?" hit":""),"num:"+v))}});
     core.appendChild(nums);
     var dozens=document.createElement("div");dozens.className="roulette-dozens";
     dozens.appendChild(rouletteCell("1ª DOZZINA","outside","d1"));dozens.appendChild(rouletteCell("2ª DOZZINA","outside","d2"));dozens.appendChild(rouletteCell("3ª DOZZINA","outside","d3"));core.appendChild(dozens);
@@ -2095,7 +2106,9 @@
     }else{
       $("#rouletteTableHint").textContent=mode==="game"?"Tocca il tavolo per piazzare fiche virtuali.":"Tutti i numeri hanno la stessa probabilità di uscita.";
     }
-    var mini=$("#rouletteLastMini");mini.textContent=state.roulette.last||"—";mini.style.background=state.roulette.last?(rouletteColor(state.roulette.last)==="red"?"#c92c35":rouletteColor(state.roulette.last)==="black"?"#17191d":"#087a45"):"#087a45";
+    var mini=$("#rouletteLastMini"),miniLast=state.roulette.spinning?null:state.roulette.last;
+    mini.textContent=state.roulette.spinning?"…":(miniLast||"—");
+    mini.style.background=miniLast?(rouletteColor(miniLast)==="red"?"#c92c35":rouletteColor(miniLast)==="black"?"#17191d":"#087a45"):"#087a45";
   }
 
   function updateExperimentUI(){
@@ -2135,8 +2148,8 @@
       var deckHasCards=deckTotal("current")>0;
       $("#cardDrawTopBtn").textContent=deckHasCards?"🃏 PESCA UNA CARTA":"MAZZO VUOTO";$("#cardDrawTopBtn").disabled=!deckHasCards;$(".brandmark").textContent="🃏";renderDeckConfig();
     }else if(isRoulette){
-      $("#rouletteSpinTopBtn").textContent=state.roulette.mode==="martingale"?"▶ UN GIRO DI MARTINGALA":"🎡 GIRA LA PALLINA";
-      $("#rouletteSpinTopBtn").disabled=state.roulette.mode==="martingale"&&state.roulette.martingale.stopped;
+      $("#rouletteSpinTopBtn").textContent=state.roulette.spinning?"🎡 PALLINA IN MOVIMENTO…":(state.roulette.mode==="martingale"?"▶ UN GIRO DI MARTINGALA":"🎡 GIRA LA PALLINA");
+      $("#rouletteSpinTopBtn").disabled=state.roulette.spinning||(state.roulette.mode==="martingale"&&state.roulette.martingale.stopped);
       $(".brandmark").textContent="🎡";renderRouletteConfig();renderRouletteTable();
     }else if(isTombola){
       $("#tombolaDrawTopBtn").textContent=state.tombola.remaining.length?"🎱 ESTRAI UN NUMERO":"TABELLONE COMPLETO";$("#tombolaDrawTopBtn").disabled=!state.tombola.remaining.length;$(".brandmark").textContent="🎱";
@@ -2163,7 +2176,7 @@
     }else if(state.experiment==="cards"){
       state.deck.current=state.deck.initial.slice();state.deck.lastCard=null;renderCardVisual();sumDisplay.innerHTML="—<small>nessuna carta pescata</small>";
     }else if(state.experiment==="roulette"){
-      state.roulette.last=null;state.roulette.lastNet=null;
+      state.roulette.spinning=false;state.roulette.pending=null;state.roulette.last=null;state.roulette.lastNet=null;
       if(state.roulette.mode==="game")clearRouletteBets(true);
       if(state.roulette.mode==="martingale")resetMartingaleData();
       renderRouletteVisual();sumDisplay.innerHTML="—<small>nessun giro</small>";
@@ -2275,14 +2288,14 @@
   $("#rouletteKindSeg").addEventListener("click",function(e){
     var b=e.target.closest("button");if(!b)return;var k=b.dataset.rouletteKind;if(k===state.roulette.kind)return;
     if(state.results.length&&!confirm("Cambiare tipo di roulette? La serie corrente verrà azzerata."))return;
-    clearRouletteBets(true);state.roulette.kind=k;state.roulette.lastNet=null;
+    clearRouletteBets(true);state.roulette.spinning=false;state.roulette.pending=null;state.roulette.kind=k;state.roulette.lastNet=null;
     if(state.roulette.mode==="martingale")resetMartingaleData();else{state.results=[];state.roulette.last=null}
     render();
   });
   $("#rouletteModeSeg").addEventListener("click",function(e){
     var b=e.target.closest("button");if(!b)return;var mode=b.dataset.rouletteMode;if(mode===state.roulette.mode)return;
     if(state.results.length&&!confirm("Cambiare modalità della roulette? La serie corrente verrà azzerata."))return;
-    clearRouletteBets(true);state.roulette.mode=mode;state.roulette.lastNet=null;state.results=[];state.roulette.last=null;
+    clearRouletteBets(true);state.roulette.spinning=false;state.roulette.pending=null;state.roulette.mode=mode;state.roulette.lastNet=null;state.results=[];state.roulette.last=null;
     if(mode==="martingale"){state.roulette.analysis="color";resetMartingaleData();$("#simN").value=1000}
     render();
   });
