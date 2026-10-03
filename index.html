@@ -984,7 +984,7 @@
               <p>Ogni ramo mostra una probabilità condizionata. Segui il percorso ROSSA → ROSSA.</p>
               <div class="event-tree">
                 <svg class="tree-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
-                  <path class="tree-line" d="M15 50 L35 27"></path><path class="tree-line" d="M15 50 L35 73"></path>
+                  <path class="tree-line highlight" d="M15 50 L35 27"></path><path class="tree-line" d="M15 50 L35 73"></path>
                   <path class="tree-line highlight" d="M43 27 L75 12"></path><path class="tree-line" d="M43 27 L75 38"></path>
                   <path class="tree-line" d="M43 73 L75 62"></path><path class="tree-line" d="M43 73 L75 88"></path>
                 </svg>
@@ -1867,7 +1867,7 @@
   }
 
   function oneRoll(){
-    if(state.experiment==="events"){eventRoll();return}
+    if(state.experiment==="events"){if(state.events.phase==="product")eventPairRoll();else eventRoll();return}
     if(state.experiment==="galton"){dropGaltonAnimated();return}
     if(state.experiment==="roulette"&&state.roulette.mode==="martingale"){runMartingaleSingle();return}
     if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"){
@@ -2635,8 +2635,162 @@
     if(inB)return v+" appartiene a B, ma non ad A.";
     return v+" non appartiene né ad A né a B.";
   }
+  function eventFraction(num,den){
+    if(den===0)return "—";
+    if(num===0)return "0";
+    if(num===den)return "1";
+    var g=gcd(Math.abs(num),Math.abs(den)),a=num/g,b=den/g;
+    return a+"/"+b;
+  }
+  function eventProductData(){
+    var p=state.events.product,r=p.red,b=p.blue,t=r+b,den2=t-1;
+    var repl=p.replacement;
+    return {
+      r:r,b:b,t:t,
+      pA:r/t,pB:r/t,
+      pAgivenStartText:eventFraction(r,t),
+      pBText:eventFraction(r,t),
+      pBgA:repl?r/t:(r-1)/den2,
+      pBlueGivenA:repl?b/t:b/den2,
+      pRedGivenBlue:repl?r/t:r/den2,
+      pBlueGivenBlue:repl?b/t:(b-1)/den2,
+      pBgAText:repl?eventFraction(r,t):eventFraction(r-1,den2),
+      pBlueGivenAText:repl?eventFraction(b,t):eventFraction(b,den2),
+      pRedGivenBlueText:repl?eventFraction(r,t):eventFraction(r,den2),
+      pBlueGivenBlueText:repl?eventFraction(b,t):eventFraction(b-1,den2),
+      rr:(r/t)*(repl?r/t:(r-1)/den2),
+      rb:(r/t)*(repl?b/t:b/den2),
+      br:(b/t)*(repl?r/t:r/den2),
+      bb:(b/t)*(repl?b/t:(b-1)/den2),
+      rrText:repl?eventFraction(r*r,t*t):eventFraction(r*(r-1),t*den2),
+      rbText:repl?eventFraction(r*b,t*t):eventFraction(r*b,t*den2),
+      brText:repl?eventFraction(b*r,t*t):eventFraction(b*r,t*den2),
+      bbText:repl?eventFraction(b*b,t*t):eventFraction(b*(b-1),t*den2),
+      dependent:!repl
+    };
+  }
+  function renderEventsPhaseUI(){
+    var phase=state.events.phase;
+    $("#eventsPhaseLabel").textContent=phase==="sum"?"fase 1 · somma":"fase 2 · prodotto";
+    document.querySelectorAll("#eventsPhaseSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.eventsPhase===phase)});
+    $("#eventsSumConfig").hidden=phase!=="sum";$("#eventsProductConfig").hidden=phase!=="product";
+    $("#eventsSumPhase").hidden=phase!=="sum";$("#eventsProductPhase").hidden=phase!=="product";
+  }
+  function renderEventsProductUrn(){
+    var p=state.events.product,host=$("#eventsProductUrnVisual"),total=p.red+p.blue;
+    host.innerHTML="";
+    var size=total>24?18:total>16?22:27;
+    [["red",p.red],["blue",p.blue]].forEach(function(pair){
+      for(var i=0;i<pair[1];i++){
+        var ball=document.createElement("i");ball.className="events-urn-ball "+pair[0];
+        ball.style.width=size+"px";ball.style.height=size+"px";host.appendChild(ball);
+      }
+    });
+  }
+  function renderEventsProduct(){
+    renderEventsPhaseUI();
+    var p=state.events.product,d=eventProductData(),revealed=!!p.prediction;
+    $("#eventsRedCount").textContent=p.red;$("#eventsBlueCount").textContent=p.blue;
+    $("#eventsUrnTotalLabel").textContent=d.t+" palline";
+    $("#eventsReplacementLabel").textContent=p.replacement?"con reintroduzione":"senza reintroduzione";
+    $("#eventsProductModeBadge").textContent=p.replacement?"CON reintroduzione":"SENZA reintroduzione";
+    document.querySelectorAll("#eventsReplacementSeg button").forEach(function(b){b.classList.toggle("active",(b.dataset.eventsReplacement==="1")===p.replacement)});
+    renderEventsProductUrn();
+
+    $("#treeP1R").textContent="P(R) = "+eventFraction(d.r,d.t);
+    $("#treeP1B").textContent="P(Blu) = "+eventFraction(d.b,d.t);
+    $("#treePRR").textContent=revealed?"P(R|R) = "+d.pBgAText:"P(R|R) = ?";
+    $("#treePRB").textContent=revealed?"P(Blu|R) = "+d.pBlueGivenAText:"P(Blu|R) = ?";
+    $("#treePBR").textContent=revealed?"P(R|Blu) = "+d.pRedGivenBlueText:"P(R|Blu) = ?";
+    $("#treePBB").textContent=revealed?"P(Blu|Blu) = "+d.pBlueGivenBlueText:"P(Blu|Blu) = ?";
+    $("#treeRRJoint").textContent=revealed?"P = "+d.rrText:"P = ?";
+    $("#treeRBJoint").textContent=revealed?"P = "+d.rbText:"P = ?";
+    $("#treeBRJoint").textContent=revealed?"P = "+d.brText:"P = ?";
+    $("#treeBBJoint").textContent=revealed?"P = "+d.bbText:"P = ?";
+
+    $("#productPA").textContent=eventFraction(d.r,d.t);
+    $("#productPB").textContent=eventFraction(d.r,d.t);
+    $("#productPBgivenA").textContent=revealed?d.pBgAText:"?";
+    $("#productIntersection").textContent=revealed?d.rrText:"?";
+
+    var correct=d.dependent?"dependent":"independent";
+    document.querySelectorAll("#eventsDependPredict button").forEach(function(b){
+      b.classList.remove("correct","wrong");
+      if(p.prediction){if(b.dataset.dependPrediction===correct)b.classList.add("correct");else if(b.dataset.dependPrediction===p.prediction)b.classList.add("wrong")}
+    });
+
+    if(!revealed){
+      $("#eventsDependFeedback").textContent="Scegli una risposta prima di leggere il verdetto.";
+      $("#eventsDependVerdict").innerHTML="<strong>Confronto nascosto.</strong><br>Prima decidi se conoscere l'esito della prima estrazione può cambiare la seconda.";
+      $("#eventsProductRule").innerHTML="P(A ∩ B) = P(A) · P(B | A)<small>Fai prima la previsione: poi l'albero rivelerà P(B | A) e completerà il calcolo.</small>";
+    }else{
+      var right=p.prediction===correct;
+      $("#eventsDependFeedback").innerHTML=right?"<strong style='color:var(--accent2)'>Corretto.</strong> Ora confronta P(B) con P(B | A).":"<strong style='color:var(--danger)'>Osserva i valori.</strong> Il confronto P(B) / P(B | A) chiarisce la risposta.";
+      if(d.dependent){
+        $("#eventsDependVerdict").innerHTML="<strong>EVENTI DIPENDENTI</strong><br>P(B) = "+d.pBText+" mentre P(B | A) = "+d.pBgAText+". Sapere che la prima pallina è rossa modifica la probabilità della seconda.";
+        $("#eventsProductRule").innerHTML="P(A ∩ B) = P(A) · P(B | A)<br><span style='font-weight:800'>"+eventFraction(d.r,d.t)+" × "+d.pBgAText+" = "+d.rrText+"</span><small>Senza reintroduzione bisogna usare la probabilità condizionata: dopo A l'urna è cambiata.</small>";
+      }else{
+        $("#eventsDependVerdict").innerHTML="<strong>EVENTI INDIPENDENTI</strong><br>P(B) = "+d.pBText+" e P(B | A) = "+d.pBgAText+". Sapere che A è avvenuto non cambia la probabilità di B.";
+        $("#eventsProductRule").innerHTML="P(A ∩ B) = P(A) · P(B | A) = P(A) · P(B)<br><span style='font-weight:800'>"+eventFraction(d.r,d.t)+" × "+d.pBgAText+" = "+d.rrText+"</span><small>Con reintroduzione l'urna torna identica: per eventi indipendenti P(B | A) = P(B).</small>";
+      }
+    }
+
+    var counts={RR:0,RB:0,BR:0,BB:0};
+    state.results.forEach(function(x){if(counts[x]!=null)counts[x]++});
+    $("#pairTrialsN").textContent=fmt(state.results.length,0);$("#pairRR").textContent=counts.RR;$("#pairRB").textContent=counts.RB;$("#pairBR").textContent=counts.BR;$("#pairBB").textContent=counts.BB;
+    var last=p.lastPair,lh=$("#eventsPairLast");lh.innerHTML="";
+    if(last){
+      function pairBall(color){var x=document.createElement("span");x.className="pair-ball "+(color==="R"?"red":"blue");x.textContent=color==="R"?"ROSSA":"BLU";return x}
+      lh.appendChild(pairBall(last.charAt(0)));var ar=document.createElement("span");ar.className="pair-arrow";ar.textContent="→";lh.appendChild(ar);lh.appendChild(pairBall(last.charAt(1)));
+    }else{
+      var empty=document.createElement("span");empty.style.cssText="color:var(--muted);font-size:11px";empty.textContent="Nessuna coppia estratta.";lh.appendChild(empty);
+    }
+    if(state.results.length){
+      var freq=counts.RR/state.results.length*100;
+      $("#eventsProductCompare").innerHTML="<strong>R → R:</strong> frequenza relativa = "+fmt(freq,1)+"% · P(A ∩ B) teorica = "+fmt(d.rr*100,1)+"%"+
+        "<br>"+(p.replacement?"Con reintroduzione le due estrazioni sono indipendenti.":"Senza reintroduzione la seconda probabilità dipende dalla prima estrazione.");
+    }else{
+      $("#eventsProductCompare").textContent="Estrai due palline o simula molte prove per confrontare la frequenza di R → R con P(A ∩ B).";
+    }
+  }
+  function resetEventsProductTrials(){
+    state.results=[];state.lastOutcome=[];state.events.product.lastPair=null;
+  }
+  function setEventsPhase(phase){
+    if(phase===state.events.phase)return;
+    state.events.phase=phase;state.results=[];state.lastOutcome=[];
+    if(phase==="sum")state.events.last=null;else state.events.product.lastPair=null;
+    render();
+  }
+  function updateEventsUrn(color,delta){
+    var p=state.events.product,next=Math.max(1,Math.min(20,p[color]+delta));
+    if(next===p[color])return;
+    p[color]=next;p.prediction=null;resetEventsProductTrials();render();
+  }
+  function setEventsReplacement(value){
+    var p=state.events.product;if(value===p.replacement)return;
+    p.replacement=value;p.prediction=null;resetEventsProductTrials();render();
+  }
+  function drawEventsPair(){
+    var p=state.events.product,r=p.red,b=p.blue,t=r+b;
+    var first=Math.random()*t<r?"R":"B",r2=r,b2=b;
+    if(!p.replacement){if(first==="R")r2--;else b2--}
+    var second=Math.random()*(r2+b2)<r2?"R":"B";
+    return first+second;
+  }
+  function eventPairRoll(){
+    var pair=drawEventsPair();state.results.push(pair);state.lastOutcome=[pair];state.events.product.lastPair=pair;beep("roll");renderEventsProduct();
+  }
+  function simulateEventPairs(n){
+    n=Math.max(1,Math.min(100000,Math.floor(Number(n)||0)));state.results=new Array(n);
+    for(var i=0;i<n;i++)state.results[i]=drawEventsPair();
+    state.events.product.lastPair=state.results[n-1];state.lastOutcome=[state.events.product.lastPair];beep("done");renderEventsProduct();
+  }
+
   function renderEvents(){
     if(!$("#eventsMain"))return;
+    renderEventsPhaseUI();
+    if(state.events.phase==="product"){renderEventsProduct();return}
     state.events.A=eventSortedUnique(state.events.A);state.events.B=eventSortedUnique(state.events.B);
     ["A","B"].forEach(function(letter){
       var host=$("#event"+letter+"Outcomes"),set=state.events[letter];host.innerHTML="";
@@ -2801,7 +2955,8 @@
     }else if(state.experiment==="galton"){
       state.galton.token++;state.galton.animating=false;state.galton.lastPath=[];state.galton.lastBin=null;renderGaltonMini();renderGaltonMachine();sumDisplay.innerHTML="—<small>nessuna pallina caduta</small>";
     }else if(state.experiment==="events"){
-      state.events.last=null;state.events.prediction=null;renderEvents();
+      if(state.events.phase==="product"){state.events.product.lastPair=null;state.events.product.prediction=null}else{state.events.last=null;state.events.prediction=null}
+      renderEvents();
     }else{
       resultWrap.innerHTML="";sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
     }
@@ -2965,7 +3120,17 @@
   $("#galtonRowQuick").addEventListener("click",function(e){var b=e.target.closest("[data-galton-rows]");if(b)setGaltonRows(b.dataset.galtonRows)});
   $("#galtonSpeed").addEventListener("change",function(e){state.galton.speed=e.target.value;renderGaltonConfig()});
 
+  $("#eventsPhaseSeg").addEventListener("click",function(e){var b=e.target.closest("[data-events-phase]");if(b)setEventsPhase(b.dataset.eventsPhase)});
+  $("#eventsProductConfig").addEventListener("click",function(e){
+    var step=e.target.closest("[data-events-color]");if(step){updateEventsUrn(step.dataset.eventsColor,Number(step.dataset.delta));return}
+    var mode=e.target.closest("[data-events-replacement]");if(mode){setEventsReplacement(mode.dataset.eventsReplacement==="1");return}
+  });
+
   $("#eventsMain").addEventListener("click",function(e){
+    var dep=e.target.closest("[data-depend-prediction]");
+    if(dep){state.events.product.prediction=dep.dataset.dependPrediction;renderEventsProduct();return}
+    var pairSim=e.target.closest("[data-events-pair-sim]");
+    if(pairSim){simulateEventPairs(Number(pairSim.dataset.eventsPairSim));return}
     var out=e.target.closest("[data-event-set]");
     if(out){toggleEventOutcome(out.dataset.eventSet,Number(out.dataset.eventValue));return}
     var pred=e.target.closest("[data-event-prediction]");
@@ -2976,6 +3141,8 @@
   $("#eventsPresetGrid").addEventListener("click",function(e){var b=e.target.closest("[data-events-preset]");if(b)applyEventsPreset(b.dataset.eventsPreset)});
   $("#eventsRollBtn").addEventListener("click",eventRoll);
   $("#eventsResetTrialsBtn").addEventListener("click",function(){resetEventTrials();beep("reset")});
+  $("#eventsPairRollBtn").addEventListener("click",eventPairRoll);
+  $("#eventsPairResetBtn").addEventListener("click",function(){resetEventsProductTrials();beep("reset");renderEventsProduct()});
 
   document.querySelectorAll(".tabs button").forEach(function(b){b.addEventListener("click",function(){
     $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
