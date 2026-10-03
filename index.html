@@ -1890,7 +1890,7 @@
     return Object.keys(state.roulette.bets).reduce(function(s,k){return s+state.roulette.bets[k]},0);
   }
   function placeRouletteBet(id){
-    if(state.roulette.mode!=="game")return;
+    if(state.roulette.mode!=="game"||state.roulette.spinning)return;
     var chip=state.roulette.chip;if(state.roulette.bankroll<chip){alert("Saldo virtuale insufficiente.");return}
     state.roulette.bankroll-=chip;state.roulette.bets[id]=(state.roulette.bets[id]||0)+chip;renderRouletteConfig();renderRouletteTable();
   }
@@ -2284,8 +2284,9 @@
   $("#cardAnalysis").addEventListener("change",function(e){state.deck.analysis=e.target.value;render()});
 
   $("#rouletteSpinTopBtn").addEventListener("click",oneRoll);
-  $("#rouletteAnalysis").addEventListener("change",function(e){state.roulette.analysis=e.target.value;render()});
+  $("#rouletteAnalysis").addEventListener("change",function(e){if(state.roulette.spinning){e.target.value=state.roulette.analysis;return}state.roulette.analysis=e.target.value;render()});
   $("#rouletteKindSeg").addEventListener("click",function(e){
+    if(state.roulette.spinning)return;
     var b=e.target.closest("button");if(!b)return;var k=b.dataset.rouletteKind;if(k===state.roulette.kind)return;
     if(state.results.length&&!confirm("Cambiare tipo di roulette? La serie corrente verrà azzerata."))return;
     clearRouletteBets(true);state.roulette.spinning=false;state.roulette.pending=null;state.roulette.kind=k;state.roulette.lastNet=null;
@@ -2293,13 +2294,14 @@
     render();
   });
   $("#rouletteModeSeg").addEventListener("click",function(e){
+    if(state.roulette.spinning)return;
     var b=e.target.closest("button");if(!b)return;var mode=b.dataset.rouletteMode;if(mode===state.roulette.mode)return;
     if(state.results.length&&!confirm("Cambiare modalità della roulette? La serie corrente verrà azzerata."))return;
     clearRouletteBets(true);state.roulette.spinning=false;state.roulette.pending=null;state.roulette.mode=mode;state.roulette.lastNet=null;state.results=[];state.roulette.last=null;
     if(mode==="martingale"){state.roulette.analysis="color";resetMartingaleData();$("#simN").value=1000}
     render();
   });
-  $("#rouletteChipSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;state.roulette.chip=Number(b.dataset.chip);renderRouletteConfig()});
+  $("#rouletteChipSeg").addEventListener("click",function(e){if(state.roulette.spinning)return;var b=e.target.closest("button");if(!b)return;state.roulette.chip=Number(b.dataset.chip);renderRouletteConfig()});
   $("#clearRouletteBetsBtn").addEventListener("click",function(){clearRouletteBets(true)});
   $("#newRouletteGameBtn").addEventListener("click",function(){state.roulette.bankroll=100;state.roulette.bets={};state.roulette.lastNet=null;renderRouletteConfig();renderRouletteTable()});
 
