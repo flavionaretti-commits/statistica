@@ -1183,8 +1183,9 @@
     <h3>⚙️ Macchina di Galton</h3>
     <p>Scegli da 4 a 16 file di pioli. Ogni urto manda la pallina a sinistra o a destra con probabilità 50%. Il canale finale corrisponde al <b>numero di deviazioni a destra</b>: è quindi lo stesso esperimento di una serie di lanci di moneta. Con molte palline emerge la distribuzione binomiale e, aumentando i livelli, la caratteristica forma a campana.</p>
 
-    <h3>🔵 Eventi · fase 1</h3>
-    <p>Con un dado equilibrato costruisci liberamente due eventi <b>A</b> e <b>B</b> scegliendo gli esiti. Il diagramma di Venn mostra A, B, l'intersezione e gli esiti esterni. Prima fai una previsione su compatibilità/incompatibilità, poi verifica il verdetto. La sezione <b>A O B</b> costruisce la regola della somma e la semplifica automaticamente quando A e B sono incompatibili. Puoi infine lanciare il dado o simulare molte prove per confrontare frequenza relativa e probabilità teorica.</p>
+    <h3>🔵 Eventi · fasi 1 e 2</h3>
+    <p><b>Fase 1 · SOMMA:</b> con un dado equilibrato costruisci due eventi A e B, li osservi nel diagramma di Venn e prevedi se sono compatibili o incompatibili. La sezione <b>A O B</b> costruisce la regola della somma.</p>
+    <p><b>Fase 2 · PRODOTTO:</b> con un'urna rossa/blu studi due estrazioni. A = “prima pallina rossa”, B = “seconda pallina rossa”. Confrontando estrazioni con e senza reintroduzione scopri probabilità condizionata, eventi dipendenti/indipendenti e la regola <b>P(A ∩ B) = P(A) · P(B | A)</b>. Il diagramma ad albero mostra i quattro percorsi possibili e puoi verificarli sperimentalmente con molte prove.</p>
 
     <h3>📊 Grafici e strumenti comuni</h3>
     <p><b>Frequenze relative</b> passa dai conteggi alle percentuali. <b>Teoria</b> mostra la distribuzione attesa quando ha senso. <b>Valori</b> mostra i numeri sulle barre. <b>PROIETTA</b> ingrandisce l'istogramma per LIM e proiezione. <b>Esporta CSV</b> salva i dati della serie corrente.</p>
@@ -2747,8 +2748,9 @@
     }
     if(state.results.length){
       var freq=counts.RR/state.results.length*100;
-      $("#eventsProductCompare").innerHTML="<strong>R → R:</strong> frequenza relativa = "+fmt(freq,1)+"% · P(A ∩ B) teorica = "+fmt(d.rr*100,1)+"%"+
-        "<br>"+(p.replacement?"Con reintroduzione le due estrazioni sono indipendenti.":"Senza reintroduzione la seconda probabilità dipende dalla prima estrazione.");
+      $("#eventsProductCompare").innerHTML="<strong>R → R:</strong> frequenza relativa = "+fmt(freq,1)+"%"+
+        (revealed?" · P(A ∩ B) teorica = "+fmt(d.rr*100,1)+"%":" · prova a prevedere dipendenza/indipendenza per rivelare il valore teorico.")+
+        (revealed?"<br>"+(p.replacement?"Le due estrazioni risultano indipendenti.":"La seconda probabilità risulta condizionata dalla prima estrazione."):"");
     }else{
       $("#eventsProductCompare").textContent="Estrai due palline o simula molte prove per confrontare la frequenza di R → R con P(A ∩ B).";
     }
