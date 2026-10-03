@@ -82,6 +82,7 @@ Laboratorio didattico interattivo di statistica e probabilità.
 - istogramma della posizione finale
 - confronto con la distribuzione binomiale teorica
 - frequenze assolute/relative, statistiche, PROIEZIONE ed esportazione CSV
+- vista PROIETTA dedicata alla macchina con caduta singola, scelta rapida delle file, velocità e simulazioni 10/100/1.000
 
 ### 🔵 Eventi · fasi 1 e 2
 **Fase 1 · SOMMA**
