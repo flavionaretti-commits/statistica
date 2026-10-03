@@ -519,6 +519,59 @@
     .events-exp-stat span{display:block;font-size:8px;color:var(--muted);font-weight:850}.events-exp-stat strong{display:block;font-size:14px;margin-top:3px}
     .events-compare{margin-top:9px;font-size:11px;color:var(--muted);line-height:1.45}
     .events-compare strong{color:var(--text)}
+    .events-phase-seg{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:7px 0 10px}
+    .events-phase-seg button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:11px;padding:9px 5px;font-size:10px;font-weight:900;cursor:pointer}
+    .events-phase-seg button.active{background:var(--accent);border-color:var(--accent);color:white}
+    .events-urn-config{display:grid;gap:6px;margin:8px 0}
+    .events-urn-row{display:grid;grid-template-columns:18px 1fr 32px 35px 32px;gap:5px;align-items:center;border:1px solid var(--line);border-radius:11px;padding:6px 7px;background:var(--panel2)}
+    .events-urn-dot{width:15px;height:15px;border-radius:50%;box-shadow:inset -2px -2px 4px rgba(0,0,0,.18)}
+    .events-urn-row span{font-size:11px;font-weight:850}.events-urn-row b{text-align:center;font-size:13px}
+    .events-urn-step{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:8px;height:28px;font-weight:950;cursor:pointer}
+    .events-replacement{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:7px 0}
+    .events-replacement button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:9px 4px;font-size:9px;font-weight:900;cursor:pointer}
+    .events-replacement button.active{background:var(--accent2);border-color:var(--accent2);color:#062b28}
+    .events-product-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .events-product-head h2{margin:0;font-size:23px}.events-product-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .events-product-badge{padding:8px 11px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:11px;font-weight:900}
+    .events-product-grid{display:grid;grid-template-columns:minmax(300px,.9fr) minmax(420px,1.1fr);gap:14px}
+    .events-product-card{border:1px solid var(--line);border-radius:18px;background:var(--panel2);padding:14px;min-width:0}
+    .events-product-card h3{margin:0 0 5px;font-size:17px}.events-product-card>p{margin:0 0 11px;color:var(--muted);font-size:11px;line-height:1.45}
+    .events-urn-visual{position:relative;height:215px;border:1px dashed var(--line);border-radius:16px;background:linear-gradient(180deg,rgba(41,98,255,.025),rgba(20,184,166,.04));overflow:hidden;display:grid;place-items:center}
+    .events-urn-vessel{position:relative;width:185px;height:155px;border:4px solid #8293a9;border-top:0;border-radius:12px 12px 62px 62px;background:rgba(151,184,214,.12);display:flex;flex-wrap:wrap-reverse;align-content:flex-start;justify-content:center;gap:6px;padding:15px 13px 10px;overflow:hidden}
+    .events-urn-vessel:before{content:"";position:absolute;left:-5px;right:-5px;top:0;height:8px;border:4px solid #8293a9;border-radius:6px;background:var(--panel)}
+    .events-urn-ball{width:27px;height:27px;border-radius:50%;box-shadow:inset -4px -4px 6px rgba(0,0,0,.2),0 2px 4px rgba(0,0,0,.13)}
+    .events-urn-ball.red{background:#ef4444}.events-urn-ball.blue{background:#3b82f6}
+    .events-ab-def{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px}
+    .events-ab-def>div{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:9px;text-align:center}
+    .events-ab-def b{display:block;font-size:16px}.events-ab-def span{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+    .event-tree{position:relative;min-height:330px;border:1px dashed var(--line);border-radius:16px;background:linear-gradient(135deg,rgba(41,98,255,.035),rgba(229,72,125,.035));overflow:hidden}
+    .tree-svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    .tree-line{stroke:var(--line);stroke-width:2.3;fill:none}.tree-line.highlight{stroke:var(--accent);stroke-width:4}
+    .tree-node{position:absolute;transform:translate(-50%,-50%);border:1px solid var(--line);background:var(--panel);border-radius:11px;padding:7px 8px;min-width:78px;text-align:center;z-index:2;box-shadow:0 3px 8px rgba(0,0,0,.06)}
+    .tree-node strong{display:block;font-size:12px}.tree-node span{display:block;font-size:9px;color:var(--muted);margin-top:2px}
+    .tree-node.start{left:10%;top:50%;min-width:58px}.tree-node.r1{left:39%;top:27%}.tree-node.b1{left:39%;top:73%}
+    .tree-node.rr{left:80%;top:12%}.tree-node.rb{left:80%;top:38%}.tree-node.br{left:80%;top:62%}.tree-node.bb{left:80%;top:88%}
+    .tree-node.red strong{color:#ef4444}.tree-node.blue strong{color:#3b82f6}
+    .tree-prob{position:absolute;z-index:3;font-size:9px;font-weight:900;color:var(--muted);background:var(--panel2);padding:2px 4px;border-radius:6px}
+    .tree-prob.p1r{left:22%;top:32%}.tree-prob.p1b{left:22%;top:65%}.tree-prob.prr{left:57%;top:15%}.tree-prob.prb{left:57%;top:38%}.tree-prob.pbr{left:57%;top:58%}.tree-prob.pbb{left:57%;top:81%}
+    .events-depend-box{margin-top:10px;padding:11px;border-radius:13px;background:var(--grid);font-size:11px;line-height:1.5}
+    .events-depend-predict{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+    .events-depend-predict button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:9px 4px;font-size:10px;font-weight:900;cursor:pointer}
+    .events-depend-predict button.correct{background:rgba(20,184,166,.14);border-color:var(--accent2)}.events-depend-predict button.wrong{background:rgba(229,72,77,.12);border-color:var(--danger)}
+    .events-cond-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:12px}
+    .events-cond-box{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:9px;text-align:center}
+    .events-cond-box span{display:block;font-size:9px;color:var(--muted);font-weight:850}.events-cond-box strong{display:block;font-size:16px;margin-top:3px}
+    .product-rule{margin-top:10px;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(20,184,166,.10),rgba(41,98,255,.08));font-size:14px;font-weight:900;line-height:1.5;text-align:center}
+    .product-rule small{display:block;color:var(--muted);font-size:10px;font-weight:750;margin-top:5px}
+    .events-pair-last{display:flex;gap:7px;align-items:center;margin-top:8px}
+    .pair-ball{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:white;font-size:12px;font-weight:950;box-shadow:inset -4px -4px 6px rgba(0,0,0,.2)}
+    .pair-ball.red{background:#ef4444}.pair-ball.blue{background:#3b82f6}.pair-arrow{color:var(--muted);font-weight:950}
+    .events-pair-stats{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:8px}
+    .events-pair-stat{border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:8px;text-align:center}
+    .events-pair-stat span{display:block;font-size:8px;color:var(--muted);font-weight:850}.events-pair-stat strong{display:block;font-size:14px;margin-top:3px}
+    @media(max-width:900px){.events-product-grid{grid-template-columns:1fr}}
+    @media(max-width:560px){.events-cond-grid{grid-template-columns:repeat(2,1fr)}.events-pair-stats{grid-template-columns:repeat(3,1fr)}.event-tree{min-height:300px}.tree-node{min-width:68px;padding:6px 5px}}
+
     @media(max-width:850px){.events-grid,.events-experiment{grid-template-columns:1fr}.events-venn-wrap{min-height:245px}}
     @media(max-width:560px){.event-outcomes{grid-template-columns:repeat(3,1fr)}.prob-grid,.events-exp-stats{grid-template-columns:repeat(2,1fr)}.venn-circle{width:160px;height:160px}.venn-circle.a{left:calc(50% - 132px)}.venn-circle.b{right:calc(50% - 132px)}.venn-region.left{left:calc(50% - 122px)}.venn-region.right{right:calc(50% - 122px)}}
 
@@ -748,13 +801,35 @@
       </div>
 
       <div class="field" id="eventsConfig" hidden>
-        <div class="labelrow"><span>EVENTI · fase 1</span><span>1 dado</span></div>
-        <div class="events-preset-grid" id="eventsPresetGrid">
+        <div class="labelrow"><span>LABORATORIO EVENTI</span><span id="eventsPhaseLabel">fase 1</span></div>
+        <div class="events-phase-seg" id="eventsPhaseSeg">
+          <button class="active" data-events-phase="sum">1 · SOMMA</button>
+          <button data-events-phase="product">2 · PRODOTTO</button>
+        </div>
+
+        <div id="eventsSumConfig">
+          <div class="labelrow"><span>Spazio campionario</span><span>1 dado</span></div>
+          <div class="events-preset-grid" id="eventsPresetGrid">
           <button data-events-preset="compatible">PARI / MAGGIORE DI 3</button>
           <button data-events-preset="incompatible">PARI / DISPARI</button>
           <button data-events-preset="clear">MODALITÀ LIBERA · AZZERA A e B</button>
+          </div>
+          <p class="events-config-note">Costruisci due eventi scegliendo direttamente gli esiti del dado. Il diagramma e le probabilità si aggiornano in tempo reale.</p>
         </div>
-        <p class="events-config-note">Costruisci due eventi scegliendo direttamente gli esiti del dado. Il diagramma e le probabilità si aggiornano in tempo reale.</p>
+
+        <div id="eventsProductConfig" hidden>
+          <div class="labelrow"><span>Urna a due colori</span><span id="eventsUrnTotalLabel">10 palline</span></div>
+          <div class="events-urn-config">
+            <div class="events-urn-row"><i class="events-urn-dot" style="background:#ef4444"></i><span>Rosse</span><button class="events-urn-step" data-events-color="red" data-delta="-1">−</button><b id="eventsRedCount">5</b><button class="events-urn-step" data-events-color="red" data-delta="1">+</button></div>
+            <div class="events-urn-row"><i class="events-urn-dot" style="background:#3b82f6"></i><span>Blu</span><button class="events-urn-step" data-events-color="blue" data-delta="-1">−</button><b id="eventsBlueCount">5</b><button class="events-urn-step" data-events-color="blue" data-delta="1">+</button></div>
+          </div>
+          <div class="labelrow"><span>Due estrazioni</span><span id="eventsReplacementLabel">con reintroduzione</span></div>
+          <div class="events-replacement" id="eventsReplacementSeg">
+            <button class="active" data-events-replacement="1">CON reintroduzione</button>
+            <button data-events-replacement="0">SENZA reintroduzione</button>
+          </div>
+          <p class="events-config-note">A = prima pallina rossa. B = seconda pallina rossa. Cambia la reintroduzione e osserva se conoscere A modifica la probabilità di B.</p>
+        </div>
       </div>
 
       <div class="tabs" id="commonTabs">
@@ -785,6 +860,7 @@
 
     <main class="maincol">
       <section class="panel events-main" id="eventsMain" hidden>
+        <div id="eventsSumPhase">
         <div class="events-head">
           <div>
             <h2>🔵 Eventi · fase 1</h2>
@@ -871,6 +947,95 @@
               <div class="events-exp-stat"><span>A O B</span><strong id="eventsHitsUnion">0</strong></div>
             </div>
             <div class="events-compare" id="eventsCompare">Lancia il dado o avvia una simulazione per confrontare frequenza e probabilità teorica di A O B.</div>
+          </div>
+        </div>
+        </div>
+
+        <div id="eventsProductPhase" hidden>
+          <div class="events-product-head">
+            <div>
+              <h2>🟣 Eventi · fase 2</h2>
+              <p>Due estrazioni dall'urna: dipendenza, probabilità condizionata e regola del prodotto.</p>
+            </div>
+            <div class="events-product-badge" id="eventsProductModeBadge">CON reintroduzione</div>
+          </div>
+
+          <div class="events-product-grid">
+            <div class="events-product-card">
+              <h3>1. L'urna e gli eventi</h3>
+              <p>Studiamo sempre gli stessi due eventi, cambiando soltanto il modo di estrarre.</p>
+              <div class="events-urn-visual"><div class="events-urn-vessel" id="eventsProductUrnVisual"></div></div>
+              <div class="events-ab-def">
+                <div><b>A</b><span>1ª pallina ROSSA</span></div>
+                <div><b>B</b><span>2ª pallina ROSSA</span></div>
+              </div>
+              <div class="events-depend-box">
+                <strong>Prima prevedi:</strong> sapere che A è avvenuto modifica la probabilità di B?
+                <div class="events-depend-predict" id="eventsDependPredict">
+                  <button data-depend-prediction="independent">NO · INDIPENDENTI</button>
+                  <button data-depend-prediction="dependent">SÌ · DIPENDENTI</button>
+                </div>
+                <div id="eventsDependFeedback" style="margin-top:7px;color:var(--muted)">Scegli una risposta prima di leggere il verdetto.</div>
+              </div>
+            </div>
+
+            <div class="events-product-card">
+              <h3>2. Diagramma ad albero</h3>
+              <p>Ogni ramo mostra una probabilità condizionata. Segui il percorso ROSSA → ROSSA.</p>
+              <div class="event-tree">
+                <svg class="tree-svg" viewBox="0 0 100 100" preserveAspectRatio="none">
+                  <path class="tree-line" d="M15 50 L35 27"></path><path class="tree-line" d="M15 50 L35 73"></path>
+                  <path class="tree-line highlight" d="M43 27 L75 12"></path><path class="tree-line" d="M43 27 L75 38"></path>
+                  <path class="tree-line" d="M43 73 L75 62"></path><path class="tree-line" d="M43 73 L75 88"></path>
+                </svg>
+                <div class="tree-node start"><strong>URNA</strong><span>inizio</span></div>
+                <div class="tree-node r1 red"><strong>ROSSA</strong><span>prima</span></div>
+                <div class="tree-node b1 blue"><strong>BLU</strong><span>prima</span></div>
+                <div class="tree-node rr red"><strong>R → R</strong><span id="treeRRJoint">—</span></div>
+                <div class="tree-node rb blue"><strong>R → B</strong><span id="treeRBJoint">—</span></div>
+                <div class="tree-node br red"><strong>B → R</strong><span id="treeBRJoint">—</span></div>
+                <div class="tree-node bb blue"><strong>B → B</strong><span id="treeBBJoint">—</span></div>
+                <span class="tree-prob p1r" id="treeP1R">—</span><span class="tree-prob p1b" id="treeP1B">—</span>
+                <span class="tree-prob prr" id="treePRR">—</span><span class="tree-prob prb" id="treePRB">—</span>
+                <span class="tree-prob pbr" id="treePBR">—</span><span class="tree-prob pbb" id="treePBB">—</span>
+              </div>
+              <div class="events-depend-box" id="eventsDependVerdict"></div>
+            </div>
+          </div>
+
+          <div class="events-formula">
+            <h3>3. A E B · probabilità condizionata e regola del prodotto</h3>
+            <div class="events-cond-grid">
+              <div class="events-cond-box"><span>P(A)</span><strong id="productPA">—</strong></div>
+              <div class="events-cond-box"><span>P(B)</span><strong id="productPB">—</strong></div>
+              <div class="events-cond-box"><span>P(B | A)</span><strong id="productPBgivenA">—</strong></div>
+              <div class="events-cond-box"><span>P(A ∩ B)</span><strong id="productIntersection">—</strong></div>
+            </div>
+            <div class="product-rule" id="eventsProductRule"></div>
+          </div>
+
+          <div class="events-experiment">
+            <div class="events-roll-zone">
+              <button class="primary" id="eventsPairRollBtn">🔴🔴 ESTRAI DUE PALLINE</button>
+              <div class="events-sim-buttons">
+                <button data-events-pair-sim="10">10</button>
+                <button data-events-pair-sim="100">100</button>
+                <button data-events-pair-sim="1000">1.000</button>
+              </div>
+              <button class="smallbtn" id="eventsPairResetBtn">↺ AZZERA PROVE</button>
+              <div class="events-pair-last" id="eventsPairLast"><span style="color:var(--muted);font-size:11px">Nessuna coppia estratta.</span></div>
+            </div>
+            <div class="events-results">
+              <h3 style="margin:0 0 8px">4. Verifica sperimentale</h3>
+              <div class="events-pair-stats">
+                <div class="events-pair-stat"><span>PROVE</span><strong id="pairTrialsN">0</strong></div>
+                <div class="events-pair-stat"><span>R → R</span><strong id="pairRR">0</strong></div>
+                <div class="events-pair-stat"><span>R → B</span><strong id="pairRB">0</strong></div>
+                <div class="events-pair-stat"><span>B → R</span><strong id="pairBR">0</strong></div>
+                <div class="events-pair-stat"><span>B → B</span><strong id="pairBB">0</strong></div>
+              </div>
+              <div class="events-compare" id="eventsProductCompare">Estrai due palline o simula molte prove per confrontare la frequenza di R → R con P(A ∩ B).</div>
+            </div>
           </div>
         </div>
       </section>
@@ -1255,10 +1420,18 @@
       token:0
     },
     events:{
+      phase:"sum",
       A:[2,4,6],
       B:[4,5,6],
       prediction:null,
-      last:null
+      last:null,
+      product:{
+        red:5,
+        blue:5,
+        replacement:true,
+        prediction:null,
+        lastPair:null
+      }
     }
   };
 
