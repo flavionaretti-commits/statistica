@@ -285,10 +285,25 @@
     .roulette-cell.hit{outline:3px solid #ffd95a;outline-offset:-3px}
     .roulette-cell.bet{box-shadow:inset 0 0 0 3px #ffd95a}
     .bet-chip{position:absolute;right:2px;top:2px;min-width:18px;height:18px;padding:0 3px;border-radius:999px;background:#ffd95a;color:#4a3200;display:grid;place-items:center;font-size:9px;font-weight:950;border:1px solid #8d6800}
-    .roulette-result-stage{display:grid;place-items:center;text-align:center}
-    .roulette-result-ball{width:92px;height:92px;border-radius:50%;display:grid;place-items:center;color:white;font-size:32px;font-weight:950;border:5px solid rgba(255,255,255,.72);box-shadow:0 8px 20px rgba(0,0,0,.24)}
-    .roulette-result-ball.red{background:#c92c35}.roulette-result-ball.black{background:#17191d}.roulette-result-ball.green{background:#087a45}
-    .roulette-result-caption{font-size:11px;font-weight:850;color:var(--muted);margin-top:8px}
+    .roulette-result-stage{display:grid;place-items:center;text-align:center;width:100%}
+    .roulette-wheel-shell{--wheel-size:230px;position:relative;width:var(--wheel-size);height:var(--wheel-size);border-radius:50%;margin:0 auto 5px;background:
+      radial-gradient(circle at 50% 50%,#c8a857 0 4%,#75551d 4.5% 6%,#153f2f 6.5% 27%,#b38a3a 27.5% 30%,#17211f 30.5% 42%,#ad8437 42.5% 45%,#153f2f 45.5% 100%);
+      box-shadow:0 9px 22px rgba(0,0,0,.26),inset 0 0 0 3px rgba(255,226,146,.35),inset 0 0 0 8px rgba(40,25,5,.32)}
+    .roulette-pocket-ring{position:absolute;inset:0;border-radius:50%}
+    .roulette-pocket-mini{position:absolute;left:50%;top:50%;width:25px;height:17px;margin:-8.5px 0 0 -12.5px;border-radius:4px;display:grid;place-items:center;
+      font-size:8px;font-weight:950;color:white;box-shadow:0 0 0 1px rgba(255,255,255,.22);transform-origin:12.5px 8.5px;transition:filter .2s,box-shadow .2s,scale .2s}
+    .roulette-pocket-mini.red{background:#c92c35}.roulette-pocket-mini.black{background:#17191d}.roulette-pocket-mini.green{background:#087a45}
+    .roulette-pocket-mini.winner{filter:brightness(1.35);box-shadow:0 0 0 2px #ffe073,0 0 13px #ffd95a;scale:1.15;z-index:3}
+    .roulette-wheel-inner{position:absolute;inset:31%;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 40% 35%,#fbf4da,#d4b46b 55%,#76551e 100%);
+      border:4px solid rgba(83,57,15,.6);box-shadow:inset 0 2px 8px rgba(255,255,255,.55),0 3px 8px rgba(0,0,0,.25);z-index:2}
+    .roulette-wheel-center-number{width:68%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;color:white;font-size:31px;font-weight:950;border:4px solid rgba(255,255,255,.72);
+      box-shadow:0 5px 13px rgba(0,0,0,.25)}
+    .roulette-wheel-center-number.red{background:#c92c35}.roulette-wheel-center-number.black{background:#17191d}.roulette-wheel-center-number.green{background:#087a45}
+    .roulette-ball-orbit{position:absolute;inset:0;border-radius:50%;z-index:6;pointer-events:none;transform:rotate(0deg)}
+    .roulette-wheel-white-ball{position:absolute;left:50%;top:4.6%;width:13px;height:13px;margin-left:-6.5px;border-radius:50%;
+      background:radial-gradient(circle at 35% 30%,#fff,#f5f5f0 48%,#bbb 78%,#777);box-shadow:0 2px 5px rgba(0,0,0,.55),0 0 0 1px rgba(40,40,40,.18)}
+    .roulette-result-caption{font-size:11px;font-weight:850;color:var(--muted);margin-top:7px;min-height:14px}
+    @media(max-width:560px){.roulette-wheel-shell{--wheel-size:205px}.roulette-pocket-mini{width:22px;height:15px;margin:-7.5px 0 0 -11px;font-size:7px}.roulette-wheel-center-number{font-size:27px}}
     .roulette-chip-history.red{background:#c92c35;color:white;border-color:#c92c35}.roulette-chip-history.black{background:#17191d;color:white;border-color:#17191d}.roulette-chip-history.green{background:#087a45;color:white;border-color:#087a45}
     .barcol.roulette-bar .bar-actual{background:var(--roulettebar)!important}
     .barcol.roulette-bar .bar-theory{background:var(--roulettebar)!important;border-color:var(--roulettebar)!important;opacity:.22}
@@ -1098,14 +1113,83 @@
     wrap.appendChild(draw);resultWrap.appendChild(wrap);
   }
 
+  var EUROPEAN_WHEEL_ORDER=["0","32","15","19","4","21","2","25","17","34","6","27","13","36","11","30","8","23","10","5","24","16","33","1","20","14","31","9","22","18","29","7","28","12","35","3","26"];
+  var AMERICAN_WHEEL_ORDER=["0","28","9","26","30","11","7","20","32","17","5","22","34","15","3","24","36","13","1","00","27","10","25","29","12","8","19","31","18","6","21","33","16","4","23","35","14","2"];
+
+  function rouletteWheelOrder(){
+    return state.roulette.kind==="american"?AMERICAN_WHEEL_ORDER:EUROPEAN_WHEEL_ORDER;
+  }
+  function rouletteWheelTargetAngle(value){
+    var order=rouletteWheelOrder(),idx=order.indexOf(String(value));
+    return idx<0?0:(idx*360/order.length);
+  }
+  function roulettePocketRadius(){
+    return state.roulette.kind==="american"?42.6:42.4;
+  }
+
   function renderRouletteVisual(){
     resultWrap.innerHTML="";
     var wrap=document.createElement("div");wrap.className="roulette-result-stage";
-    var ball=document.createElement("div");ball.className="roulette-result-ball "+(state.roulette.last?rouletteColor(state.roulette.last):"green");
-    ball.textContent=state.roulette.last||"?";wrap.appendChild(ball);
-    var cap=document.createElement("div");cap.className="roulette-result-caption";
+    var wheel=document.createElement("div");wheel.className="roulette-wheel-shell";wheel.id="rouletteWheelVisual";
+
+    var ring=document.createElement("div");ring.className="roulette-pocket-ring";
+    var order=rouletteWheelOrder(),radius=roulettePocketRadius();
+    order.forEach(function(num,i){
+      var angle=i*360/order.length,rad=(angle-90)*Math.PI/180;
+      var p=document.createElement("div"),x=50+Math.cos(rad)*radius,y=50+Math.sin(rad)*radius;
+      p.className="roulette-pocket-mini "+rouletteColor(num)+(state.roulette.last===num?" winner":"");
+      p.dataset.roulettePocket=num;p.textContent=num;
+      p.style.left=x+"%";p.style.top=y+"%";
+      p.style.transform="rotate("+angle+"deg)";
+      ring.appendChild(p);
+    });
+    wheel.appendChild(ring);
+
+    var inner=document.createElement("div");inner.className="roulette-wheel-inner";
+    var center=document.createElement("div");center.className="roulette-wheel-center-number "+(state.roulette.last?rouletteColor(state.roulette.last):"green");
+    center.id="rouletteWheelCenter";center.textContent=state.roulette.last||"?";inner.appendChild(center);wheel.appendChild(inner);
+
+    var orbit=document.createElement("div");orbit.className="roulette-ball-orbit";orbit.id="rouletteBallOrbit";
+    orbit.style.transform="rotate("+rouletteWheelTargetAngle(state.roulette.last)+"deg)";
+    var whiteBall=document.createElement("i");whiteBall.className="roulette-wheel-white-ball";orbit.appendChild(whiteBall);wheel.appendChild(orbit);
+
+    wrap.appendChild(wheel);
+    var cap=document.createElement("div");cap.className="roulette-result-caption";cap.id="rouletteWheelCaption";
     cap.textContent=state.roulette.last?"ULTIMO NUMERO · "+rouletteColor(state.roulette.last).toUpperCase():"NESSUN GIRO";
     wrap.appendChild(cap);resultWrap.appendChild(wrap);
+  }
+
+  function animateRouletteVisual(value){
+    var orbit=$("#rouletteBallOrbit"),center=$("#rouletteWheelCenter"),caption=$("#rouletteWheelCaption");
+    if(!orbit||value==null)return;
+    var target=rouletteWheelTargetAngle(value),turns=6+Math.floor(Math.random()*3),finalAngle=turns*360+target;
+    document.querySelectorAll(".roulette-pocket-mini").forEach(function(p){p.classList.remove("winner")});
+    if(center){center.textContent="";center.className="roulette-wheel-center-number green"}
+    if(caption)caption.textContent="LA PALLINA GIRA…";
+    orbit.style.transform="rotate(0deg)";
+    if(orbit.animate){
+      var anim=orbit.animate(
+        [{transform:"rotate(0deg)"},{transform:"rotate("+finalAngle+"deg)"}],
+        {duration:2400,easing:"cubic-bezier(.08,.62,.18,1)",fill:"forwards"}
+      );
+      anim.onfinish=function(){
+        orbit.style.transform="rotate("+target+"deg)";
+        if(center){center.textContent=value;center.className="roulette-wheel-center-number "+rouletteColor(value)}
+        var winner=document.querySelector('.roulette-pocket-mini[data-roulette-pocket="'+String(value)+'"]');if(winner)winner.classList.add("winner");
+        if(caption)caption.textContent="ULTIMO NUMERO · "+rouletteColor(value).toUpperCase();
+        beep("done");
+      };
+    }else{
+      orbit.style.transition="transform 2.4s cubic-bezier(.08,.62,.18,1)";
+      requestAnimationFrame(function(){orbit.style.transform="rotate("+finalAngle+"deg)"});
+      setTimeout(function(){
+        orbit.style.transition="";orbit.style.transform="rotate("+target+"deg)";
+        if(center){center.textContent=value;center.className="roulette-wheel-center-number "+rouletteColor(value)}
+        var winner=document.querySelector('.roulette-pocket-mini[data-roulette-pocket="'+String(value)+'"]');if(winner)winner.classList.add("winner");
+        if(caption)caption.textContent="ULTIMO NUMERO · "+rouletteColor(value).toUpperCase();
+        beep("done");
+      },2450);
+    }
   }
   function ticketNumbers(ticket){
     var out=[];ticket.forEach(function(row){row.forEach(function(n){if(n!=null)out.push(n)})});return out;
@@ -1366,6 +1450,9 @@
     if(state.experiment==="roulette"){
       state.roulette.last=r.value;
       if(state.roulette.mode==="game")resolveRouletteBets(r.value);
+      sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
+      requestAnimationFrame(function(){animateRouletteVisual(r.value)});
+      return;
     }
     showOutcome(r.raw,true);sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
   }
@@ -1867,7 +1954,8 @@
     var m=state.roulette.martingale;
     if(m.stopped){alert("La martingala è ferma. Azzera la simulazione per ricominciare.");return}
     var r=martingaleStep();if(!r){render();return}
-    sumDisplay.innerHTML=resultText(r.value,false);beep(r.win?"done":"roll");render();
+    sumDisplay.innerHTML=resultText(r.value,false);beep("roll");render();
+    requestAnimationFrame(function(){animateRouletteVisual(r.value)});
   }
   function simulateMartingale(n){
     resetMartingaleData();
