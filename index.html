@@ -2412,10 +2412,141 @@
     updateRouletteProjectionUI();
   }
 
+  function eventSortedUnique(arr){
+    return Array.from(new Set(arr.map(Number).filter(function(n){return n>=1&&n<=6}))).sort(function(a,b){return a-b});
+  }
+  function eventIntersection(){
+    return state.events.A.filter(function(n){return state.events.B.indexOf(n)!==-1}).sort(function(a,b){return a-b});
+  }
+  function eventUnion(){
+    return eventSortedUnique(state.events.A.concat(state.events.B));
+  }
+  function eventOnlyA(){
+    return state.events.A.filter(function(n){return state.events.B.indexOf(n)===-1}).sort(function(a,b){return a-b});
+  }
+  function eventOnlyB(){
+    return state.events.B.filter(function(n){return state.events.A.indexOf(n)===-1}).sort(function(a,b){return a-b});
+  }
+  function eventOutside(){
+    var u=eventUnion(),out=[];for(var n=1;n<=6;n++)if(u.indexOf(n)===-1)out.push(n);return out;
+  }
+  function eventSetLabel(arr){
+    return "{"+(arr.length?arr.join(", "):"∅")+"}";
+  }
+  function gcd(a,b){while(b){var t=a%b;a=b;b=t}return a}
+  function eventProbText(n){
+    if(n===0)return "0/6 = 0";
+    if(n===6)return "6/6 = 1";
+    var g=gcd(n,6),a=n/g,b=6/g;
+    return n+"/6"+(g>1?" = "+a+"/"+b:"");
+  }
+  function vennChip(n){
+    var d=document.createElement("span");d.className="venn-chip";d.textContent=n;return d;
+  }
+  function fillVennRegion(id,values,outside){
+    var host=$(id);host.innerHTML="";
+    if(outside){
+      var lab=document.createElement("span");lab.className="venn-outside-label";lab.textContent="fuori da A e B:";host.appendChild(lab);
+    }
+    values.forEach(function(n){host.appendChild(vennChip(n))});
+    if(!values.length&&!outside){var e=document.createElement("span");e.style.cssText="font-size:10px;color:var(--muted);font-weight:850";e.textContent="∅";host.appendChild(e)}
+  }
+  function eventOutcomeDescription(v){
+    var inA=state.events.A.indexOf(v)!==-1,inB=state.events.B.indexOf(v)!==-1;
+    if(inA&&inB)return v+" appartiene sia ad A sia a B.";
+    if(inA)return v+" appartiene ad A, ma non a B.";
+    if(inB)return v+" appartiene a B, ma non ad A.";
+    return v+" non appartiene né ad A né a B.";
+  }
+  function renderEvents(){
+    if(!$("#eventsMain"))return;
+    state.events.A=eventSortedUnique(state.events.A);state.events.B=eventSortedUnique(state.events.B);
+    ["A","B"].forEach(function(letter){
+      var host=$("#event"+letter+"Outcomes"),set=state.events[letter];host.innerHTML="";
+      for(var n=1;n<=6;n++){
+        var b=document.createElement("button");b.type="button";b.className="event-outcome "+letter.toLowerCase()+(set.indexOf(n)!==-1?" selected":"");
+        b.dataset.eventSet=letter;b.dataset.eventValue=n;b.textContent=n;host.appendChild(b);
+      }
+    });
+    $("#eventASet").textContent="A = "+eventSetLabel(state.events.A);
+    $("#eventBSet").textContent="B = "+eventSetLabel(state.events.B);
+
+    var inter=eventIntersection(),uni=eventUnion(),onlyA=eventOnlyA(),onlyB=eventOnlyB(),outside=eventOutside(),compatible=inter.length>0;
+    fillVennRegion("#vennAOnly",onlyA,false);fillVennRegion("#vennIntersection",inter,false);fillVennRegion("#vennBOnly",onlyB,false);fillVennRegion("#vennOutside",outside,true);
+
+    $("#eventsCompatibility").innerHTML="<strong>"+(compatible?"EVENTI COMPATIBILI":"EVENTI INCOMPATIBILI")+"</strong><br>A ∩ B = "+eventSetLabel(inter)+(compatible?" → esistono esiti che realizzano contemporaneamente A e B.":" → i due eventi non possono verificarsi nello stesso lancio.");
+
+    var predButtons=document.querySelectorAll("#eventsPredict button"),pred=state.events.prediction,correctKey=compatible?"compatible":"incompatible";
+    predButtons.forEach(function(b){
+      b.classList.remove("correct","wrong");
+      if(pred){if(b.dataset.eventPrediction===correctKey)b.classList.add("correct");else if(b.dataset.eventPrediction===pred)b.classList.add("wrong")}
+    });
+    if(!pred)$("#eventsPredictionFeedback").textContent="Scegli una risposta per verificarla.";
+    else if(pred===correctKey)$("#eventsPredictionFeedback").innerHTML="<strong style='color:var(--accent2)'>Corretto.</strong> Guarda l'intersezione nel diagramma.";
+    else $("#eventsPredictionFeedback").innerHTML="<strong style='color:var(--danger)'>Riprova.</strong> Controlla se A ∩ B contiene almeno un esito.";
+
+    $("#probA").textContent=eventProbText(state.events.A.length);
+    $("#probB").textContent=eventProbText(state.events.B.length);
+    $("#probIntersection").textContent=eventProbText(inter.length);
+    $("#probUnion").textContent=eventProbText(uni.length);
+
+    if(compatible){
+      $("#eventsSumRule").innerHTML="P(A ∪ B) = P(A) + P(B) − P(A ∩ B)<br>"+
+        "<span style='font-weight:800'>"+state.events.A.length+"/6 + "+state.events.B.length+"/6 − "+inter.length+"/6 = "+uni.length+"/6</span>"+
+        "<small>Sottraiamo l'intersezione perché gli esiti comuni erano stati contati due volte.</small>";
+    }else{
+      $("#eventsSumRule").innerHTML="P(A ∪ B) = P(A) + P(B)<br>"+
+        "<span style='font-weight:800'>"+state.events.A.length+"/6 + "+state.events.B.length+"/6 = "+uni.length+"/6</span>"+
+        "<small>Poiché A ∩ B = ∅, non c'è nessuna sovrapposizione da sottrarre.</small>";
+    }
+
+    var nTrials=state.results.length,hA=0,hB=0,hU=0,hI=0;
+    state.results.forEach(function(v){
+      var a=state.events.A.indexOf(v)!==-1,b=state.events.B.indexOf(v)!==-1;
+      if(a)hA++;if(b)hB++;if(a||b)hU++;if(a&&b)hI++;
+    });
+    $("#eventsTrialsN").textContent=fmt(nTrials,0);$("#eventsHitsA").textContent=fmt(hA,0);$("#eventsHitsB").textContent=fmt(hB,0);$("#eventsHitsUnion").textContent=fmt(hU,0);
+    $("#eventsLastDie").textContent=state.events.last==null?"?":state.events.last;
+    $("#eventsLastText").textContent=state.events.last==null?"Nessun lancio ancora.":eventOutcomeDescription(state.events.last);
+    if(nTrials){
+      var freq=hU/nTrials*100,theory=uni.length/6*100;
+      $("#eventsCompare").innerHTML="<strong>A O B:</strong> frequenza relativa = "+fmt(freq,1)+"% · probabilità teorica = "+fmt(theory,1)+"%"+
+        "<br>A ∩ B osservato "+fmt(hI,0)+" volte su "+fmt(nTrials,0)+" prove.";
+    }else{
+      $("#eventsCompare").textContent="Lancia il dado o avvia una simulazione per confrontare frequenza e probabilità teorica di A O B.";
+    }
+  }
+  function resetEventTrials(){
+    state.results=[];state.lastOutcome=[];state.events.last=null;renderEvents();
+  }
+  function toggleEventOutcome(letter,value){
+    var set=state.events[letter],i=set.indexOf(value);
+    if(i===-1)set.push(value);else set.splice(i,1);
+    state.events[letter]=eventSortedUnique(set);state.events.prediction=null;resetEventTrials();render();
+  }
+  function applyEventsPreset(preset){
+    if(preset==="compatible"){state.events.A=[2,4,6];state.events.B=[4,5,6]}
+    else if(preset==="incompatible"){state.events.A=[2,4,6];state.events.B=[1,3,5]}
+    else{state.events.A=[];state.events.B=[]}
+    state.events.prediction=null;resetEventTrials();render();
+  }
+  function eventRoll(){
+    var v=1+Math.floor(Math.random()*6);state.results.push(v);state.lastOutcome=[v];state.events.last=v;beep("roll");renderEvents();
+  }
+  function simulateEvents(n){
+    n=Math.max(1,Math.min(100000,Math.floor(Number(n)||0)));state.results=new Array(n);
+    for(var i=0;i<n;i++)state.results[i]=1+Math.floor(Math.random()*6);
+    state.events.last=state.results[n-1];state.lastOutcome=[state.events.last];beep("done");renderEvents();
+  }
+
   function updateExperimentUI(){
-    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isRoulette=state.experiment==="roulette",isTombola=state.experiment==="tombola",isGalton=state.experiment==="galton",isCategorical=isBalls||isCards||isRoulette||isTombola||isGalton;
+    var q=quantity(),isBalls=state.experiment==="balls",isCards=state.experiment==="cards",isRoulette=state.experiment==="roulette",isTombola=state.experiment==="tombola",isGalton=state.experiment==="galton",isEvents=state.experiment==="events",isCategorical=isBalls||isCards||isRoulette||isTombola||isGalton||isEvents;
     $$(".experiment-card").forEach(function(b){b.classList.toggle("active",b.dataset.experiment===state.experiment)});
-    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;$("#rouletteConfig").hidden=!isRoulette;$("#tombolaConfig").hidden=!isTombola;$("#galtonConfig").hidden=!isGalton;$("#rouletteMain").hidden=!isRoulette;$("#tombolaMain").hidden=!isTombola;$("#galtonMain").hidden=!isGalton;
+    $("#standardQuantityField").hidden=isCategorical;$("#ballsConfig").hidden=!isBalls;$("#cardsConfig").hidden=!isCards;$("#rouletteConfig").hidden=!isRoulette;$("#tombolaConfig").hidden=!isTombola;$("#galtonConfig").hidden=!isGalton;$("#eventsConfig").hidden=!isEvents;
+    $("#rouletteMain").hidden=!isRoulette;$("#tombolaMain").hidden=!isTombola;$("#galtonMain").hidden=!isGalton;$("#eventsMain").hidden=!isEvents;
+    $("#commonTabs").hidden=isEvents;$("#manualPane").hidden=isEvents;$("#simulationPane").hidden=isEvents;
+    document.querySelectorAll(".common-switch").forEach(function(x){x.hidden=isEvents});
+    $("#topStatArea").hidden=isEvents;$("#standardChartPanel").hidden=isEvents;$("#stats").hidden=isEvents;$("#standardBottomActions").hidden=isEvents;
     var noFixedTheory=(isBalls&&!state.urn.replacement)||(isCards&&!state.deck.replacement)||(isTombola&&state.tombola.dataMode==="waiting");
     $("#theoryToggle").disabled=noFixedTheory;$("#theoryToggle").closest(".switchrow").style.opacity=noFixedTheory?".5":"1";
     document.querySelectorAll("#quantitySeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.n)===q)});
@@ -2458,11 +2589,15 @@
       $("#tombolaWaitEvent").value=state.tombola.waitEvent;$("#tombolaWaitLabel").textContent=tombolaWaitName();renderTombolaMain();
     }else if(isGalton){
       $(".brandmark").textContent="⚙️";renderGaltonConfig();renderGaltonMachine();
+    }else if(isEvents){
+      $(".brandmark").textContent="🔵";renderEvents();
     }
   }
 
   function render(){
-    updateExperimentUI();renderHistory();renderChart();renderStats();$("#seriesInfo").textContent=seriesDescription();$("#expectedInfo").textContent=expectedText();
+    updateExperimentUI();
+    if(state.experiment==="events"){renderEvents();return}
+    renderHistory();renderChart();renderStats();$("#seriesInfo").textContent=seriesDescription();$("#expectedInfo").textContent=expectedText();
     if(state.experiment==="balls")renderUrnVisual();
     if(state.experiment==="cards")renderCardVisual();
     if(state.experiment==="roulette"){renderRouletteVisual();renderRouletteConfig();renderRouletteTable();}
@@ -2485,6 +2620,8 @@
       state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";state.tombola.lastPrize="";renderTombolaVisual();sumDisplay.innerHTML="—<small>nessun numero estratto</small>";
     }else if(state.experiment==="galton"){
       state.galton.token++;state.galton.animating=false;state.galton.lastPath=[];state.galton.lastBin=null;renderGaltonMini();renderGaltonMachine();sumDisplay.innerHTML="—<small>nessuna pallina caduta</small>";
+    }else if(state.experiment==="events"){
+      state.events.last=null;state.events.prediction=null;renderEvents();
     }else{
       resultWrap.innerHTML="";sumDisplay.innerHTML=state.experiment==="dice"?"—<small>somma dell'ultimo lancio</small>":"—<small>risultato dell'ultimo lancio</small>";
     }
@@ -2507,6 +2644,7 @@
     if(exp==="roulette"){renderRouletteVisual();renderRouletteConfig();renderRouletteTable();}
     if(exp==="tombola"){renderTombolaVisual();renderTombolaMain();}
     if(exp==="galton"){renderGaltonMini();renderGaltonConfig();renderGaltonMachine();}
+    if(exp==="events")renderEvents();
   }
 
   function updateUrnCount(id,delta){
@@ -2646,6 +2784,18 @@
   $("#galtonRows").addEventListener("change",function(e){setGaltonRows(e.target.value)});
   $("#galtonRowQuick").addEventListener("click",function(e){var b=e.target.closest("[data-galton-rows]");if(b)setGaltonRows(b.dataset.galtonRows)});
   $("#galtonSpeed").addEventListener("change",function(e){state.galton.speed=e.target.value;renderGaltonConfig()});
+
+  $("#eventsMain").addEventListener("click",function(e){
+    var out=e.target.closest("[data-event-set]");
+    if(out){toggleEventOutcome(out.dataset.eventSet,Number(out.dataset.eventValue));return}
+    var pred=e.target.closest("[data-event-prediction]");
+    if(pred){state.events.prediction=pred.dataset.eventPrediction;renderEvents();return}
+    var sim=e.target.closest("[data-events-sim]");
+    if(sim){simulateEvents(Number(sim.dataset.eventsSim));return}
+  });
+  $("#eventsPresetGrid").addEventListener("click",function(e){var b=e.target.closest("[data-events-preset]");if(b)applyEventsPreset(b.dataset.eventsPreset)});
+  $("#eventsRollBtn").addEventListener("click",eventRoll);
+  $("#eventsResetTrialsBtn").addEventListener("click",function(){resetEventTrials();beep("reset")});
 
   document.querySelectorAll(".tabs button").forEach(function(b){b.addEventListener("click",function(){
     $$(".tabs button").forEach(function(x){x.classList.remove("active")});b.classList.add("active");
