@@ -54,6 +54,13 @@ Laboratorio didattico interattivo di statistica e probabilità.
 - modalità GIOCO con saldo e fiche esclusivamente virtuali
 - puntate virtuali su numero pieno, rosso/nero, pari/dispari, basso/alto, dozzine e colonne
 - quote virtuali standard: 35:1 sul pieno, 2:1 su dozzine/colonne, 1:1 sulle chance semplici
+- modalità MARTINGALA come laboratorio matematico su puntate virtuali rosso/nero
+- tre scenari: capitale + massimale, solo capitale, modello ideale con risorse illimitate
+- raddoppio automatico dopo una perdita e ritorno alla puntata base dopo una vincita
+- simulazione di un singolo giro, di N giri o fino al blocco della strategia
+- cruscotto con saldo, puntata corrente, puntata massima, serie negativa massima e volume totale puntato
+- grafico dell'andamento del capitale
+- evidenza della perdita attesa legata al vantaggio del banco
 - esportazione CSV e modalità PROIEZIONE
 
 ### 🎱 Tombola
