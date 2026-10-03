@@ -309,6 +309,53 @@
     .barcol.roulette-bar .bar-theory{background:var(--roulettebar)!important;border-color:var(--roulettebar)!important;opacity:.22}
     @media(max-width:940px){.roulette-board{min-width:720px}}
     @media(max-width:560px){.roulette-main{padding:10px}.roulette-board{min-width:680px}.roulette-main-head{align-items:flex-start}}
+    /* PROIEZIONE DEDICATA ROULETTE */
+    .roulette-head-actions{display:flex;align-items:center;gap:9px}
+    .roulette-project-btn{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:9px 12px;font-size:10px;font-weight:950;cursor:pointer;white-space:nowrap}
+    .roulette-project-btn:hover{border-color:var(--accent);box-shadow:0 0 0 3px rgba(41,98,255,.10)}
+    dialog.roulette-projection-dialog{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;border:0;border-radius:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    dialog.roulette-projection-dialog::backdrop{background:#020713}
+    .roulette-projection-shell{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;padding:14px 18px 16px;box-sizing:border-box}
+    .roulette-projection-head{display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .roulette-projection-head h2{margin:0;font-size:clamp(22px,2.4vw,34px)}
+    .roulette-projection-head p{margin:3px 0 0;color:var(--muted);font-size:clamp(11px,1.2vw,15px);font-weight:750}
+    .roulette-projection-close{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:13px;padding:10px 14px;font-weight:950;font-size:13px;cursor:pointer}
+    .roulette-projection-layout{min-height:0;display:grid;grid-template-rows:minmax(0,1fr) auto;gap:12px}
+    .roulette-projection-table-panel{min-height:0;border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:12px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .roulette-projection-table-slot{width:100%;min-width:0}
+    .roulette-projection-table-slot .roulette-table-scroll{overflow:visible;padding:0}
+    .roulette-projection-table-slot .roulette-board{width:100%;min-width:0;box-sizing:border-box}
+    .roulette-projection-bottom{display:grid;grid-template-columns:minmax(280px,390px) minmax(320px,1fr);gap:12px;align-items:stretch}
+    .roulette-projection-wheel-panel,.roulette-projection-control-panel{border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:12px}
+    .roulette-projection-wheel-panel{display:grid;place-items:center;min-height:285px}
+    .roulette-projection-wheel-slot{display:grid;place-items:center;width:100%}
+    .roulette-projection-wheel-slot .dice-wrap{min-height:0;height:auto;padding:0}
+    .roulette-projection-wheel-slot .roulette-wheel-shell{--wheel-size:min(31vh,310px)}
+    .roulette-projection-control-panel{display:flex;flex-direction:column;justify-content:center;gap:12px;min-width:0}
+    .roulette-projection-game-status{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+    .roulette-projection-game-status>div{border:1px solid var(--line);border-radius:13px;background:var(--panel2);padding:10px;text-align:center}
+    .roulette-projection-game-status span{display:block;color:var(--muted);font-size:10px;font-weight:850}
+    .roulette-projection-game-status strong{display:block;font-size:22px;margin-top:3px}
+    .roulette-projection-spin-slot{width:100%}
+    .roulette-projection-spin-slot #rouletteSpinTopBtn{width:100%;margin:0;padding:22px 16px;border-radius:18px;font-size:clamp(18px,2.2vw,30px);box-shadow:0 8px 20px rgba(0,0,0,.20)}
+    .roulette-projection-note{margin:0;text-align:center;color:var(--muted);font-size:11px;font-weight:750;line-height:1.35}
+    @media(max-width:900px){
+      .roulette-projection-shell{padding:10px}
+      .roulette-projection-table-panel{padding:8px}
+      .roulette-projection-bottom{grid-template-columns:minmax(220px,310px) 1fr}
+      .roulette-projection-wheel-panel{min-height:245px}
+      .roulette-projection-wheel-slot .roulette-wheel-shell{--wheel-size:min(28vh,270px)}
+    }
+    @media(max-width:700px){
+      .roulette-projection-dialog{overflow:auto!important}
+      .roulette-projection-shell{height:auto;min-height:100dvh;overflow:auto}
+      .roulette-projection-layout{grid-template-rows:auto auto}
+      .roulette-projection-table-panel{overflow-x:auto;justify-content:flex-start}
+      .roulette-projection-table-slot .roulette-board{min-width:680px}
+      .roulette-projection-bottom{grid-template-columns:1fr}
+      .roulette-projection-wheel-panel{min-height:230px}
+    }
+
     /* MARTINGALA */
     .roulette-martingale-panel{margin-top:10px;padding:11px;border:1px solid var(--line);border-radius:14px;background:linear-gradient(135deg,rgba(201,44,53,.055),rgba(8,122,69,.045))}
     .martingale-scenario{display:grid;grid-template-columns:1fr;gap:5px;margin:6px 0 11px}
@@ -694,7 +741,10 @@
             <h2>Tavolo della roulette</h2>
             <p id="rouletteTableHint">Tutti i numeri hanno la stessa probabilità di uscita.</p>
           </div>
-          <div class="roulette-last-mini" id="rouletteLastMini">—</div>
+          <div class="roulette-head-actions">
+            <button class="roulette-project-btn" id="rouletteProjectBtn" type="button">⛶ PROIETTA</button>
+            <div class="roulette-last-mini" id="rouletteLastMini">—</div>
+          </div>
         </div>
         <div class="roulette-table-scroll" id="rouletteTableWrap"><div id="rouletteTable"></div></div>
 
@@ -837,6 +887,39 @@
     </div>
     <div class="projection-body">
       <div class="chart-scroll"><div class="chart" id="projectionChart"><div class="empty-chart">I dati compariranno qui dopo il primo lancio.</div></div></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="rouletteProjectionDialog" class="roulette-projection-dialog">
+  <div class="roulette-projection-shell">
+    <div class="roulette-projection-head">
+      <div>
+        <h2>🎡 Roulette · modalità proiezione</h2>
+        <p id="rouletteProjectionMeta">Europea · 0</p>
+      </div>
+      <button class="roulette-projection-close" id="closeRouletteProjection" type="button">✕ ESCI</button>
+    </div>
+
+    <div class="roulette-projection-layout">
+      <div class="roulette-projection-table-panel">
+        <div class="roulette-projection-table-slot" id="rouletteProjectionTableSlot"></div>
+      </div>
+
+      <div class="roulette-projection-bottom">
+        <div class="roulette-projection-wheel-panel">
+          <div class="roulette-projection-wheel-slot" id="rouletteProjectionWheelSlot"></div>
+        </div>
+
+        <div class="roulette-projection-control-panel">
+          <div class="roulette-projection-game-status" id="rouletteProjectionGameStatus">
+            <div><span>SALDO VIRTUALE</span><strong id="rouletteProjectionBankroll">100</strong></div>
+            <div><span>VALORE FICHE</span><strong id="rouletteProjectionChip">1</strong></div>
+          </div>
+          <div class="roulette-projection-spin-slot" id="rouletteProjectionSpinSlot"></div>
+          <p class="roulette-projection-note">Tocca il tavolo per piazzare le fiche, poi gira la pallina. Il risultato resta nascosto fino al termine dell'animazione.</p>
+        </div>
+      </div>
     </div>
   </div>
 </dialog>
@@ -2072,6 +2155,49 @@
     cols.appendChild(rouletteCell("2:1","outside","c3"));cols.appendChild(rouletteCell("2:1","outside","c2"));cols.appendChild(rouletteCell("2:1","outside","c1"));board.appendChild(cols);
     host.appendChild(board);
   }
+  function rouletteProjectionIsOpen(){
+    var d=$("#rouletteProjectionDialog");return !!(d&&d.open);
+  }
+  function rouletteProjectionMeta(){
+    var mode=state.roulette.mode==="game"?"GIOCO":state.roulette.mode==="martingale"?"MARTINGALA":"LABORATORIO";
+    return (state.roulette.kind==="american"?"Americana · 0 + 00":"Europea · 0")+" · "+mode;
+  }
+  function updateRouletteProjectionUI(){
+    if(!$("#rouletteProjectionDialog"))return;
+    $("#rouletteProjectionMeta").textContent=rouletteProjectionMeta();
+    var game=state.roulette.mode==="game";
+    $("#rouletteProjectionGameStatus").hidden=!game;
+    $("#rouletteProjectionBankroll").textContent=fmt(state.roulette.bankroll,0);
+    $("#rouletteProjectionChip").textContent=state.roulette.chip;
+  }
+  function rouletteProjectionMoveNode(node,slotId,placeholderId){
+    if(!node||$("#"+placeholderId))return;
+    var ph=document.createElement("span");ph.id=placeholderId;ph.hidden=true;
+    node.parentNode.insertBefore(ph,node);
+    $("#"+slotId).appendChild(node);
+  }
+  function rouletteProjectionRestoreNode(nodeId,placeholderId){
+    var node=$("#"+nodeId),ph=$("#"+placeholderId);
+    if(node&&ph&&ph.parentNode){ph.parentNode.insertBefore(node,ph);ph.remove()}
+  }
+  function openRouletteProjection(){
+    if(state.experiment!=="roulette"||state.roulette.mode==="martingale")return;
+    var d=$("#rouletteProjectionDialog");if(!d||d.open)return;
+    rouletteProjectionMoveNode($("#rouletteTableWrap"),"rouletteProjectionTableSlot","rouletteTableProjectionPlaceholder");
+    rouletteProjectionMoveNode($("#resultWrap"),"rouletteProjectionWheelSlot","rouletteWheelProjectionPlaceholder");
+    rouletteProjectionMoveNode($("#rouletteSpinTopBtn"),"rouletteProjectionSpinSlot","rouletteSpinProjectionPlaceholder");
+    updateRouletteProjectionUI();
+    d.showModal();
+  }
+  function restoreRouletteProjection(){
+    rouletteProjectionRestoreNode("rouletteTableWrap","rouletteTableProjectionPlaceholder");
+    rouletteProjectionRestoreNode("resultWrap","rouletteWheelProjectionPlaceholder");
+    rouletteProjectionRestoreNode("rouletteSpinTopBtn","rouletteSpinProjectionPlaceholder");
+  }
+  function closeRouletteProjection(){
+    var d=$("#rouletteProjectionDialog");if(d&&d.open)d.close();
+  }
+
   function renderRouletteConfig(){
     var mode=state.roulette.mode,m=state.roulette.martingale;
     $("#rouletteKindLabel").textContent=state.roulette.kind==="american"?"Americana · 38 numeri":"Europea · 37 numeri";
@@ -2081,6 +2207,7 @@
     document.querySelectorAll("#rouletteModeSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteMode===mode)});
     document.querySelectorAll("#rouletteChipSeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.chip)===state.roulette.chip)});
     $("#rouletteGamePanel").hidden=mode!=="game";
+    $("#rouletteProjectBtn").hidden=mode==="martingale";
     $("#rouletteMartingalePanel").hidden=mode!=="martingale";
     $("#rouletteMartingaleMain").hidden=mode!=="martingale";
     $("#rouletteTableWrap").hidden=mode==="martingale";
@@ -2109,6 +2236,7 @@
     var mini=$("#rouletteLastMini"),miniLast=state.roulette.spinning?null:state.roulette.last;
     mini.textContent=state.roulette.spinning?"…":(miniLast||"—");
     mini.style.background=miniLast?(rouletteColor(miniLast)==="red"?"#c92c35":rouletteColor(miniLast)==="black"?"#17191d":"#087a45"):"#087a45";
+    updateRouletteProjectionUI();
   }
 
   function updateExperimentUI(){
@@ -2193,6 +2321,7 @@
   function setQuantity(n){state.quantities[state.experiment]=n;resetSeries(false)}
   function setExperiment(exp){
     if(exp===state.experiment)return;
+    if(rouletteProjectionIsOpen())closeRouletteProjection();
     if(state.results.length&&!confirm("Cambiare esperimento? La serie corrente verrà azzerata."))return;
     if(state.experiment==="galton"){state.galton.token++;state.galton.animating=false}
     if(state.experiment==="roulette"&&state.roulette.mode==="martingale")resetMartingaleData();
@@ -2284,6 +2413,10 @@
   $("#cardAnalysis").addEventListener("change",function(e){state.deck.analysis=e.target.value;render()});
 
   $("#rouletteSpinTopBtn").addEventListener("click",oneRoll);
+  $("#rouletteProjectBtn").addEventListener("click",openRouletteProjection);
+  $("#closeRouletteProjection").addEventListener("click",closeRouletteProjection);
+  $("#rouletteProjectionDialog").addEventListener("close",function(){restoreRouletteProjection();if(state.experiment==="roulette")render()});
+  $("#rouletteProjectionDialog").addEventListener("click",function(e){if(e.target===$("#rouletteProjectionDialog"))closeRouletteProjection()});
   $("#rouletteAnalysis").addEventListener("change",function(e){if(state.roulette.spinning){e.target.value=state.roulette.analysis;return}state.roulette.analysis=e.target.value;render()});
   $("#rouletteKindSeg").addEventListener("click",function(e){
     if(state.roulette.spinning)return;
@@ -2295,6 +2428,7 @@
   });
   $("#rouletteModeSeg").addEventListener("click",function(e){
     if(state.roulette.spinning)return;
+    if(rouletteProjectionIsOpen())closeRouletteProjection();
     var b=e.target.closest("button");if(!b)return;var mode=b.dataset.rouletteMode;if(mode===state.roulette.mode)return;
     if(state.results.length&&!confirm("Cambiare modalità della roulette? La serie corrente verrà azzerata."))return;
     clearRouletteBets(true);state.roulette.spinning=false;state.roulette.pending=null;state.roulette.mode=mode;state.roulette.lastNet=null;state.results=[];state.roulette.last=null;
