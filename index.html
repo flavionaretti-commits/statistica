@@ -459,12 +459,75 @@
       .galton-row-quick{grid-template-columns:repeat(3,1fr)}
     }
 
-    /* sette modalità: Galton occupa una riga propria */
+    /* EVENTI · fase 1 */
+    .events-config-note{font-size:11px;line-height:1.45;color:var(--muted);margin:9px 1px 0}
+    .events-preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
+    .events-preset-grid button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:11px;padding:9px 5px;font-size:10px;font-weight:900;cursor:pointer}
+    .events-preset-grid button:last-child{grid-column:1/-1}
+    .events-main{overflow:hidden}
+    .events-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+    .events-head h2{margin:0;font-size:23px}.events-head p{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .events-omega{padding:8px 11px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);font-size:12px;font-weight:900}
+    .events-grid{display:grid;grid-template-columns:minmax(290px,.85fr) minmax(360px,1.15fr);gap:14px}
+    .events-card{border:1px solid var(--line);border-radius:18px;background:var(--panel2);padding:14px;min-width:0}
+    .events-card h3{margin:0 0 4px;font-size:17px}.events-card>p{margin:0 0 12px;color:var(--muted);font-size:11px;line-height:1.45}
+    .event-builder{display:grid;gap:12px}
+    .event-builder-row{display:grid;grid-template-columns:36px 1fr;gap:9px;align-items:center}
+    .event-letter{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;color:white;font-size:17px;font-weight:950}
+    .event-letter.a{background:#2962ff}.event-letter.b{background:#e5487d}
+    .event-outcomes{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+    .event-outcome{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 0;font-size:12px;font-weight:900;cursor:pointer}
+    .event-outcome.a.selected{background:#2962ff;color:#fff;border-color:#2962ff}
+    .event-outcome.b.selected{background:#e5487d;color:#fff;border-color:#e5487d}
+    .event-set-text{font-size:10px;color:var(--muted);font-weight:800;margin:5px 0 0 45px}
+    .events-venn-wrap{position:relative;min-height:250px;border-radius:16px;background:linear-gradient(135deg,rgba(41,98,255,.045),rgba(229,72,125,.045));border:1px dashed var(--line);overflow:hidden}
+    .venn-circle{position:absolute;top:34px;width:190px;height:190px;border-radius:50%;border:3px solid;display:flex;align-items:flex-start;justify-content:center;padding-top:14px;font-weight:950;font-size:15px}
+    .venn-circle.a{left:calc(50% - 155px);border-color:#2962ff;background:rgba(41,98,255,.12);color:#2050d0}
+    .venn-circle.b{right:calc(50% - 155px);border-color:#e5487d;background:rgba(229,72,125,.12);color:#c12d61}
+    html[data-theme="dark"] .venn-circle.a{color:#a9beff}html[data-theme="dark"] .venn-circle.b{color:#ff9fbe}
+    .venn-region{position:absolute;display:flex;flex-wrap:wrap;gap:5px;justify-content:center;align-content:center;z-index:3}
+    .venn-region.left{left:calc(50% - 140px);top:95px;width:78px;height:78px}
+    .venn-region.intersection{left:calc(50% - 50px);top:92px;width:100px;height:84px}
+    .venn-region.right{right:calc(50% - 140px);top:95px;width:78px;height:78px}
+    .venn-region.outside{left:12px;right:12px;bottom:8px;height:34px;justify-content:flex-start}
+    .venn-chip{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);font-size:11px;font-weight:950;box-shadow:0 2px 6px rgba(0,0,0,.08)}
+    .venn-region.intersection .venn-chip{background:linear-gradient(135deg,#6389ff,#ed7aa2);color:white;border-color:transparent}
+    .venn-outside-label{font-size:9px;color:var(--muted);font-weight:850;margin-right:3px;align-self:center}
+    .events-classification{margin-top:10px;padding:10px;border-radius:13px;background:var(--grid);font-size:12px;line-height:1.45}
+    .events-classification strong{font-size:14px}
+    .events-predict{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:9px}
+    .events-predict button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:11px;padding:9px 6px;font-size:10px;font-weight:900;cursor:pointer}
+    .events-predict button.correct{background:rgba(20,184,166,.14);border-color:var(--accent2)}
+    .events-predict button.wrong{background:rgba(229,72,77,.12);border-color:var(--danger)}
+    .events-formula{margin-top:14px;border:1px solid var(--line);border-radius:18px;background:var(--panel2);padding:14px}
+    .events-formula h3{margin:0 0 9px;font-size:17px}
+    .prob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+    .prob-box{border:1px solid var(--line);border-radius:12px;padding:9px;text-align:center;background:var(--panel)}
+    .prob-box span{display:block;font-size:9px;color:var(--muted);font-weight:850}.prob-box strong{display:block;font-size:17px;margin-top:3px}
+    .sum-rule{margin-top:10px;padding:12px;border-radius:13px;background:linear-gradient(135deg,rgba(41,98,255,.08),rgba(20,184,166,.08));font-size:14px;font-weight:900;line-height:1.5;text-align:center}
+    .sum-rule small{display:block;color:var(--muted);font-size:10px;font-weight:750;margin-top:5px}
+    .events-experiment{margin-top:14px;display:grid;grid-template-columns:minmax(220px,.7fr) minmax(300px,1.3fr);gap:12px}
+    .events-roll-zone,.events-results{border:1px solid var(--line);border-radius:18px;background:var(--panel2);padding:14px}
+    .events-roll-zone{display:grid;align-content:center;gap:9px}
+    .events-roll-zone button{width:100%}
+    .events-sim-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+    .events-sim-buttons button{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:10px;padding:8px 4px;font-size:10px;font-weight:900;cursor:pointer}
+    .events-last{display:flex;align-items:center;gap:10px;margin-top:6px;color:var(--muted);font-size:11px;font-weight:800}
+    .events-last-die{width:42px;height:42px;border-radius:11px;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;color:var(--text);font-size:20px;font-weight:950}
+    .events-exp-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+    .events-exp-stat{border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:8px;text-align:center}
+    .events-exp-stat span{display:block;font-size:8px;color:var(--muted);font-weight:850}.events-exp-stat strong{display:block;font-size:14px;margin-top:3px}
+    .events-compare{margin-top:9px;font-size:11px;color:var(--muted);line-height:1.45}
+    .events-compare strong{color:var(--text)}
+    @media(max-width:850px){.events-grid,.events-experiment{grid-template-columns:1fr}.events-venn-wrap{min-height:245px}}
+    @media(max-width:560px){.event-outcomes{grid-template-columns:repeat(3,1fr)}.prob-grid,.events-exp-stats{grid-template-columns:repeat(2,1fr)}.venn-circle{width:160px;height:160px}.venn-circle.a{left:calc(50% - 132px)}.venn-circle.b{right:calc(50% - 132px)}.venn-region.left{left:calc(50% - 122px)}.venn-region.right{right:calc(50% - 122px)}}
+
+    /* otto modalità: griglia 2×4 nella sidebar */
     .experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    .experiment-card[data-experiment="balls"]{grid-column:auto}
-    .experiment-card[data-experiment="galton"]{grid-column:1/-1}
-    @media(max-width:940px){.experiment-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.experiment-card[data-experiment="balls"]{grid-column:auto}.experiment-card[data-experiment="galton"]{grid-column:1/-1}}
-    @media(max-width:560px){.experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.experiment-card[data-experiment="galton"]{grid-column:1/-1}.tombola-board{gap:2px}.tombola-number{min-height:27px;border-radius:5px;font-size:9px}.tombola-ticket{grid-template-rows:repeat(3,38px)}}
+    .experiment-card[data-experiment="balls"],.experiment-card[data-experiment="galton"],.experiment-card[data-experiment="events"]{grid-column:auto}
+    @media(max-width:940px){.experiment-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+    @media(max-width:700px){.experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:560px){.experiment-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.tombola-board{gap:2px}.tombola-number{min-height:27px;border-radius:5px;font-size:9px}.tombola-ticket{grid-template-rows:repeat(3,38px)}}
   </style>
 </head>
 <body>
@@ -507,6 +570,9 @@
         </button>
         <button class="mode-card experiment-card" data-experiment="galton">
           <div class="emoji">⚙️</div><div><strong>Macchina di Galton</strong><span>Binomiale in caduta</span></div>
+        </button>
+        <button class="mode-card experiment-card" data-experiment="events">
+          <div class="emoji">🔵</div><div><strong>Eventi</strong><span>A, B e probabilità</span></div>
         </button>
       </div>
 
@@ -681,7 +747,17 @@
         <p class="urn-note">A ogni piolo: <b>sinistra = CROCE</b>, <b>destra = TESTA</b>. Il canale finale conta quanti passaggi a destra sono avvenuti.</p>
       </div>
 
-      <div class="tabs">
+      <div class="field" id="eventsConfig" hidden>
+        <div class="labelrow"><span>EVENTI · fase 1</span><span>1 dado</span></div>
+        <div class="events-preset-grid" id="eventsPresetGrid">
+          <button data-events-preset="compatible">ESEMPIO COMPATIBILI</button>
+          <button data-events-preset="incompatible">ESEMPIO INCOMPATIBILI</button>
+          <button data-events-preset="clear">MODALITÀ LIBERA · AZZERA A e B</button>
+        </div>
+        <p class="events-config-note">Costruisci due eventi scegliendo direttamente gli esiti del dado. Il diagramma e le probabilità si aggiornano in tempo reale.</p>
+      </div>
+
+      <div class="tabs" id="commonTabs">
         <button class="active" data-tab="manual">Lanci manuali</button>
         <button data-tab="simulation">Simulazione</button>
       </div>
@@ -702,12 +778,103 @@
       </div>
 
       <div style="height:14px"></div>
-      <div class="switchrow"><span>Frequenze relative (%)</span><label class="switch"><input type="checkbox" id="relativeToggle"><span class="slider"></span></label></div>
-      <div class="switchrow"><span>Confronta con la teoria</span><label class="switch"><input type="checkbox" id="theoryToggle" checked><span class="slider"></span></label></div>
-      <div class="switchrow"><span>Mostra valori sulle barre</span><label class="switch"><input type="checkbox" id="labelsToggle" checked><span class="slider"></span></label></div>
+      <div class="switchrow common-switch"><span>Frequenze relative (%)</span><label class="switch"><input type="checkbox" id="relativeToggle"><span class="slider"></span></label></div>
+      <div class="switchrow common-switch"><span>Confronta con la teoria</span><label class="switch"><input type="checkbox" id="theoryToggle" checked><span class="slider"></span></label></div>
+      <div class="switchrow common-switch"><span>Mostra valori sulle barre</span><label class="switch"><input type="checkbox" id="labelsToggle" checked><span class="slider"></span></label></div>
     </aside>
 
     <main class="maincol">
+      <section class="panel events-main" id="eventsMain" hidden>
+        <div class="events-head">
+          <div>
+            <h2>🔵 Eventi · fase 1</h2>
+            <p>Costruisci A e B, osserva il diagramma di Venn e scopri la regola della somma.</p>
+          </div>
+          <div class="events-omega">Ω = {1, 2, 3, 4, 5, 6}</div>
+        </div>
+
+        <div class="events-grid">
+          <div class="events-card">
+            <h3>1. Costruisci gli eventi</h3>
+            <p>Tocca gli esiti che vuoi far appartenere ad A e a B. Uno stesso esito può appartenere a entrambi.</p>
+            <div class="event-builder">
+              <div>
+                <div class="event-builder-row">
+                  <div class="event-letter a">A</div>
+                  <div class="event-outcomes" id="eventAOutcomes"></div>
+                </div>
+                <div class="event-set-text" id="eventASet">A = {2, 4, 6}</div>
+              </div>
+              <div>
+                <div class="event-builder-row">
+                  <div class="event-letter b">B</div>
+                  <div class="event-outcomes" id="eventBOutcomes"></div>
+                </div>
+                <div class="event-set-text" id="eventBSet">B = {4, 5, 6}</div>
+              </div>
+            </div>
+
+            <div class="events-classification">
+              <strong>Prima prevedi:</strong> A e B sono compatibili oppure incompatibili?
+              <div class="events-predict" id="eventsPredict">
+                <button data-event-prediction="compatible">COMPATIBILI</button>
+                <button data-event-prediction="incompatible">INCOMPATIBILI</button>
+              </div>
+              <div id="eventsPredictionFeedback" style="margin-top:7px;color:var(--muted)">Scegli una risposta per verificarla.</div>
+            </div>
+          </div>
+
+          <div class="events-card">
+            <h3>2. Diagramma di Venn</h3>
+            <p>Gli esiti comuni finiscono nell'intersezione A ∩ B. Gli esiti fuori da entrambi restano in Ω.</p>
+            <div class="events-venn-wrap">
+              <div class="venn-circle a">A</div>
+              <div class="venn-circle b">B</div>
+              <div class="venn-region left" id="vennAOnly"></div>
+              <div class="venn-region intersection" id="vennIntersection"></div>
+              <div class="venn-region right" id="vennBOnly"></div>
+              <div class="venn-region outside" id="vennOutside"></div>
+            </div>
+            <div class="events-classification" id="eventsCompatibility"></div>
+          </div>
+        </div>
+
+        <div class="events-formula">
+          <h3>3. A O B · regola della somma</h3>
+          <div class="prob-grid">
+            <div class="prob-box"><span>P(A)</span><strong id="probA">3/6</strong></div>
+            <div class="prob-box"><span>P(B)</span><strong id="probB">3/6</strong></div>
+            <div class="prob-box"><span>P(A ∩ B)</span><strong id="probIntersection">2/6</strong></div>
+            <div class="prob-box"><span>P(A ∪ B)</span><strong id="probUnion">4/6</strong></div>
+          </div>
+          <div class="sum-rule" id="eventsSumRule"></div>
+        </div>
+
+        <div class="events-experiment">
+          <div class="events-roll-zone">
+            <button class="primary" id="eventsRollBtn">🎲 LANCIA IL DADO</button>
+            <div class="events-sim-buttons">
+              <button data-events-sim="10">10</button>
+              <button data-events-sim="100">100</button>
+              <button data-events-sim="1000">1.000</button>
+            </div>
+            <button class="smallbtn" id="eventsResetTrialsBtn">↺ AZZERA PROVE</button>
+            <div class="events-last"><div class="events-last-die" id="eventsLastDie">?</div><span id="eventsLastText">Nessun lancio ancora.</span></div>
+          </div>
+
+          <div class="events-results">
+            <h3 style="margin:0 0 8px">4. Verifica sperimentale</h3>
+            <div class="events-exp-stats">
+              <div class="events-exp-stat"><span>PROVE</span><strong id="eventsTrialsN">0</strong></div>
+              <div class="events-exp-stat"><span>A</span><strong id="eventsHitsA">0</strong></div>
+              <div class="events-exp-stat"><span>B</span><strong id="eventsHitsB">0</strong></div>
+              <div class="events-exp-stat"><span>A O B</span><strong id="eventsHitsUnion">0</strong></div>
+            </div>
+            <div class="events-compare" id="eventsCompare">Lancia il dado o avvia una simulazione per confrontare frequenza e probabilità teorica di A O B.</div>
+          </div>
+        </div>
+      </section>
+
       <section class="panel galton-main" id="galtonMain" hidden>
         <div class="galton-main-head">
           <div>
@@ -790,7 +957,7 @@
         </section>
       </div>
 
-      <section class="panel">
+      <section class="panel" id="standardChartPanel">
         <div class="charthead">
           <div><h2 id="chartTitle">Distribuzione delle somme</h2><p id="chartSubtitle">Lancia i dadi per costruire l'istogramma.</p></div>
           <div class="chart-actions">
@@ -812,7 +979,7 @@
         <div class="stat"><div class="k">Dev. std.</div><div class="v" data-stat="sd">—</div></div>
       </div>
 
-      <div class="bottom-actions">
+      <div class="bottom-actions" id="standardBottomActions">
         <button class="smallbtn" id="csvBtn">⇩ Esporta CSV</button>
         <button class="smallbtn" id="resetBtn">↺ Azzera serie</button>
       </div>
@@ -1083,6 +1250,12 @@
       speed:"normal",
       animating:false,
       token:0
+    },
+    events:{
+      A:[2,4,6],
+      B:[4,5,6],
+      prediction:null,
+      last:null
     }
   };
 
