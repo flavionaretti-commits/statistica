@@ -1928,14 +1928,15 @@
     var upto=Math.min(11,Math.max(6,m.maxLossStreak+2));
     for(var i=0;i<upto;i++){var s=document.createElement("span");s.textContent=fmt(m.baseBet*Math.pow(2,i),0);p.appendChild(s)}
     if(m.maxLossStreak+2>upto){var more=document.createElement("span");more.textContent="…";p.appendChild(more)}
-    var insight=$("#martingaleInsight");
+    var insight=$("#martingaleInsight"),edge=state.roulette.kind==="american"?2/38:1/37,expectedLoss=m.totalWagered*edge;
+    var edgeText=m.totalWagered?" Sul volume totale di "+fmt(m.totalWagered,0)+" unità, la perdita matematica attesa è circa "+fmt(expectedLoss,1)+" unità.":"";
     if(m.stopped){
-      insight.innerHTML="<strong>CROLLO DELLA STRATEGIA.</strong> "+m.stopReason+" Dopo "+fmt(m.spins,0)+" giri la serie negativa massima è stata di "+m.maxLossStreak+" e la massima puntata effettivamente giocata "+fmt(m.maxBetReached,0)+" unità.";
+      insight.innerHTML="<strong>CROLLO DELLA STRATEGIA.</strong> "+m.stopReason+" Dopo "+fmt(m.spins,0)+" giri la serie negativa massima è stata di "+m.maxLossStreak+" e la massima puntata effettivamente giocata "+fmt(m.maxBetReached,0)+" unità."+edgeText;
     }else if(m.scenario==="ideal"){
-      insight.innerHTML="<strong>Modello ideale:</strong> capitale e massimale non possono fermare la strategia. Dopo "+fmt(m.spins,0)+" giri il profitto relativo è "+martingaleFormatValue(m.net)+" unità, ma la puntata massima usata è arrivata a "+fmt(m.maxBetReached,0)+" e la massima puntata richiesta a "+fmt(m.maxRequired,0)+". Non esiste un limite superiore alle puntate che una sequenza sufficientemente lunga può richiedere.";
+      insight.innerHTML="<strong>Modello ideale:</strong> capitale e massimale non possono fermare la strategia. Dopo "+fmt(m.spins,0)+" giri il profitto relativo è "+martingaleFormatValue(m.net)+" unità, ma la puntata massima usata è arrivata a "+fmt(m.maxBetReached,0)+" e la massima puntata richiesta a "+fmt(m.maxRequired,0)+". Non esiste un limite superiore alle puntate che una sequenza sufficientemente lunga può richiedere."+edgeText;
     }else{
       var k=Math.max(1,m.maxLossStreak+1),next=m.baseBet*Math.pow(2,k),cum=m.baseBet*(Math.pow(2,k)-1);
-      insight.innerHTML="<strong>Rischio nascosto:</strong> una serie di "+k+" sconfitte consecutive richiede una puntata successiva di "+fmt(next,0)+" unità e comporta "+fmt(cum,0)+" unità perse nella serie. Molte piccole chiusure positive convivono con un rischio raro ma molto grande.";
+      insight.innerHTML="<strong>Rischio nascosto:</strong> una serie di "+k+" sconfitte consecutive richiede una puntata successiva di "+fmt(next,0)+" unità e comporta "+fmt(cum,0)+" unità perse nella serie. Molte piccole chiusure positive convivono con un rischio raro ma molto grande."+edgeText;
     }
     $("#martingaleSubtitle").textContent=(m.side==="red"?"ROSSO":"NERO")+" · puntata base "+fmt(m.baseBet,0)+" · "+martingaleScenarioName();
     renderMartingaleChart();
@@ -2093,6 +2094,7 @@
     if(exp===state.experiment)return;
     if(state.results.length&&!confirm("Cambiare esperimento? La serie corrente verrà azzerata."))return;
     if(state.experiment==="galton"){state.galton.token++;state.galton.animating=false}
+    if(state.experiment==="roulette"&&state.roulette.mode==="martingale")resetMartingaleData();
     state.experiment=exp;resetSeries(false);
     if(exp==="galton")$("#simN").value=100;
     if(exp==="dice")showOutcome([1,6],false);
