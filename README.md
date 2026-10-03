@@ -83,7 +83,8 @@ Laboratorio didattico interattivo di statistica e probabilità.
 - confronto con la distribuzione binomiale teorica
 - frequenze assolute/relative, statistiche, PROIEZIONE ed esportazione CSV
 
-### 🔵 Eventi · fase 1
+### 🔵 Eventi · fasi 1 e 2
+**Fase 1 · SOMMA**
 - spazio campionario di un dado equilibrato: Ω = {1,2,3,4,5,6}
 - costruzione libera di due eventi A e B selezionando direttamente gli esiti
 - diagramma di Venn dinamico con A, B, intersezione e risultati esterni
@@ -92,7 +93,18 @@ Laboratorio didattico interattivo di statistica e probabilità.
 - calcolo di P(A), P(B), P(A∩B) e P(A∪B)
 - costruzione della regola della somma e semplificazione automatica per eventi incompatibili
 - lanci singoli e simulazioni da 10, 100 o 1.000 prove
-- confronto tra frequenza sperimentale di A∪B e probabilità teorica
+
+**Fase 2 · PRODOTTO**
+- urna configurabile con palline rosse e blu
+- due estrazioni con o senza reintroduzione
+- A = prima pallina rossa; B = seconda pallina rossa
+- previsione non-spoiler su eventi dipendenti/indipendenti
+- confronto tra P(B) e P(B|A)
+- diagramma ad albero con i quattro percorsi RR, RB, BR e BB
+- regola generale P(A∩B) = P(A) · P(B|A)
+- semplificazione P(A∩B) = P(A) · P(B) nel caso indipendente
+- estrazioni singole e simulazioni da 10, 100 o 1.000 coppie
+- confronto tra frequenza sperimentale di RR e probabilità teorica
 
 ## Crediti
 Ideazione e progettazione didattica: prof. Flavio Naretti.  
