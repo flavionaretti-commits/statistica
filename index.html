@@ -460,6 +460,45 @@
       .galton-row-quick{grid-template-columns:repeat(3,1fr)}
     }
 
+    /* PROIEZIONE DEDICATA GALTON */
+    .galton-head-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+    .galton-project-btn{border:1px solid var(--accent);background:var(--panel2);color:var(--accent);border-radius:12px;padding:8px 11px;font-size:10px;font-weight:950;cursor:pointer;white-space:nowrap}
+    .galton-project-btn:hover{box-shadow:0 0 0 3px rgba(41,98,255,.10)}
+    dialog.galton-projection-dialog{width:100vw;height:100dvh;max-width:none;max-height:none;margin:0;border:0;border-radius:0;padding:0;background:var(--bg);color:var(--text);overflow:hidden}
+    dialog.galton-projection-dialog::backdrop{background:#020713}
+    .galton-projection-shell{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);gap:12px;padding:14px 18px 16px;box-sizing:border-box}
+    .galton-projection-head{display:flex;align-items:center;justify-content:space-between;gap:14px}
+    .galton-projection-head h2{margin:0;font-size:clamp(22px,2.5vw,36px)}
+    .galton-projection-head p{margin:3px 0 0;color:var(--muted);font-size:clamp(11px,1.2vw,15px);font-weight:750}
+    .galton-projection-close{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:13px;padding:10px 14px;font-size:13px;font-weight:950;cursor:pointer}
+    .galton-projection-layout{min-height:0;display:grid;grid-template-columns:minmax(0,1fr) minmax(250px,330px);gap:12px}
+    .galton-projection-machine-slot{min-height:0;display:flex}
+    .galton-projection-machine-slot #galtonMain{display:flex!important;flex:1;flex-direction:column;min-height:0;margin:0;padding:12px}
+    .galton-projection-machine-slot #galtonMain .galton-main-head{margin-bottom:7px}
+    .galton-projection-machine-slot #galtonMain .galton-machine{flex:1;height:auto;min-height:0}
+    .galton-projection-machine-slot .galton-project-btn{display:none}
+    .galton-projection-controls{border:1px solid var(--line);border-radius:20px;background:var(--panel);padding:14px;display:flex;flex-direction:column;gap:12px;justify-content:center;min-width:0}
+    .galton-projection-drop-slot #galtonDropTopBtn{width:100%;margin:0;padding:19px 12px;border-radius:16px;font-size:clamp(14px,1.6vw,21px)}
+    .galton-projection-label{display:flex;justify-content:space-between;gap:8px;align-items:center;font-size:11px;color:var(--muted);font-weight:850}
+    .galton-projection-rows{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+    .galton-projection-rows button,.galton-projection-sims button{border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:10px;padding:8px 4px;font-size:10px;font-weight:900;cursor:pointer}
+    .galton-projection-rows button.active{background:var(--accent);border-color:var(--accent);color:white}
+    .galton-projection-speed{width:100%;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:11px;padding:9px;font-weight:800}
+    .galton-projection-sims{display:grid;grid-template-columns:repeat(3,1fr);gap:5px}
+    .galton-projection-reset{width:100%;padding:9px!important}
+    .galton-projection-note{margin:0;color:var(--muted);font-size:10px;line-height:1.45;text-align:center}
+    @media(max-width:800px){
+      .galton-projection-shell{padding:10px}
+      .galton-projection-layout{grid-template-columns:minmax(0,1fr) 230px}
+      .galton-projection-controls{padding:10px}
+    }
+    @media(max-width:650px){
+      dialog.galton-projection-dialog{overflow:auto}
+      .galton-projection-shell{height:auto;min-height:100dvh;overflow:auto}
+      .galton-projection-layout{grid-template-columns:1fr}
+      .galton-projection-machine-slot{min-height:470px}
+    }
+
     /* EVENTI · fase 1 */
     .events-config-note{font-size:11px;line-height:1.45;color:var(--muted);margin:9px 1px 0}
     .events-preset-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:7px}
@@ -1047,7 +1086,10 @@
             <h2>Macchina di Galton</h2>
             <p id="galtonStatusText">10 file di pioli · 11 canali · nessuna pallina</p>
           </div>
-          <div class="galton-badge" id="galtonBadge">SINISTRA 50% · DESTRA 50%</div>
+          <div class="galton-head-actions">
+            <button class="galton-project-btn" id="galtonProjectBtn" type="button">⛶ PROIETTA</button>
+            <div class="galton-badge" id="galtonBadge">SINISTRA 50% · DESTRA 50%</div>
+          </div>
         </div>
         <div class="galton-machine" id="galtonMachine" aria-label="Macchina di Galton"></div>
       </section>
@@ -1182,7 +1224,7 @@
     <p>Estrai numeri da 1 a 90 senza reintroduzione: il tabellone si completa e una cartella 3×9 da 15 numeri viene segnata automaticamente. L'app riconosce <b>ambo, terno, quaterna, cinquina e tombola</b>. In SIMULAZIONE puoi generare molte partite e studiare <b>dopo quante estrazioni</b> compare il premio scelto.</p>
 
     <h3>⚙️ Macchina di Galton</h3>
-    <p>Scegli da 4 a 16 file di pioli. Ogni urto manda la pallina a sinistra o a destra con probabilità 50%. Il canale finale corrisponde al <b>numero di deviazioni a destra</b>: è quindi lo stesso esperimento di una serie di lanci di moneta. Con molte palline emerge la distribuzione binomiale e, aumentando i livelli, la caratteristica forma a campana.</p>
+    <p>Scegli da 4 a 16 file di pioli. Ogni urto manda la pallina a sinistra o a destra con probabilità 50%. Il canale finale corrisponde al <b>numero di deviazioni a destra</b>: è quindi lo stesso esperimento di una serie di lanci di moneta. Con molte palline emerge la distribuzione binomiale e, aumentando i livelli, la caratteristica forma a campana. Il pulsante <b>PROIETTA</b> apre una vista dedicata per LIM con macchina grande, caduta singola, scelta dei livelli e simulazioni rapide.</p>
 
     <h3>🔵 Eventi · fasi 1 e 2</h3>
     <p><b>Fase 1 · SOMMA:</b> con un dado equilibrato costruisci due eventi A e B, li osservi nel diagramma di Venn e prevedi se sono compatibili o incompatibili. La sezione <b>A O B</b> costruisce la regola della somma.</p>
@@ -1224,6 +1266,53 @@
     </div>
     <div class="projection-body">
       <div class="chart-scroll"><div class="chart" id="projectionChart"><div class="empty-chart">I dati compariranno qui dopo il primo lancio.</div></div></div>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="galtonProjectionDialog" class="galton-projection-dialog">
+  <div class="galton-projection-shell">
+    <div class="galton-projection-head">
+      <div>
+        <h2>⚙️ Macchina di Galton · modalità proiezione</h2>
+        <p id="galtonProjectionMeta">10 file · 11 canali · 0 palline</p>
+      </div>
+      <button class="galton-projection-close" id="closeGaltonProjection" type="button">✕ ESCI</button>
+    </div>
+
+    <div class="galton-projection-layout">
+      <div class="galton-projection-machine-slot" id="galtonProjectionMachineSlot"></div>
+
+      <div class="galton-projection-controls">
+        <div class="galton-projection-drop-slot" id="galtonProjectionDropSlot"></div>
+
+        <div class="galton-projection-label"><span>FILE DI PIOLI</span><span id="galtonProjectionRowsLabel">10</span></div>
+        <div class="galton-projection-rows" id="galtonProjectionRows">
+          <button data-galton-proj-rows="4">4</button>
+          <button data-galton-proj-rows="6">6</button>
+          <button data-galton-proj-rows="8">8</button>
+          <button data-galton-proj-rows="10">10</button>
+          <button data-galton-proj-rows="12">12</button>
+          <button data-galton-proj-rows="16">16</button>
+        </div>
+
+        <div class="galton-projection-label"><span>VELOCITÀ PALLINA</span><span></span></div>
+        <select class="galton-projection-speed" id="galtonProjectionSpeed">
+          <option value="slow">Lenta</option>
+          <option value="normal">Normale</option>
+          <option value="fast">Veloce</option>
+        </select>
+
+        <div class="galton-projection-label"><span>SIMULAZIONE RAPIDA</span><span></span></div>
+        <div class="galton-projection-sims" id="galtonProjectionSims">
+          <button data-galton-proj-sim="10">10</button>
+          <button data-galton-proj-sim="100">100</button>
+          <button data-galton-proj-sim="1000">1.000</button>
+        </div>
+
+        <button class="smallbtn galton-projection-reset" id="galtonProjectionReset">↺ AZZERA</button>
+        <p class="galton-projection-note">Una pallina mostra il percorso. Le simulazioni rapide fanno emergere progressivamente la distribuzione nei canali.</p>
+      </div>
     </div>
   </div>
 </dialog>
@@ -1768,6 +1857,41 @@
     sumDisplay.innerHTML="—<small>nessuna pallina caduta</small>";render();
   }
 
+  function galtonProjectionIsOpen(){
+    var d=$("#galtonProjectionDialog");return !!(d&&d.open);
+  }
+  function galtonProjectionMoveNode(node,slotId,placeholderId){
+    if(!node||$("#"+placeholderId))return;
+    var ph=document.createElement("span");ph.id=placeholderId;ph.hidden=true;
+    node.parentNode.insertBefore(ph,node);$("#"+slotId).appendChild(node);
+  }
+  function galtonProjectionRestoreNode(nodeId,placeholderId){
+    var node=$("#"+nodeId),ph=$("#"+placeholderId);
+    if(node&&ph&&ph.parentNode){ph.parentNode.insertBefore(node,ph);ph.remove()}
+  }
+  function updateGaltonProjectionUI(){
+    if(!$("#galtonProjectionDialog"))return;
+    $("#galtonProjectionMeta").textContent=state.galton.rows+" file · "+(state.galton.rows+1)+" canali · "+fmt(state.results.length,0)+" "+(state.results.length===1?"pallina":"palline");
+    $("#galtonProjectionRowsLabel").textContent=state.galton.rows;
+    $("#galtonProjectionSpeed").value=state.galton.speed;
+    document.querySelectorAll("#galtonProjectionRows button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.galtonProjRows)===state.galton.rows)});
+  }
+  function openGaltonProjection(){
+    if(state.experiment!=="galton")return;
+    var d=$("#galtonProjectionDialog");if(!d||d.open)return;
+    galtonProjectionMoveNode($("#galtonMain"),"galtonProjectionMachineSlot","galtonMainProjectionPlaceholder");
+    galtonProjectionMoveNode($("#galtonDropTopBtn"),"galtonProjectionDropSlot","galtonDropProjectionPlaceholder");
+    updateGaltonProjectionUI();d.showModal();
+    requestAnimationFrame(function(){renderGaltonMachine()});
+  }
+  function restoreGaltonProjection(){
+    galtonProjectionRestoreNode("galtonMain","galtonMainProjectionPlaceholder");
+    galtonProjectionRestoreNode("galtonDropTopBtn","galtonDropProjectionPlaceholder");
+  }
+  function closeGaltonProjection(){
+    var d=$("#galtonProjectionDialog");if(d&&d.open)d.close();
+  }
+
   function renderGaltonConfig(){
     var rows=state.galton.rows;
     $("#galtonRows").value=rows;$("#galtonRowsLabel").textContent=rows+" file · "+(rows+1)+" canali";
@@ -1775,6 +1899,7 @@
     document.querySelectorAll("#galtonRowQuick button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.galtonRows)===rows)});
     $("#galtonDropTopBtn").disabled=state.galton.animating;
     $("#galtonDropTopBtn").textContent=state.galton.animating?"🟠 PALLINA IN CADUTA…":"🟠 LASCIA CADERE UNA PALLINA";
+    updateGaltonProjectionUI();
   }
 
   function showOutcome(vals,animate){
@@ -2974,6 +3099,7 @@
   function setExperiment(exp){
     if(exp===state.experiment)return;
     if(rouletteProjectionIsOpen())closeRouletteProjection();
+    if(galtonProjectionIsOpen())closeGaltonProjection();
     if(state.results.length&&!confirm("Cambiare esperimento? La serie corrente verrà azzerata."))return;
     if(state.experiment==="galton"){state.galton.token++;state.galton.animating=false}
     if(state.experiment==="roulette"&&state.roulette.mode==="martingale")resetMartingaleData();
@@ -3121,6 +3247,14 @@
     state.tombola.ticket=generateTombolaTicket();state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";state.results=[];sumDisplay.innerHTML="—<small>nessun numero estratto</small>";render();
   });
 
+  $("#galtonProjectBtn").addEventListener("click",openGaltonProjection);
+  $("#closeGaltonProjection").addEventListener("click",closeGaltonProjection);
+  $("#galtonProjectionDialog").addEventListener("close",function(){restoreGaltonProjection();if(state.experiment==="galton"){render();requestAnimationFrame(function(){renderGaltonMachine()})}});
+  $("#galtonProjectionDialog").addEventListener("click",function(e){if(e.target===$("#galtonProjectionDialog"))closeGaltonProjection()});
+  $("#galtonProjectionRows").addEventListener("click",function(e){var b=e.target.closest("[data-galton-proj-rows]");if(!b)return;setGaltonRows(Number(b.dataset.galtonProjRows));updateGaltonProjectionUI()});
+  $("#galtonProjectionSpeed").addEventListener("change",function(e){state.galton.speed=e.target.value;renderGaltonConfig()});
+  $("#galtonProjectionSims").addEventListener("click",function(e){var b=e.target.closest("[data-galton-proj-sim]");if(!b)return;simulate(Number(b.dataset.galtonProjSim));updateGaltonProjectionUI()});
+  $("#galtonProjectionReset").addEventListener("click",function(){resetSeries(true);updateGaltonProjectionUI()});
   $("#galtonDropTopBtn").addEventListener("click",dropGaltonAnimated);
   $("#galtonRows").addEventListener("input",function(e){$("#galtonRowsLabel").textContent=e.target.value+" file · "+(Number(e.target.value)+1)+" canali"});
   $("#galtonRows").addEventListener("change",function(e){setGaltonRows(e.target.value)});
