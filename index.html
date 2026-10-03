@@ -256,6 +256,8 @@
     /* ROULETTE */
     .roulette-spin-top{margin:2px 0 14px;background:linear-gradient(135deg,#087a45,#0ea968)}
     .roulette-kind-title,.roulette-analysis-title,.roulette-mode-title{margin-top:13px}
+    #rouletteModeSeg{grid-template-columns:repeat(3,1fr)}
+    #rouletteModeSeg button{font-size:9px;padding-left:3px;padding-right:3px}
     .roulette-game-panel{margin-top:10px;padding:10px;border:1px solid var(--line);border-radius:14px;background:rgba(8,122,69,.05)}
     .roulette-bank{display:flex;justify-content:space-between;align-items:center;padding:7px 0 10px;font-size:12px;font-weight:800}
     .roulette-bank strong{font-size:22px}
@@ -1553,7 +1555,7 @@
     }
     if(state.experiment==="roulette"&&state.roulette.mode==="martingale"){
       var mm=state.roulette.martingale;
-      setStat("n","Giri",fmt(mm.spins,0));setStat("mean",mm.scenario==="ideal"?"Profitto rel.":"Saldo",martingaleFormatValue(martingaleBalance()));
+      setStat("n","Giri",fmt(mm.spins,0));setStat("mean",mm.scenario==="ideal"?"Profitto rel.":"Saldo",mm.scenario==="ideal"?martingaleFormatValue(martingaleBalance()):fmt(martingaleBalance(),0));
       setStat("median","Puntata prossima",fmt(mm.currentBet,0));setStat("mode","Puntata max",fmt(mm.maxBetReached,0));
       setStat("min","Serie perdite",fmt(mm.maxLossStreak,0));setStat("max","Volume puntato",fmt(mm.totalWagered,0));
       setStat("range","Cicli vinti",fmt(mm.cycles,0));setStat("sd","Stato",mm.stopped?"FERMA":mm.scenario==="ideal"?"IDEALE":"ATTIVA");return;
@@ -1838,6 +1840,7 @@
     m.lossStreak=0;m.maxLossStreak=0;m.spins=0;m.wins=0;m.losses=0;m.zeros=0;m.cycles=0;m.totalWagered=0;
     m.stopped=false;m.stopReason="";m.trace=[{spin:0,value:m.scenario==="ideal"?0:m.initialBankroll}];
     state.results=[];state.lastOutcome=[];state.roulette.last=null;
+    var initialCheck=martingaleFeasibility();if(!initialCheck.ok){m.stopped=true;m.stopReason=initialCheck.reason}
   }
   function martingaleStep(){
     var m=state.roulette.martingale;
@@ -1911,7 +1914,7 @@
   }
   function renderMartingaleDashboard(){
     var m=state.roulette.martingale;
-    $("#martingaleBalance").textContent=martingaleFormatValue(martingaleBalance());
+    $("#martingaleBalance").textContent=m.scenario==="ideal"?martingaleFormatValue(martingaleBalance()):fmt(martingaleBalance(),0);
     $("#martingaleCurrentBet").textContent=fmt(m.currentBet,0);
     $("#martingaleMaxBet").textContent=fmt(m.maxBetReached,0);
     $("#martingaleMaxStreak").textContent=fmt(m.maxLossStreak,0);
@@ -2182,15 +2185,41 @@
   $("#rouletteKindSeg").addEventListener("click",function(e){
     var b=e.target.closest("button");if(!b)return;var k=b.dataset.rouletteKind;if(k===state.roulette.kind)return;
     if(state.results.length&&!confirm("Cambiare tipo di roulette? La serie corrente verrà azzerata."))return;
-    clearRouletteBets(true);state.roulette.kind=k;state.results=[];state.roulette.last=null;state.roulette.lastNet=null;render();
+    clearRouletteBets(true);state.roulette.kind=k;state.roulette.lastNet=null;
+    if(state.roulette.mode==="martingale")resetMartingaleData();else{state.results=[];state.roulette.last=null}
+    render();
   });
   $("#rouletteModeSeg").addEventListener("click",function(e){
     var b=e.target.closest("button");if(!b)return;var mode=b.dataset.rouletteMode;if(mode===state.roulette.mode)return;
-    clearRouletteBets(true);state.roulette.mode=mode;state.roulette.lastNet=null;render();
+    if(state.results.length&&!confirm("Cambiare modalità della roulette? La serie corrente verrà azzerata."))return;
+    clearRouletteBets(true);state.roulette.mode=mode;state.roulette.lastNet=null;state.results=[];state.roulette.last=null;
+    if(mode==="martingale"){state.roulette.analysis="color";resetMartingaleData();$("#simN").value=1000}
+    render();
   });
   $("#rouletteChipSeg").addEventListener("click",function(e){var b=e.target.closest("button");if(!b)return;state.roulette.chip=Number(b.dataset.chip);renderRouletteConfig()});
   $("#clearRouletteBetsBtn").addEventListener("click",function(){clearRouletteBets(true)});
   $("#newRouletteGameBtn").addEventListener("click",function(){state.roulette.bankroll=100;state.roulette.bets={};state.roulette.lastNet=null;renderRouletteConfig();renderRouletteTable()});
+
+  $("#martingaleScenarioSeg").addEventListener("click",function(e){
+    var b=e.target.closest("[data-martingale-scenario]");if(!b)return;var value=b.dataset.martingaleScenario,m=state.roulette.martingale;if(value===m.scenario)return;
+    if(state.results.length&&!confirm("Cambiare scenario? La martingala corrente verrà azzerata."))return;
+    m.scenario=value;resetMartingaleData();sumDisplay.innerHTML="—<small>martingala pronta</small>";render();
+  });
+  $("#martingaleSideSeg").addEventListener("click",function(e){
+    var b=e.target.closest("[data-martingale-side]");if(!b)return;var value=b.dataset.martingaleSide,m=state.roulette.martingale;if(value===m.side)return;
+    if(state.results.length&&!confirm("Cambiare colore? La martingala corrente verrà azzerata."))return;
+    m.side=value;state.roulette.analysis="color";resetMartingaleData();sumDisplay.innerHTML="—<small>martingala pronta</small>";render();
+  });
+  function updateMartingaleNumber(field,key){
+    var m=state.roulette.martingale,v=Math.max(1,Math.floor(Number($(field).value)||1));
+    m[key]=v;if(key==="baseBet")m.currentBet=v;
+    resetMartingaleData();sumDisplay.innerHTML="—<small>martingala pronta</small>";render();
+  }
+  $("#martingaleBaseBet").addEventListener("change",function(){updateMartingaleNumber("#martingaleBaseBet","baseBet")});
+  $("#martingaleInitialBankroll").addEventListener("change",function(){updateMartingaleNumber("#martingaleInitialBankroll","initialBankroll")});
+  $("#martingaleTableLimit").addEventListener("change",function(){updateMartingaleNumber("#martingaleTableLimit","tableLimit")});
+  $("#resetMartingaleBtn").addEventListener("click",function(){resetMartingaleData();sumDisplay.innerHTML="—<small>martingala pronta</small>";beep("reset");render()});
+  $("#collapseMartingaleBtn").addEventListener("click",simulateMartingaleToCollapse);
 
   $("#tombolaDrawTopBtn").addEventListener("click",oneRoll);
   $("#tombolaAnalysis").addEventListener("change",function(e){state.tombola.analysis=e.target.value;if(state.tombola.dataMode==="draws")render()});
