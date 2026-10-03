@@ -1348,6 +1348,7 @@
 
   function oneRoll(){
     if(state.experiment==="galton"){dropGaltonAnimated();return}
+    if(state.experiment==="roulette"&&state.roulette.mode==="martingale"){runMartingaleSingle();return}
     if(state.experiment==="tombola"&&state.tombola.dataMode==="waiting"){
       if(state.results.length&&!confirm("Iniziare una partita manuale? La simulazione corrente verrà azzerata."))return;
       state.results=[];state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";
@@ -1369,6 +1370,7 @@
 
   function simulate(n){
     n=Math.max(1,Math.min(1000000,Math.floor(Number(n)||0)));
+    if(state.experiment==="roulette"&&state.roulette.mode==="martingale"){simulateMartingale(n);return}
     state.results=[];state.lastOutcome=[];
 
     if(state.experiment==="galton"){
@@ -1549,6 +1551,13 @@
       var hi=tombolaHitInfo(state.results);setStat("n","Estratti",fmt(state.results.length,0));setStat("mean","Ultimo",state.tombola.last||"—");setStat("median","Cartella",hi.total+"/15");setStat("mode","Miglior riga",hi.best+"/5");
       setStat("min","Mancano",15-hi.total);setStat("max","Rimasti",state.tombola.remaining.length);setStat("range","Premio",hi.prize);setStat("sd","Modalità","SENZA");return;
     }
+    if(state.experiment==="roulette"&&state.roulette.mode==="martingale"){
+      var mm=state.roulette.martingale;
+      setStat("n","Giri",fmt(mm.spins,0));setStat("mean",mm.scenario==="ideal"?"Profitto rel.":"Saldo",martingaleFormatValue(martingaleBalance()));
+      setStat("median","Puntata prossima",fmt(mm.currentBet,0));setStat("mode","Puntata max",fmt(mm.maxBetReached,0));
+      setStat("min","Serie perdite",fmt(mm.maxLossStreak,0));setStat("max","Volume puntato",fmt(mm.totalWagered,0));
+      setStat("range","Cicli vinti",fmt(mm.cycles,0));setStat("sd","Stato",mm.stopped?"FERMA":mm.scenario==="ideal"?"IDEALE":"ATTIVA");return;
+    }
     if(state.experiment==="balls"||state.experiment==="cards"||state.experiment==="roulette"){
       var c=counts(),ids=domain(),best=null,bestN=0,used=0;ids.forEach(function(id){var n=c[id]||0;if(n>0)used++;if(n>bestN){bestN=n;best=id}});
       setStat("n",state.experiment==="cards"?"Pescate":state.experiment==="roulette"?"Giri":"Estrazioni",fmt(state.results.length,0));setStat("mean","Più frequente",best?categoryLabel(best):"—");setStat("median","Frequenza max",best?fmt(bestN,0):"—");setStat("mode","Categorie viste",fmt(used,0));
@@ -1596,7 +1605,10 @@
   function chartTitle(){
     if(state.experiment==="balls")return "Distribuzione dei colori estratti";
     if(state.experiment==="cards"){var names={suit:"Distribuzione per seme",rank:"Distribuzione per valore",type:"Distribuzione per tipo di carta",color:"Distribuzione per colore"};return names[state.deck.analysis]}
-    if(state.experiment==="roulette"){var rn={color:"Roulette · colori",parity:"Roulette · pari/dispari",range:"Roulette · 1–18 / 19–36",dozen:"Roulette · dozzine",column:"Roulette · colonne",number:"Roulette · numeri"};return rn[state.roulette.analysis]}
+    if(state.experiment==="roulette"){
+      if(state.roulette.mode==="martingale")return "Roulette · esiti durante la martingala";
+      var rn={color:"Roulette · colori",parity:"Roulette · pari/dispari",range:"Roulette · 1–18 / 19–36",dozen:"Roulette · dozzine",column:"Roulette · colonne",number:"Roulette · numeri"};return rn[state.roulette.analysis]
+    }
     if(state.experiment==="tombola"){if(state.tombola.dataMode==="waiting")return "Tempo di attesa · "+tombolaWaitName();var tn={decade:"Tombola · decine",parity:"Tombola · pari/dispari",half:"Tombola · 1–45 / 46–90",number:"Tombola · numeri"};return tn[state.tombola.analysis]}
     if(state.experiment==="galton")return "Macchina di Galton · canale finale";
     return state.experiment==="dice"?"Distribuzione delle somme":"Distribuzione del numero di teste";
@@ -1614,7 +1626,10 @@
     var n=state.results.length,q=quantity();
     if(state.experiment==="balls")return fmt(n,0)+" estrazioni · "+(state.urn.replacement?"con reintroduzione":"senza reintroduzione");
     if(state.experiment==="cards")return fmt(n,0)+" pescate · "+(state.deck.replacement?"con reintroduzione":"senza reintroduzione")+" · "+deckTotal("initial")+" carte";
-    if(state.experiment==="roulette")return fmt(n,0)+" giri · "+(state.roulette.kind==="american"?"americana 0+00":"europea 0");
+    if(state.experiment==="roulette"){
+      if(state.roulette.mode==="martingale")return fmt(n,0)+" giri · martingala su "+(state.roulette.martingale.side==="red"?"rosso":"nero")+" · "+martingaleScenarioName();
+      return fmt(n,0)+" giri · "+(state.roulette.kind==="american"?"americana 0+00":"europea 0");
+    }
     if(state.experiment==="tombola")return state.tombola.dataMode==="waiting"?fmt(n,0)+" partite · attesa per "+tombolaWaitName():fmt(n,0)+" estrazioni · senza reintroduzione";
     if(state.experiment==="galton")return fmt(n,0)+" "+(n===1?"pallina":"palline")+" · "+state.galton.rows+" file · "+(state.galton.rows+1)+" canali";
     return state.experiment==="dice"?fmt(n,0)+" lanci · "+q+(q===1?" dado":" dadi"):fmt(n,0)+" lanci · "+q+(q===1?" moneta":" monete");
@@ -1622,7 +1637,10 @@
   function expectedText(){
     if(state.experiment==="balls")return state.urn.replacement?"Probabilità teoriche = composizione dell'urna":"Le probabilità cambiano dopo ogni estrazione";
     if(state.experiment==="cards")return state.deck.replacement?"Probabilità teoriche = composizione del mazzo · analisi per "+analysisName():"Le probabilità cambiano dopo ogni pescata";
-    if(state.experiment==="roulette")return (state.roulette.kind==="american"?"38 esiti equiprobabili · vantaggio banco 5,26%":"37 esiti equiprobabili · vantaggio banco 2,70%")+" · analisi per "+rouletteAnalysisName();
+    if(state.experiment==="roulette"){
+      if(state.roulette.mode==="martingale")return (state.roulette.kind==="american"?"Valore atteso per unità puntata: −5,26%":"Valore atteso per unità puntata: −2,70%")+" · il raddoppio non modifica il vantaggio del banco";
+      return (state.roulette.kind==="american"?"38 esiti equiprobabili · vantaggio banco 5,26%":"37 esiti equiprobabili · vantaggio banco 2,70%")+" · analisi per "+rouletteAnalysisName();
+    }
     if(state.experiment==="tombola")return state.tombola.dataMode==="waiting"?"Numero di estrazione in cui compare "+tombolaWaitName():"Campione casuale senza reintroduzione da 1 a 90";
     if(state.experiment==="galton")return "Valore atteso: "+fmt(state.galton.rows/2,1)+" deviazioni a destra · equivalente a "+state.galton.rows+" lanci di moneta";
     var q=quantity(),v=state.experiment==="dice"?3.5*q:q/2;
@@ -1789,6 +1807,137 @@
     });
     state.roulette.bankroll+=returns;state.roulette.lastNet=returns-stake;state.roulette.bets={};
   }
+  function martingaleBalance(){
+    var m=state.roulette.martingale;
+    return m.scenario==="ideal"?m.net:m.initialBankroll+m.net;
+  }
+  function martingaleScenarioName(){
+    var s=state.roulette.martingale.scenario;
+    return s==="realistic"?"capitale + massimale":s==="finite"?"solo capitale":"modello ideale ∞";
+  }
+  function martingaleFeasibility(){
+    var m=state.roulette.martingale;
+    if(m.scenario==="ideal")return {ok:true,reason:""};
+    var balance=m.initialBankroll+m.net;
+    if(m.currentBet>balance)return {ok:false,reason:"Capitale insufficiente: servono "+fmt(m.currentBet,0)+" unità, ma il saldo disponibile è "+fmt(balance,0)+"."};
+    if(m.scenario==="realistic"&&m.currentBet>m.tableLimit)return {ok:false,reason:"Massimale del banco superato: la puntata richiesta è "+fmt(m.currentBet,0)+" unità, il limite è "+fmt(m.tableLimit,0)+"."};
+    return {ok:true,reason:""};
+  }
+  function martingaleTracePoint(){
+    var m=state.roulette.martingale;
+    m.trace.push({spin:m.spins,value:martingaleBalance()});
+    if(m.trace.length>900){
+      var reduced=[];for(var i=0;i<m.trace.length;i+=2)reduced.push(m.trace[i]);
+      if(reduced[reduced.length-1]!==m.trace[m.trace.length-1])reduced.push(m.trace[m.trace.length-1]);
+      m.trace=reduced;
+    }
+  }
+  function resetMartingaleData(){
+    var m=state.roulette.martingale;
+    m.net=0;m.currentBet=m.baseBet;m.maxBetReached=m.baseBet;m.maxRequired=m.baseBet;
+    m.lossStreak=0;m.maxLossStreak=0;m.spins=0;m.wins=0;m.losses=0;m.zeros=0;m.cycles=0;m.totalWagered=0;
+    m.stopped=false;m.stopReason="";m.trace=[{spin:0,value:m.scenario==="ideal"?0:m.initialBankroll}];
+    state.results=[];state.lastOutcome=[];state.roulette.last=null;
+  }
+  function martingaleStep(){
+    var m=state.roulette.martingale;
+    if(m.stopped)return null;
+    var pre=martingaleFeasibility();
+    if(!pre.ok){m.stopped=true;m.stopReason=pre.reason;return null}
+    var pockets=roulettePockets(),value=pockets[Math.floor(Math.random()*pockets.length)],color=rouletteColor(value);
+    var bet=m.currentBet,win=color===m.side;
+    m.spins++;m.totalWagered+=bet;m.maxBetReached=Math.max(m.maxBetReached,bet);
+    if(win){
+      m.net+=bet;m.wins++;m.cycles++;m.lossStreak=0;m.currentBet=m.baseBet;
+    }else{
+      m.net-=bet;m.losses++;if(color==="green")m.zeros++;
+      m.lossStreak++;m.maxLossStreak=Math.max(m.maxLossStreak,m.lossStreak);
+      m.currentBet=bet*2;m.maxRequired=Math.max(m.maxRequired,m.currentBet);
+    }
+    state.roulette.last=value;state.results.push(value);state.lastOutcome=[value];
+    martingaleTracePoint();
+    var after=martingaleFeasibility();
+    if(!after.ok){m.stopped=true;m.stopReason=after.reason}
+    return {value:value,color:color,bet:bet,win:win};
+  }
+  function runMartingaleSingle(){
+    var m=state.roulette.martingale;
+    if(m.stopped){alert("La martingala è ferma. Azzera la simulazione per ricominciare.");return}
+    var r=martingaleStep();if(!r){render();return}
+    sumDisplay.innerHTML=resultText(r.value,false);beep(r.win?"done":"roll");render();
+  }
+  function simulateMartingale(n){
+    resetMartingaleData();
+    var last=null;
+    for(var i=0;i<n&&!state.roulette.martingale.stopped;i++)last=martingaleStep();
+    if(last)sumDisplay.innerHTML=resultText(last.value,true);
+    beep("done");render();
+  }
+  function simulateMartingaleToCollapse(){
+    var m=state.roulette.martingale;
+    if(m.scenario==="ideal"){
+      alert("Nel modello ideale non esiste un crollo per capitale o massimale. Usa SIMULA per osservare quanto cresce la puntata richiesta.");return;
+    }
+    resetMartingaleData();
+    var last=null,limit=1000000;
+    for(var i=0;i<limit&&!m.stopped;i++)last=martingaleStep();
+    if(last)sumDisplay.innerHTML=resultText(last.value,true);
+    if(!m.stopped)m.stopReason="Nessun crollo osservato nei primi "+fmt(limit,0)+" giri.";
+    beep("done");render();
+  }
+  function martingaleFormatValue(v){
+    if(!Number.isFinite(v))return "∞";
+    var sign=v>0?"+":"";
+    return sign+fmt(v,0);
+  }
+  function renderMartingaleChart(){
+    var svg=$("#martingaleChart"),m=state.roulette.martingale,tr=m.trace||[];
+    while(svg.firstChild)svg.removeChild(svg.firstChild);
+    if(!tr.length)return;
+    var NS="http://www.w3.org/2000/svg",w=800,h=190,pad=12;
+    var vals=tr.map(function(p){return p.value}),min=Math.min.apply(null,vals),max=Math.max.apply(null,vals);
+    if(min===max){min-=1;max+=1}
+    var maxSpin=Math.max(1,tr[tr.length-1].spin);
+    function X(spin){return pad+(spin/maxSpin)*(w-2*pad)}
+    function Y(v){return h-pad-((v-min)/(max-min))*(h-2*pad)}
+    var baseline=state.roulette.martingale.scenario==="ideal"?0:state.roulette.martingale.initialBankroll;
+    if(baseline>=min&&baseline<=max){
+      var base=document.createElementNS(NS,"line");base.setAttribute("x1",pad);base.setAttribute("x2",w-pad);base.setAttribute("y1",Y(baseline));base.setAttribute("y2",Y(baseline));base.setAttribute("stroke","currentColor");base.setAttribute("stroke-opacity",".18");base.setAttribute("stroke-dasharray","6 5");svg.appendChild(base);
+    }
+    var poly=document.createElementNS(NS,"polyline");
+    poly.setAttribute("points",tr.map(function(p){return X(p.spin)+","+Y(p.value)}).join(" "));
+    poly.setAttribute("fill","none");poly.setAttribute("stroke","#2962ff");poly.setAttribute("stroke-width","3");poly.setAttribute("vector-effect","non-scaling-stroke");svg.appendChild(poly);
+    $("#martingaleChartRange").textContent=martingaleFormatValue(min)+" → "+martingaleFormatValue(max);
+  }
+  function renderMartingaleDashboard(){
+    var m=state.roulette.martingale;
+    $("#martingaleBalance").textContent=martingaleFormatValue(martingaleBalance());
+    $("#martingaleCurrentBet").textContent=fmt(m.currentBet,0);
+    $("#martingaleMaxBet").textContent=fmt(m.maxBetReached,0);
+    $("#martingaleMaxStreak").textContent=fmt(m.maxLossStreak,0);
+    $("#martingaleWagered").textContent=fmt(m.totalWagered,0);
+    $("#martingaleSpins").textContent=fmt(m.spins,0);
+    var status=$("#martingaleStatus");
+    status.className="martingale-status "+(m.stopped?"stopped":"running");
+    status.textContent=m.stopped?"FERMA":m.scenario==="ideal"?"IDEALE ∞":m.spins?"ATTIVA":"PRONTA";
+
+    var p=$("#martingaleProgression");p.innerHTML="";
+    var upto=Math.min(11,Math.max(6,m.maxLossStreak+2));
+    for(var i=0;i<upto;i++){var s=document.createElement("span");s.textContent=fmt(m.baseBet*Math.pow(2,i),0);p.appendChild(s)}
+    if(m.maxLossStreak+2>upto){var more=document.createElement("span");more.textContent="…";p.appendChild(more)}
+    var insight=$("#martingaleInsight");
+    if(m.stopped){
+      insight.innerHTML="<strong>CROLLO DELLA STRATEGIA.</strong> "+m.stopReason+" Dopo "+fmt(m.spins,0)+" giri la serie negativa massima è stata di "+m.maxLossStreak+" e la massima puntata effettivamente giocata "+fmt(m.maxBetReached,0)+" unità.";
+    }else if(m.scenario==="ideal"){
+      insight.innerHTML="<strong>Modello ideale:</strong> capitale e massimale non possono fermare la strategia. Dopo "+fmt(m.spins,0)+" giri il profitto relativo è "+martingaleFormatValue(m.net)+" unità, ma la puntata massima usata è arrivata a "+fmt(m.maxBetReached,0)+" e la massima puntata richiesta a "+fmt(m.maxRequired,0)+". Non esiste un limite superiore alle puntate che una sequenza sufficientemente lunga può richiedere.";
+    }else{
+      var k=Math.max(1,m.maxLossStreak+1),next=m.baseBet*Math.pow(2,k),cum=m.baseBet*(Math.pow(2,k)-1);
+      insight.innerHTML="<strong>Rischio nascosto:</strong> una serie di "+k+" sconfitte consecutive richiede una puntata successiva di "+fmt(next,0)+" unità e comporta "+fmt(cum,0)+" unità perse nella serie. Molte piccole chiusure positive convivono con un rischio raro ma molto grande.";
+    }
+    $("#martingaleSubtitle").textContent=(m.side==="red"?"ROSSO":"NERO")+" · puntata base "+fmt(m.baseBet,0)+" · "+martingaleScenarioName();
+    renderMartingaleChart();
+  }
+
   function rouletteCell(text,cls,betId){
     var b=document.createElement("button");b.type="button";b.className="roulette-cell "+cls;b.textContent=text;
     if(betId){
@@ -1821,17 +1970,39 @@
     host.appendChild(board);
   }
   function renderRouletteConfig(){
+    var mode=state.roulette.mode,m=state.roulette.martingale;
     $("#rouletteKindLabel").textContent=state.roulette.kind==="american"?"Americana · 38 numeri":"Europea · 37 numeri";
     $("#rouletteAnalysis").value=state.roulette.analysis;$("#rouletteAnalysisLabel").textContent=rouletteAnalysisName();
-    $("#rouletteModeLabel").textContent=state.roulette.mode==="game"?"gioco":"laboratorio";
+    $("#rouletteModeLabel").textContent=mode==="game"?"gioco":mode==="martingale"?"martingala":"laboratorio";
     document.querySelectorAll("#rouletteKindSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteKind===state.roulette.kind)});
-    document.querySelectorAll("#rouletteModeSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteMode===state.roulette.mode)});
+    document.querySelectorAll("#rouletteModeSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.rouletteMode===mode)});
     document.querySelectorAll("#rouletteChipSeg button").forEach(function(b){b.classList.toggle("active",Number(b.dataset.chip)===state.roulette.chip)});
-    $("#rouletteGamePanel").hidden=state.roulette.mode!=="game";
+    $("#rouletteGamePanel").hidden=mode!=="game";
+    $("#rouletteMartingalePanel").hidden=mode!=="martingale";
+    $("#rouletteMartingaleMain").hidden=mode!=="martingale";
+    $("#rouletteTableWrap").hidden=mode==="martingale";
+    $(".roulette-analysis-title").hidden=mode==="martingale";$("#rouletteAnalysis").hidden=mode==="martingale";
+
     $("#rouletteBankroll").textContent=fmt(state.roulette.bankroll,0);$("#rouletteChipLabel").textContent=state.roulette.chip;
     var stake=rouletteStakeTotal(),parts=Object.keys(state.roulette.bets).map(function(id){return rouletteBetDef(id).label+" "+state.roulette.bets[id]});
     $("#rouletteBetSummary").textContent=parts.length?parts.join(" · ")+" · Totale "+stake:(state.roulette.lastNet==null?"Nessuna fiche piazzata.":"Ultimo giro: "+(state.roulette.lastNet>=0?"+":"")+state.roulette.lastNet+" · nessuna fiche piazzata.");
-    $("#rouletteTableHint").textContent=state.roulette.mode==="game"?"Tocca il tavolo per piazzare fiche virtuali.":"Tutti i numeri hanno la stessa probabilità di uscita.";
+
+    if(mode==="martingale"){
+      $("#rouletteTableHint").textContent="Martingala su "+(m.side==="red"?"ROSSO":"NERO")+" · lo zero"+(state.roulette.kind==="american"?" e il doppio zero":"")+" fanno perdere la puntata.";
+      $("#martingaleScenarioLabel").textContent=martingaleScenarioName();
+      $("#martingaleSideLabel").textContent=m.side==="red"?"rosso":"nero";
+      document.querySelectorAll("#martingaleScenarioSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.martingaleScenario===m.scenario)});
+      document.querySelectorAll("#martingaleSideSeg button").forEach(function(b){b.classList.toggle("active",b.dataset.martingaleSide===m.side)});
+      $("#martingaleBaseBet").value=m.baseBet;$("#martingaleInitialBankroll").value=m.initialBankroll;$("#martingaleTableLimit").value=m.tableLimit;
+      $("#martingaleCapitalField").hidden=m.scenario==="ideal";$("#martingaleLimitField").hidden=m.scenario!=="realistic";
+      $("#collapseMartingaleBtn").disabled=m.scenario==="ideal";
+      $("#collapseMartingaleBtn").textContent=m.scenario==="ideal"?"∞ NESSUN CROLLO":"▶ FINO AL CROLLO";
+      var den=state.roulette.kind==="american"?38:37,loss=den-18;
+      $("#martingaleProbabilityText").textContent=(state.roulette.kind==="american"?"Americana":"Europea")+": P(vittoria) = 18/"+den+" = "+fmt(18/den*100,2)+"% · P(perdita) = "+loss+"/"+den+" = "+fmt(loss/den*100,2)+"%. Ogni unità puntata conserva il vantaggio matematico del banco.";
+      renderMartingaleDashboard();
+    }else{
+      $("#rouletteTableHint").textContent=mode==="game"?"Tocca il tavolo per piazzare fiche virtuali.":"Tutti i numeri hanno la stessa probabilità di uscita.";
+    }
     var mini=$("#rouletteLastMini");mini.textContent=state.roulette.last||"—";mini.style.background=state.roulette.last?(rouletteColor(state.roulette.last)==="red"?"#c92c35":rouletteColor(state.roulette.last)==="black"?"#17191d":"#087a45"):"#087a45";
   }
 
@@ -1854,7 +2025,7 @@
 
     if(isBalls)$("#simNote").textContent=state.urn.replacement?"La simulazione avvia una nuova serie di estrazioni indipendenti.":"Senza reintroduzione la simulazione si ferma quando l'urna è vuota.";
     else if(isCards)$("#simNote").textContent=state.deck.replacement?"La simulazione avvia una nuova serie di pescate indipendenti.":"Senza reintroduzione la simulazione si ferma quando il mazzo è vuoto.";
-    else if(isRoulette)$("#simNote").textContent="La simulazione genera una nuova serie di giri della roulette.";
+    else if(isRoulette)$("#simNote").textContent=state.roulette.mode==="martingale"?"SIMULA avvia una nuova martingala per il numero di giri scelto; la simulazione si ferma prima se capitale o massimale rendono impossibile il raddoppio.":"La simulazione genera una nuova serie di giri della roulette.";
     else if(isTombola)$("#simNote").textContent="Il numero indica quante partite simulare (massimo 100.000). Si misura il tempo di attesa per "+tombolaWaitName()+".";
     else if(isGalton)$("#simNote").textContent="La simulazione genera rapidamente molte palline. Per seguire i rimbalzi usa LASCIA CADERE UNA PALLINA.";
     else $("#simNote").textContent="La simulazione avvia una nuova serie. Massimo 1.000.000 di lanci.";
@@ -1872,7 +2043,9 @@
       var deckHasCards=deckTotal("current")>0;
       $("#cardDrawTopBtn").textContent=deckHasCards?"🃏 PESCA UNA CARTA":"MAZZO VUOTO";$("#cardDrawTopBtn").disabled=!deckHasCards;$(".brandmark").textContent="🃏";renderDeckConfig();
     }else if(isRoulette){
-      $("#rouletteSpinTopBtn").textContent="🎡 GIRA LA PALLINA";$("#rouletteSpinTopBtn").disabled=false;$(".brandmark").textContent="🎡";renderRouletteConfig();renderRouletteTable();
+      $("#rouletteSpinTopBtn").textContent=state.roulette.mode==="martingale"?"▶ UN GIRO DI MARTINGALA":"🎡 GIRA LA PALLINA";
+      $("#rouletteSpinTopBtn").disabled=state.roulette.mode==="martingale"&&state.roulette.martingale.stopped;
+      $(".brandmark").textContent="🎡";renderRouletteConfig();renderRouletteTable();
     }else if(isTombola){
       $("#tombolaDrawTopBtn").textContent=state.tombola.remaining.length?"🎱 ESTRAI UN NUMERO":"TABELLONE COMPLETO";$("#tombolaDrawTopBtn").disabled=!state.tombola.remaining.length;$(".brandmark").textContent="🎱";
       $("#tombolaAnalysis").value=state.tombola.analysis;$("#tombolaAnalysisLabel").textContent=state.tombola.analysis==="decade"?"decine":state.tombola.analysis==="parity"?"pari/dispari":state.tombola.analysis==="half"?"1–45 / 46–90":"numero";
@@ -1898,7 +2071,10 @@
     }else if(state.experiment==="cards"){
       state.deck.current=state.deck.initial.slice();state.deck.lastCard=null;renderCardVisual();sumDisplay.innerHTML="—<small>nessuna carta pescata</small>";
     }else if(state.experiment==="roulette"){
-      state.roulette.last=null;state.roulette.lastNet=null;if(state.roulette.mode==="game")clearRouletteBets(true);renderRouletteVisual();sumDisplay.innerHTML="—<small>nessun giro</small>";
+      state.roulette.last=null;state.roulette.lastNet=null;
+      if(state.roulette.mode==="game")clearRouletteBets(true);
+      if(state.roulette.mode==="martingale")resetMartingaleData();
+      renderRouletteVisual();sumDisplay.innerHTML="—<small>nessun giro</small>";
     }else if(state.experiment==="tombola"){
       state.tombola.remaining=range90();state.tombola.last=null;state.tombola.dataMode="draws";state.tombola.lastPrize="";renderTombolaVisual();sumDisplay.innerHTML="—<small>nessun numero estratto</small>";
     }else if(state.experiment==="galton"){
@@ -1965,7 +2141,17 @@
       if(state.tombola.dataMode==="waiting"){rows.push("premio;estrazione;frequenza_assoluta;frequenza_relativa_percento");domain().forEach(function(k){rows.push([tombolaWaitName(),k,c[k]||0,(c[k]/state.results.length*100).toFixed(4)].join(";"))});kind="tombola_attesa_"+state.tombola.waitEvent}
       else{rows.push("analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");domain().forEach(function(k){rows.push([state.tombola.analysis,categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});kind="tombola_"+state.tombola.analysis}
     }else if(state.experiment==="roulette"){
-      rows.push("roulette;analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");domain().forEach(function(k){rows.push([state.roulette.kind,rouletteAnalysisName(),categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});kind="roulette_"+state.roulette.kind+"_"+state.roulette.analysis;
+      if(state.roulette.mode==="martingale"){
+        var mx=state.roulette.martingale;
+        rows.push("metrica;valore");
+        rows.push(["roulette",state.roulette.kind].join(";"));rows.push(["scenario",mx.scenario].join(";"));rows.push(["colore",mx.side].join(";"));
+        rows.push(["giri",mx.spins].join(";"));rows.push(["saldo_o_profitto",martingaleBalance()].join(";"));rows.push(["puntata_base",mx.baseBet].join(";"));
+        rows.push(["puntata_massima",mx.maxBetReached].join(";"));rows.push(["massima_puntata_richiesta",mx.maxRequired].join(";"));rows.push(["serie_perdite_massima",mx.maxLossStreak].join(";"));
+        rows.push(["volume_totale_puntato",mx.totalWagered].join(";"));rows.push(["cicli_vinti",mx.cycles].join(";"));rows.push(["zeri",mx.zeros].join(";"));rows.push(["stato",mx.stopped?"ferma":"attiva"].join(";"));
+        rows.push(["motivo_stop",mx.stopReason||""].join(";"));kind="roulette_martingala_"+state.roulette.kind;
+      }else{
+        rows.push("roulette;analisi;categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_percento");domain().forEach(function(k){rows.push([state.roulette.kind,rouletteAnalysisName(),categoryLabel(k),c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});kind="roulette_"+state.roulette.kind+"_"+state.roulette.analysis;
+      }
     }else if(state.experiment==="cards"){
       rows.push("analisi;categoria;carte_iniziali_categoria;frequenza_assoluta;frequenza_relativa_percento;probabilita_teorica_iniziale_percento");var initialCategoryCounts={};domain().forEach(function(k){initialCategoryCounts[k]=0});
       state.deck.initial.forEach(function(id){var k=cardCategory(id);initialCategoryCounts[k]=(initialCategoryCounts[k]||0)+1});domain().forEach(function(k){rows.push([analysisName(),categoryLabel(k),initialCategoryCounts[k]||0,c[k]||0,(c[k]/state.results.length*100).toFixed(4),(t[k]*100).toFixed(4)].join(";"))});kind="carte_"+state.deck.analysis;
